@@ -1,3 +1,4 @@
 {
-  "products": "public/ecommerce/products"
+  "products": "public/ecommerce/products",
+  "languages": "public/ecommerce/languages"
 }

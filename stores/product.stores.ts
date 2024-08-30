@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 
-export const useCounterStore = defineStore("products", {
+export const useProductsStore = defineStore("products", {
   state: () => ({
     products: [],
     count: 0,
@@ -18,11 +18,11 @@ export const useCounterStore = defineStore("products", {
     increment() {
       this.count++;
     },
-    async fetchMountains() {
+    async fetchProducts() {
       const config = useRuntimeConfig();
       const baseURL = config.public.baseURL;
 
-      const { data, status, error } = await useAsyncData("mountains", () =>
+      const { data, status, error } = await useAsyncData("products", () =>
         $fetch(`${baseURL}${urls.products}`, {
           headers: {
             "Accept-Language": "AZE",
@@ -35,9 +35,8 @@ export const useCounterStore = defineStore("products", {
           },
         })
       );
-      console.log(data);
 
-      this.mountains = data.value;
+      this.products = data.value;
       this.status = status.value;
       this.error = error.value;
     },

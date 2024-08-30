@@ -198,31 +198,28 @@
         >
           {{ $t("copyright") }}
         </p>
-        <!-- <p class="text-gray-500 text-sm p-0 m-0" v-html="formattedProducts"></p> -->
+
+        <p
+          class="text-gray-500 text-sm p-0 m-0"
+          v-html="
+            $t('platform_developed_by_the_company', {
+              tag: `<a
+          href=&quot;https://digirella.az/&quot;
+          target=&quot;_blank&quot;
+          class=&quot;text-[#7DC819] hover:text-[#7DC819]&quot;
+          >Digital Umbrella </a
+        >`,
+            })
+          "
+        ></p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-// import json from "@/utils/textFooterSection/text.json"
-
-// const text = computed(()=>json)
 const localePath = useLocalePath();
-// import TapagroLogo from "@/components/inc/svg/tapagro_logo.vue";
-
-// export default {
-//   components: { TapagroLogo },
-//   data() {
-//     return {
-//       text: json,
-//     };
-//   },
-//   computed: {
-//     formattedProducts() {
-//       return this.$t("platform_developed_by_the_company");
-//     },
-//   },
-//   methods: {},
-// };
+import TapagroLogo from "@/components/svg/tapagro_logo.vue";
+import { useI18n } from "vue-i18n";
+// const { t } = useI18n();
 </script>
