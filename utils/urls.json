@@ -1,4 +1,5 @@
 {
   "products": "public/ecommerce/products",
-  "languages": "public/ecommerce/languages"
+  "languages": "public/ecommerce/languages",
+  "generate-url": "authentication/asan-login/generate-url"
 }

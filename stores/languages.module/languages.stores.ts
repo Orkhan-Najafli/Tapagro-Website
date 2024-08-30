@@ -2,11 +2,12 @@
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
+import type { Language } from "~/utils/types/language";
 
 export const useLanguagesStore = defineStore("languages", {
   state: () => ({
-    languages: [] as Array<{ countryCode: string; flagPath: string }>,
-    status: null,
+    languages: [] as Array<Language>,
+    status: "",
     error: null,
   }),
   getters: {

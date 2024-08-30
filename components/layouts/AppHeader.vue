@@ -167,7 +167,7 @@
                   >
                     <span>
                       <img
-                        v-if="useCookie('countryCode').value"
+                        v-if="useCookie('flagPath').value"
                         class="border border-gray-400 min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
                         :src="`${baseURL}${useCookie('flagPath').value}`"
                         @error="setDefaultImage"
@@ -567,7 +567,7 @@
                 >
                   <span>
                     <img
-                      v-if="useCookie('countryCode').value"
+                      v-if="useCookie('flagPath').value"
                       class="border border-gray-400 min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
                       :src="`${baseURL}${useCookie('flagPath').value}`"
                       @error="setDefaultImage"
@@ -706,54 +706,14 @@
       </div>
     </div>
     <!-- <FAQ @handleCancel="visibleFAQ = false" v-if="visibleFAQ" /> -->
-
-    <div class="mr-8">
-      <a-dropdown
-        :trigger="['click']"
-        placement="bottom"
-        :arrow="{ pointAtCenter: true }"
-      >
-        <a
-          class="inline-flex justify-start items-center flex-row cursor-pointer"
-        >
-          <span>
-            <img
-              v-if="useCookie('countryCode').value"
-              class="border border-gray-400 min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-              :src="`${baseURL}${useCookie('flagPath').value}`"
-              @error="setDefaultImage"
-            />
-            <AZE v-else />
-          </span>
-          <DownOutlined class="text-green-600 ml-1" />
-        </a>
-        <!-- <a-button></a-button> -->
-        <template #overlay>
-          <a-menu>
-            <a-menu-item
-              v-for="(language, index) in useLanguagesStore().getLanguages"
-              :key="index"
-              @click="changeLang(language)"
-            >
-              <div class="flex flex-row justify-start items-center">
-                <img
-                  class="min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-                  :src="`${baseURL}${language.flagPath}`"
-                  @error="setDefaultImage"
-                />
-                <span class="ml-2">{{ language.countryCode }}</span>
-              </div>
-            </a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
-    </div>
+    <button @click="fetchData">Click here</button>
   </nav>
 </template>
 <script setup lang="ts">
 import TapagroLogo from "@/components/svg/tapagro_logo.vue";
 import AZE from "@/components/svg/aze_icon.vue";
 import { useLanguagesStore } from "~/stores/languages.module/languages.stores";
+import { useAuthenticator } from "~/stores/auth.module/auth.stores";
 import type { Language } from "~/utils/types/language";
 
 //variables
@@ -769,6 +729,9 @@ const showFAQ = function () {
 //methods
 useLanguagesStore().fetchLanguages();
 
+const fetchData = function () {
+  useAuthenticator().fetchGenerateUrl();
+};
 const changeLang = function (language: Language) {
   locale.value = language.countryCode;
   refreshCookie("lang");
