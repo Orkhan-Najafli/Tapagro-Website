@@ -324,8 +324,8 @@ export default {
     "Elanı irəli çəkmək istədiyinizdən əminsinizmi?",
   ad_will_be_featured_further_in_the_Farm_Products_directory:
     'Elanınız "Fermer məhsulları" kataloqunda daha irəlidə təsvir olunacaq',
-  // platform_developed_by_the_company:
-  //   'Platforma <a href="https://digirella.az/" target="_blank" class="text-[#7DC819] hover:text-[#7DC819]">Digital Umbrella </a> şirkəti tərəfindan hazırlanmışdır',
+  platform_developed_by_the_company:
+    "Platforma {tag} şirkəti tərəfindan hazırlanmışdır",
   your_request_has_been_registered: "Müraciətiniz qeydə alındı",
   we_will_contact_you_soon: "Sizinlə tezliklə əlaqə saxlayacağıq",
   thank_you: "Təşəkkür edirik!",
