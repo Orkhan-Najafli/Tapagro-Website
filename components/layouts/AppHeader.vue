@@ -95,7 +95,7 @@
                     <nuxt-link
                       tag="a"
                       class="relative p-0 m-0 cursor-pointer"
-                      :to="localePath('/beyenilmis-mehsullar')"
+                      to="/beyenilmis-mehsullar"
                     >
                       <favorite_icon />
                     </nuxt-link>
@@ -106,7 +106,7 @@
                 v-if="loggedIn"
                 tag="a"
                 class="relative text-emerald-800 hover:text-emerald-800 mr-9 text-base leading-4 font-normal cursor-pointer"
-                :to="localePath('/sebet')"
+                to="/sebet"
               >
                 <a-badge
                   :count="basketCount"
@@ -148,7 +148,7 @@
                     <nuxt-link
                       tag="a"
                       class="relative p-0 m-0 cursor-pointer"
-                      :to="localePath('/mehsullarin-muqayisesi')"
+                      to="/mehsullarin-muqayisesi"
                     >
                       <scale_logo_in_header />
                     </nuxt-link>
@@ -245,7 +245,7 @@
                       </a-menu-item>
                       <a-menu-item key="1">
                         <nuxt-link
-                          :to="localePath(`/kabinet/tenzimlemelerim`)"
+                          to="/kabinet/tenzimlemelerim"
                           tag="a"
                           active-class="text-emerald-600"
                           style="
@@ -357,7 +357,7 @@
                 <nuxt-link
                   tag="a"
                   class="relative p-0 m-0 cursor-pointer"
-                  :to="localePath('/beyenilmis-mehsullar')"
+                  to="/beyenilmis-mehsullar"
                 >
                   <favorite_icon />
                 </nuxt-link>
@@ -370,7 +370,7 @@
               <nuxt-link
                 tag="a"
                 class="relative text-base leading-4 text-emerald-800 font-normal cursor-pointer"
-                :to="localePath('/sebet')"
+                to="/sebet"
               >
                 <a-badge
                   :count="4"
@@ -411,7 +411,7 @@
                 <nuxt-link
                   tag="a"
                   class="relative p-0 m-0 cursor-pointer"
-                  :to="localePath('/mehsullarin-muqayisesi')"
+                  to="/mehsullarin-muqayisesi"
                 >
                   <scale_logo_in_header />
                 </nuxt-link>
@@ -465,7 +465,7 @@
               <div v-else>
                 <nuxt-link
                   tag="a"
-                  :to="localePath(`/kabinet/tenzimlemelerim`)"
+                  to="/kabinet/tenzimlemelerim"
                   class="flex flex-row items-center cursor-pointer"
                   active-class="text-emerald-600"
                 >
@@ -497,7 +497,7 @@
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
                 active-class="text-green-500"
-                :to="localePath('/fermerler')"
+                to="/fermerler"
               >
                 {{ $t("farmers") }}
               </nuxt-link>
@@ -507,7 +507,7 @@
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
                 active-class="text-green-500"
-                :to="localePath('/magazalar')"
+                to="/magazalar"
               >
                 {{ $t("stores") }}
               </nuxt-link>
@@ -519,7 +519,7 @@
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
                 active-class="text-green-500"
-                :to="localePath('/haqqimizda')"
+                to="/haqqimizda"
               >
                 {{ $t("about") }}
               </nuxt-link>
@@ -528,7 +528,7 @@
               <nuxt-link
                 @click="contactInfo"
                 exact
-                :to="{ path: localePath('/bize-qosul') }"
+                to="/bize-qosul"
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
                 active-class="text-green-500"
@@ -542,7 +542,7 @@
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
                 active-class="text-green-500"
-                :to="localePath('/kabinet/tenzimlemelerim')"
+                to="/kabinet/tenzimlemelerim"
               >
                 {{ $t("my_account") }}
               </nuxt-link>
@@ -603,9 +603,11 @@
       </div>
 
       <div
-        v-if="loggedIn"
+        v-if="false"
         class="flex lg:hidden py-1 pt-4 px-5 justify-start items-center w-full h-auto border-t border-gray-300 bg-white"
       >
+        <!-- v-if="loggedIn" -->
+
         <a-tooltip placement="bottom">
           <template slot="title">
             <span>
@@ -661,7 +663,7 @@
             <nuxt-link
               tag="a"
               class="relative py-1 px-1 ml-4 w-28 h-6 text-gray-500 hover:text-green-500 text-base leading-4 font-normal cursor-pointer"
-              :to="localePath('/magazalar')"
+              to="/magazalar"
               active-class="text-green-500 border-b border-green-500 pb-2"
             >
               {{ $t("stores") }}
@@ -671,7 +673,7 @@
             <nuxt-link
               tag="a"
               class="relative py-1 px-1 mx-4 w-28 h-6 text-gray-500 hover:text-green-500 text-base leading-4 font-normal cursor-pointer"
-              :to="localePath('/fermerler')"
+              to="/fermerler"
               active-class="text-green-500 border-b border-green-500 pb-2"
             >
               {{ $t("farmers") }}
@@ -683,7 +685,7 @@
               tag="a"
               class="relative pt-1 px-1 w-28 h-6 text-gray-500 hover:text-green-500 text-base leading-4 font-normal cursor-pointer"
               active-class=" text-green-500 border-b border-green-500 pb-2"
-              :to="localePath('/haqqimizda')"
+              to="/haqqimizda"
             >
               {{ $t("about") }}
             </nuxt-link>
@@ -693,7 +695,7 @@
               tag="a"
               @click="contactInfo"
               exact
-              :to="{ path: localePath('/bize-qosul') }"
+              to="/bize-qosul"
               class="relative pt-1 px-1 mx-4 w-28 h-6 text-gray-500 hover:text-green-500 text-base leading-4 font-normal cursor-pointer"
               active-class="text-green-500 border-b border-green-500 pb-2"
             >
@@ -760,7 +762,6 @@ const router = useRouter();
 const baseURL = useRuntimeConfig().public.baseURL;
 const mobileMenuShow = ref(false);
 const visibleFAQ = ref(false);
-const localePath = useLocalePath();
 const showFAQ = function () {
   visibleFAQ.value = true;
 };
