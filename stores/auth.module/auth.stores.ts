@@ -8,14 +8,14 @@ export const useAuthenticator = defineStore("Authenticator", {
   state: () => ({
     url: "",
     status: "",
-    acces: {} as Login,
+    access: {} as Login,
     error: null as any,
     token: null,
     refresh_token: null,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
-    getToken: (state) => state.acces?.access,
+    getToken: (state) => state.access,
   },
   actions: {
     //Generate-url
@@ -39,6 +39,7 @@ export const useAuthenticator = defineStore("Authenticator", {
       this.error = error.value || null;
     },
     async login() {
+      //login
       const { code, state } = useRoute().query;
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
@@ -63,12 +64,12 @@ export const useAuthenticator = defineStore("Authenticator", {
       //   useCookie("token").value = request.data.value?.access;
       //   useCookie("refresh-token").value = request.data.value?.refresh;
       // });
-      this.acces = data.value!;
+      this.access = data.value!;
       this.status = status.value;
       this.error = error.value || null;
-      console.log(this.acces);
-      console.log(data.value);
-
+      console.log(data);
+      console.log(data.value?.access);
+      useCookie("testCookie").value = "test edirem";
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
     },

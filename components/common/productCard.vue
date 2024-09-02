@@ -153,7 +153,7 @@
         <nuxt-link
           @click="$event.stopPropagation()"
           tag="a"
-          :to="localePath(`/mehsullar/${product.id}#rating`)"
+          :to="`/mehsullar/${product.id}#rating`"
           class="flex flex-row items-center justify-start mb-5 mt-3"
         >
           <span class="text-[#1F2937] text-xs md:text-sm font-medium">{{
@@ -300,126 +300,79 @@
   </div>
 </template>
 <script setup lang="ts">
-defineProps({
+import basket_logo from "@/components/svg/basket_logo.vue";
+import monetary_unit_logo from "@/components/svg/monetary_unit_logo.vue";
+import scale_logo from "@/components/svg/scale_logo.vue";
+import rate_icon from "@/components/svg/rate_icon.vue";
+// import { mapGetters, mapActions } from "vuex";
+import cancel_icon from "@/components/svg/cancel_icon.vue";
+import Vip_icon2 from "@/components/svg/vip_icon2.vue";
+import type { Product } from "~/utils/types/product";
+const baseURL = useRuntimeConfig().public.baseURL;
+const fixed = ref(false);
+const imageHeight = ref(145);
+const { link, product } = defineProps({
   link: {
     type: String,
   },
   product: {
-    type: Object,
+    type: Object as PropType<Product>,
     // defautl:()=>{}
   },
 });
-const baseURL = useRuntimeConfig().public.baseURL;
+
+const stopPropagationProduct = function (event: Event | any) {
+  event.stopPropagation();
+  event.preventDefault();
+};
+
+const priceFixed = function () {
+  if (product && !Number.isInteger(Number(product?.price.discountedPrice))) {
+    fixed.value = false;
+  } else {
+    fixed.value = true;
+  }
+};
+if (product) {
+  priceFixed();
+}
+const rateSet = function (value: number) {
+  if (!Number.isInteger(Number(value))) {
+    return Number(`${Math.floor(value)}.${5}`);
+  } else {
+    return value;
+  }
+};
+const setheight = function (event: Event | any) {
+  let image = event.target;
+  imageHeight.value = image.clientWidth;
+};
+const showBasketModal = function (id: number | string) {
+  // this.loggedIn
+  // ? this.$store
+  //     .dispatch("basket/addBasketIncrease", { productId: id, count: 1 })
+  //     .then(() => {
+  //       this.$store.commit("setBasketModalShow", true);
+  //       this.$store.commit("setBasketModalHide", true);
+  //     })
+  // : this.$store.commit("setLoginRequiredModal", true);
+};
+const setDefaultImage = async function (event: Event | any) {
+  const noImage = await import("@/assets/img/no-image.svg");
+  event.target.src = noImage.default;
+  event.target.className = "p-16";
+};
+const hasValidThumbnail = function (product: Product) {
+  return product.thumbnailPath;
+};
 </script>
-<script>
-import basket_logo from "@/components/svg/basket_logo.vue";
-import monetary_unit_logo from "@/components/svg/monetary_unit_logo.vue";
-import scale_logo from "@/components/inc/svg/scale_logo.vue";
-import rate_icon from "@/components/inc/svg/rate_icon.vue";
-import { mapGetters, mapActions } from "vuex";
-import { isEmpty } from "lodash";
-import cancel_icon from "@/components/inc/svg/cancel_icon.vue";
-import Vip_icon2 from "../inc/svg/vip_icon2.vue";
-
+<!-- <script>
 export default {
-  components: {
-    Vip_icon2,
-    basket_logo,
-    scale_logo,
-    monetary_unit_logo,
-    rate_icon,
-    cancel_icon,
-  },
-  //   props: {
-  //     link: {
-  //       type: String,
-  //     },
-  //     product: {
-  //       type: Object,
-  //       default: () => {
-  //         return {};
-  //       },
-  //     },
-  //   },
-  data() {
-    return {
-      //   baseURL: urls.getParam("API_BASE_URL"),
-      imageHeight: 145,
-      half: true,
-      fixed: false,
-      tofixed: true,
-    };
-  },
-
   computed: {
-    addLocaleStorageProductCompare() {
-      return;
-    },
     ...mapGetters({
       loggedIn: "auth/loggedIn",
     }),
   },
-  created() {
-    if (this.product) {
-      this.priceFixed();
-    }
-  },
-  methods: {
-    stopPropagationProduct(event) {
-      event.stopPropagation();
-      event.preventDefault();
-    },
-    priceFixed() {
-      if (
-        this.product.price &&
-        !Number.isInteger(Number(this.product.price.discountedPrice))
-      ) {
-        this.fixed = false;
-      } else {
-        this.fixed = true;
-      }
-    },
-    rateSet(val) {
-      if (!Number.isInteger(Number(val))) {
-        return Number(`${Math.floor(val)}.${5}`);
-      } else {
-        return val;
-      }
-    },
-    setheight(event) {
-      let image = event.target;
-      this.imageHeight = image.clientWidth;
-    },
 
-    showBasketModal(id) {
-      this.loggedIn
-        ? this.$store
-            .dispatch("basket/addBasketIncrease", { productId: id, count: 1 })
-            .then(() => {
-              this.$store.commit("setBasketModalShow", true);
-              this.$store.commit("setBasketModalHide", true);
-            })
-        : this.$store.commit("setLoginRequiredModal", true);
-    },
-    setDefaultImage(event) {
-      event.target.src = require(`@/assets/img/no-image.svg`);
-      event.target.className = "p-16";
-    },
-    hasValidThumbnail(product) {
-      return product.thumbnailPath;
-    },
-  },
 };
-</script>
-<style>
-/* @media only screen and (max-width: 768px) {
-    pictuer img{
-      width: 160px;
-    }
-  }
-  @media only screen and (min-width: 769px) {
-    pictuer img{
-      width: 100%;
-    }
-  } */
-</style>
+</script> -->

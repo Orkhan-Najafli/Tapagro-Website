@@ -1,17 +1,23 @@
 <template>
   <div class="max-h-screen min-h-screen">
-    <div>Home Page {{ useProductsStore().doubleCount }}</div>
     <button @click="increment">Increment</button>
+    <ul>
+      <li
+        v-for="product in useProductsStore().getProduct.content"
+        :key="product.id"
+      >
+        {{ product.name }}
+      </li>
+    </ul>
   </div>
 </template>
 <script setup lang="ts">
-const { locale } = useI18n();
+// const { locale } = useI18n();
 // console.log(locale);
 
 useProductsStore().fetchProducts();
 
 function increment() {
-  useProductsStore().increment();
   useProductsStore().fetchProducts();
 }
 // onMounted(() => {
