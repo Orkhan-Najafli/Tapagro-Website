@@ -1,5 +1,5 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-  if (to.path !== "/") {
+  if (useAuthenticator().getToken) {
     return navigateTo("/");
   }
   // if (store.getters['auth/loggedIn']) {
