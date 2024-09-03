@@ -22,10 +22,12 @@ export interface Product {
     averageRating: number;
     reviewCount: number;
   };
-  addedToComparisonBasket: boolean;
-  addedToFavoriteBasket: boolean;
+  addedToComparisonBasket?: boolean;
+  addedToFavoriteBasket?: boolean;
   isActive: boolean;
   vipAt?: boolean;
+  compareIsActive?: boolean;
+  favoriteIsActive?: any;
 }
 type StoreStatus = {
   label: string;

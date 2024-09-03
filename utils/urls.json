@@ -2,5 +2,7 @@
   "products": "public/ecommerce/products",
   "languages": "public/ecommerce/languages",
   "generate-url": "authentication/asan-login/generate-url",
-  "login": "authentication/asan-login/login"
+  "login": "authentication/asan-login/login",
+  "comparison-count": "ecommerce/comparison-baskets/count",
+  "comparison-baskets-count": "ecommerce/comparison-baskets/count"
 }

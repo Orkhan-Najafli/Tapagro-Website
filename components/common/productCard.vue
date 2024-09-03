@@ -302,7 +302,7 @@ import scale_logo from "@/components/svg/scale_logo.vue";
 import rate_icon from "@/components/svg/rate_icon.vue";
 // import { mapGetters, mapActions } from "vuex";
 import cancel_icon from "@/components/svg/cancel_icon.vue";
-import Vip_icon2 from "@/components/svg/vip_icon2.vue";
+import vip_icon2 from "@/components/svg/vip_icon2.vue";
 import type { Product } from "~/utils/types/product";
 const baseURL = useRuntimeConfig().public.baseURL;
 const fixed = ref(false);

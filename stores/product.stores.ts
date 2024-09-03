@@ -2,37 +2,44 @@
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
+import type { ApiBase } from "~/utils/types";
+import type { Product } from "~/utils/types/product";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
-    products: [] as any,
+    products: [] as Array<Product>,
+    totalElements: 0 as number,
+    totalPages: 0 as number,
     mountains: null,
     status: "" as string,
-    error: null,
+    error: null as null | Error,
   }),
   getters: {
-    getProduct: (state) => state.products,
+    getProducts: (state) => state.products,
   },
   actions: {
     async fetchProducts() {
       const config = useRuntimeConfig();
       const baseURL = config.public.baseURL;
 
-      const { data, status, error } = await useAsyncData("products", () =>
-        $fetch(`${baseURL}${urls.products}`, {
-          headers: {
-            "Accept-Language": "AZE",
-          },
-          query: {
-            page: 0,
-            size: 12,
-            sortBy: "createdAt",
-            sortDirection: "DESC",
-          },
-        })
+      const { data, status, error } = await useAsyncData<ApiBase<Product>>(
+        "products",
+        () =>
+          $fetch(`${baseURL}${urls.products}`, {
+            headers: {
+              "Accept-Language": "AZE",
+            },
+            query: {
+              page: 0,
+              size: 12,
+              sortBy: "createdAt",
+              sortDirection: "DESC",
+            },
+          })
       );
-
-      this.products = data.value;
+      this.totalElements = data.value?.totalElements!;
+      this.totalPages = data.value?.totalPages!;
+      this.products = data.value?.content!;
       this.status = status.value;
       this.error = error.value;
     },

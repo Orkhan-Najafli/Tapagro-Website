@@ -1,3 +1,4 @@
+import { HeaderConfigs } from "@/utils/configs";
 // import { defineStore } from "@pinia/nuxt";
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
@@ -8,7 +9,7 @@ export const useLanguagesStore = defineStore("languages", {
   state: () => ({
     languages: [] as Array<Language>,
     status: "",
-    error: null,
+    error: null as null | Error,
   }),
   getters: {
     getLanguages: (state) => state.languages,
@@ -26,7 +27,7 @@ export const useLanguagesStore = defineStore("languages", {
 
             {
               headers: {
-                "Accept-Language": "AZE",
+                ...HeaderConfigs(),
               },
               method: "GET",
             }

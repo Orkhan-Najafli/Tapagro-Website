@@ -40,8 +40,7 @@
                   <question_icon />
                 </div>
               </a-tooltip>
-              <a-tooltip placement="bottom" v-if="false">
-                <!-- v-if="loggedIn" -->
+              <a-tooltip v-if="useAuthenticator().getToken" placement="bottom">
                 <template #title>
                   <span>
                     {{ $t("region") }}
@@ -102,14 +101,14 @@
                   </a-badge>
                 </a-tooltip> -->
               </div>
-              <!-- <nuxt-link
-                v-if="loggedIn"
+              <nuxt-link
+                v-if="useAuthenticator().getToken"
                 tag="a"
                 class="relative text-emerald-800 hover:text-emerald-800 mr-9 text-base leading-4 font-normal cursor-pointer"
                 to="/sebet"
               >
                 <a-badge
-                  :count="basketCount"
+                  :count="useComparisonBasketsStore().getComparisonBasketsCount"
                   :number-style="{
                     backgroundColor: '#FCD34D',
                     color: '#065F46',
@@ -123,10 +122,10 @@
                     class="text-2xl text-emerald-800 font-extrabold"
                   />
                 </a-badge>
-              </nuxt-link> -->
+              </nuxt-link>
               <div class="m-0 p-0 mr-9">
                 <a-tooltip placement="bottom">
-                  <template slot="title">
+                  <template #title>
                     <span>
                       {{ $t("compare") }}
                     </span>
@@ -134,7 +133,11 @@
 
                   <a-badge
                     @click="$event.stopPropagation()"
-                    :count="6"
+                    :count="
+                      useAuthenticator().getToken
+                        ? useComparisonStore().getComparisonCount
+                        : useProductsStore().getProducts.length
+                    "
                     :number-style="{
                       backgroundColor: '#FCD34D',
                       color: '#065F46',
@@ -143,8 +146,6 @@
                       lineHeight: '15px',
                     }"
                   >
-                    <!-- :count="loggedIn ? getCount : getCompareProducts.length" -->
-
                     <nuxt-link
                       tag="a"
                       class="relative p-0 m-0 cursor-pointer"
@@ -199,10 +200,9 @@
               </div>
               <div>
                 <button
-                  v-if="false"
+                  v-if="useAuthenticator().getToken"
                   class="flex flex-row justify-center items-center cursor-pointer px-5 py-3 rounded-xl border border-lime-700"
                 >
-                  <!-- v-if="!loggedIn" -->
                   <!-- @click="SSO.generateLoginUrl" -->
 
                   <Digital />
@@ -363,8 +363,7 @@
               </a-badge>
             </a-tooltip>
           </div>
-          <div>
-            <!-- v-if="loggedIn" -->
+          <div v-if="useAuthenticator().getToken">
             <a class="text-emerald-800 hover:text-green-800">
               <nuxt-link
                 tag="a"
@@ -450,11 +449,9 @@
           >
             <li class="pl-5 pt-4 border-b border-gray-300 pb-4">
               <button
-                v-if="false"
+                v-if="!useAuthenticator().getToken"
                 class="flex flex-row justify-center items-center cursor-pointer px-5 py-3 rounded-xl border border-lime-700"
               >
-                <!-- v-if="!loggedIn" -->
-
                 <!-- @click="SSO.generateLoginUrl" -->
 
                 <Digital />
@@ -602,11 +599,9 @@
       </div>
 
       <div
-        v-if="false"
+        v-if="useAuthenticator().getToken"
         class="flex lg:hidden py-1 pt-4 px-5 justify-start items-center w-full h-auto border-t border-gray-300 bg-white"
       >
-        <!-- v-if="loggedIn" -->
-
         <a-tooltip placement="bottom">
           <template slot="title">
             <span>
@@ -711,18 +706,17 @@
 <script setup lang="ts">
 import TapagroLogo from "@/components/svg/tapagro_logo.vue";
 // import BasketModal from "../common/BasketModal.vue";
-// import scale_logo_in_header from "@/components/inc/svg/scale_logo_in_header.vue";
+import scale_logo_in_header from "@/components/svg/scale_logo_in_header.vue";
 import question_icon from "@/components/svg/question_icon.vue";
 import favorite_icon from "@/components/svg/favorite_icon.vue";
-// import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
 import AZE from "@/components/svg/aze_icon.vue";
-import { useLanguagesStore } from "~/stores/languages.module/languages.stores";
-import { useAuthenticator } from "~/stores/auth.module/auth.stores";
+import { useLanguagesStore } from "~/stores/languages.stores";
+import { useAuthenticator } from "~/stores/auth.stores";
 import type { Language } from "~/utils/types/language";
-
+import { useComparisonBasketsStore } from "~/stores/comparison-baskets.stores";
+// import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
 //variables
 const { locale } = useI18n({ useScope: "global" });
-const router = useRouter();
 const baseURL = useRuntimeConfig().public.baseURL;
 const mobileMenuShow = ref(false);
 const visibleFAQ = ref(false);
