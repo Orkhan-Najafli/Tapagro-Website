@@ -1,6 +1,7 @@
 export interface Product {
   id: number;
   name: string;
+  fullName?: string;
   storeId: number;
   storeName: string;
   storeStatus: StoreStatus;
@@ -24,6 +25,7 @@ export interface Product {
   addedToComparisonBasket: boolean;
   addedToFavoriteBasket: boolean;
   isActive: boolean;
+  vipAt?: boolean;
 }
 type StoreStatus = {
   label: string;

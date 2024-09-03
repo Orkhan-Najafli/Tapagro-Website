@@ -1,9 +1,9 @@
 <template>
-  <div v-if="product != {}">
+  <div v-if="product">
     <nuxt-link
       v-if="link == 'mehsullar'"
       tag="a"
-      :to="`/mehsullar/${product.id}`"
+      :to="`/mehsullar/${product?.id}`"
       class="flex flex-col group overflow-hidden relative cursor-pointer z-10 align-baseline h-full"
     >
       <div class="flex w-full h-auto relative">
@@ -227,16 +227,12 @@
     <nuxt-link
       v-if="link == 'fermer-mehsullari'"
       tag="a"
-      :to="localePath(`/fermer-mehsullari/${product.id}`)"
+      :to="`/fermer-mehsullari/${product.id}`"
       class="flex flex-col group overflow-hidden relative cursor-pointer z-10"
     >
       <div class="flex w-full h-auto relative">
         <template>
-          <nuxt-link
-            tag="div"
-            :to="localePath(``)"
-            @click="$event.stopPropagation()"
-          >
+          <nuxt-link tag="div" :to="``" @click="$event.stopPropagation()">
             <slot name="compare"></slot>
           </nuxt-link>
         </template>
@@ -311,13 +307,13 @@ import type { Product } from "~/utils/types/product";
 const baseURL = useRuntimeConfig().public.baseURL;
 const fixed = ref(false);
 const imageHeight = ref(145);
+const tofixed = ref(true);
 const { link, product } = defineProps({
   link: {
     type: String,
   },
   product: {
     type: Object as PropType<Product>,
-    // defautl:()=>{}
   },
 });
 

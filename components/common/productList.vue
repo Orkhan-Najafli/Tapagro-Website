@@ -91,8 +91,8 @@
 
 <script>
 import ProductCard from "@/components/common/ProductCard";
-import scale_logo from "@/components/inc/svg/scale_logo.vue";
-import favorite_icon from "@/components/inc/svg/favorite_icon";
+import scale_logo from "@/components/svg/scale_logo.vue";
+import favorite_icon from "@/components/svg/favorite_icon";
 import { notification } from "ant-design-vue";
 import { mapGetters, mapMutations } from "vuex";
 

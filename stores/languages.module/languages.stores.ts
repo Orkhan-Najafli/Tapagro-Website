@@ -32,9 +32,9 @@ export const useLanguagesStore = defineStore("languages", {
             }
           )
       );
-      this.languages = data.value;
+      this.languages = data!.value!;
       this.status = status.value;
-      this.error = error.value;
+      this.error = error?.value;
     },
   },
 });

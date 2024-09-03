@@ -176,7 +176,6 @@
                     </span>
                     <DownOutlined class="text-green-600 ml-1" />
                   </a>
-                  <!-- <a-button></a-button> -->
                   <template #overlay>
                     <a-menu>
                       <a-menu-item
@@ -738,6 +737,8 @@ const fetchData = function () {
   useAuthenticator().fetchGenerateUrl();
 };
 const changeLang = function (language: Language) {
+  useLanguagesStore().fetchLanguages();
+
   locale.value = language.countryCode;
   refreshCookie("lang");
   ref(useCookie("countryCode")).value = language.countryCode;

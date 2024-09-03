@@ -10,12 +10,13 @@ export const useAuthenticator = defineStore("Authenticator", {
     status: "",
     access: {} as Login,
     error: null as any,
-    token: null,
-    refresh_token: null,
+    token: useCookie("token"),
+    refresh_token: useCookie("refresh_token"),
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
-    getToken: (state) => state.access,
+    getToken: (state) => state.token,
+    getRefreshToken: (state) => state.refresh_token,
   },
   actions: {
     //Generate-url
@@ -54,22 +55,11 @@ export const useAuthenticator = defineStore("Authenticator", {
           },
         })
       );
-      // .then((request) => {
-      //   this.acces = request.data.value!;
-      //   this.token = request.data.value?.access;
-      //   this.refresh_token = request.data.value?.refresh;
-      //   this.status = request.status.value;
-      //   this.error = request.error.value || null;
-      //   console.log(request.data.value);
-      //   useCookie("token").value = request.data.value?.access;
-      //   useCookie("refresh-token").value = request.data.value?.refresh;
-      // });
       this.access = data.value!;
       this.status = status.value;
       this.error = error.value || null;
-      console.log(data);
-      console.log(data.value?.access);
-      useCookie("testCookie").value = "test edirem";
+      this.token = data.value?.access;
+      this.refresh_token = data.value?.refresh;
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
     },
