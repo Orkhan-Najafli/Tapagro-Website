@@ -28,7 +28,7 @@
 
             <div class="hidden lg:flex flex-row items-center">
               <a-tooltip placement="bottom">
-                <template slot="title">
+                <template #title>
                   <span>
                     {{ $t("frequently_asked_questions") }}
                   </span>
@@ -42,7 +42,7 @@
               </a-tooltip>
               <a-tooltip placement="bottom" v-if="false">
                 <!-- v-if="loggedIn" -->
-                <template slot="title">
+                <template #title>
                   <span>
                     {{ $t("region") }}
                   </span>
@@ -318,7 +318,7 @@
         >
           <div>
             <a-tooltip placement="bottom">
-              <template slot="title">
+              <template #title>
                 <span>
                   {{ $t("frequently_asked_questions") }}
                 </span>
@@ -334,7 +334,7 @@
 
           <div class="m-0 p-0 mx-6">
             <a-tooltip placement="bottom">
-              <template slot="title">
+              <template #title>
                 <span>
                   {{ $t("my_favorite") }}
                 </span>
@@ -711,6 +711,11 @@
 </template>
 <script setup lang="ts">
 import TapagroLogo from "@/components/svg/tapagro_logo.vue";
+// import BasketModal from "../common/BasketModal.vue";
+// import scale_logo_in_header from "@/components/inc/svg/scale_logo_in_header.vue";
+import question_icon from "@/components/svg/question_icon.vue";
+import favorite_icon from "@/components/svg/favorite_icon.vue";
+// import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
 import AZE from "@/components/svg/aze_icon.vue";
 import { useLanguagesStore } from "~/stores/languages.module/languages.stores";
 import { useAuthenticator } from "~/stores/auth.module/auth.stores";

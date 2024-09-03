@@ -18,25 +18,20 @@ export const useLanguagesStore = defineStore("languages", {
       const config = useRuntimeConfig();
       const baseURL = config.public.baseURL;
 
-      const { data, status, error } = await useAsyncData("languages", () =>
-        $fetch(
-          `${baseURL}${urls.languages}`,
+      const { data, status, error } = await useAsyncData<Language[]>(
+        "languages",
+        () =>
+          $fetch(
+            `${baseURL}${urls.languages}`,
 
-          {
-            headers: {
-              "Accept-Language": "AZE",
-            },
-            //   query: {
-            //     page: 0,
-            //     size: 12,
-            //     sortBy: "createdAt",
-            //     sortDirection: "DESC",
-            //   },
-            method: "GET",
-          }
-        )
+            {
+              headers: {
+                "Accept-Language": "AZE",
+              },
+              method: "GET",
+            }
+          )
       );
-      console.log("languages =>", data.value);
       this.languages = data.value;
       this.status = status.value;
       this.error = error.value;

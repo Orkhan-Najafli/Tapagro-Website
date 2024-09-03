@@ -5,19 +5,15 @@ import { useRuntimeConfig } from "#app";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
-    products: [],
-    count: 0,
+    products: [] as any,
     mountains: null,
-    status: null,
+    status: "" as string,
     error: null,
   }),
   getters: {
-    doubleCount: (state) => state.count,
+    getProduct: (state) => state.products,
   },
   actions: {
-    increment() {
-      this.count++;
-    },
     async fetchProducts() {
       const config = useRuntimeConfig();
       const baseURL = config.public.baseURL;
