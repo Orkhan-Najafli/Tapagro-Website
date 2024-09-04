@@ -42,3 +42,21 @@ type bargainMethod = {
   label: string;
   status: string;
 };
+
+export interface ProductQuery {
+  page: number;
+  size: number;
+  searchText?: string;
+  productCategoryLabels?: string[];
+  productBaseCategoryLabel?: string;
+  storeIds?: number[];
+  cityIds?: number[];
+  minPrice?: number;
+  maxPrice?: number;
+  productTypeLabels?: string[];
+  isDiscounted?: boolean;
+  sortBy: string;
+  sortDirection: string;
+  excludedProductId?: number;
+  minAverageRating?: number;
+}

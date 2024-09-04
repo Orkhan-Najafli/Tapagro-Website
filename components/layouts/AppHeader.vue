@@ -71,8 +71,8 @@
               </a-tooltip>
 
               <div class="m-0 p-0 mx-6">
-                <!-- <a-tooltip placement="bottom">
-                  <template slot="title">
+                <a-tooltip placement="bottom">
+                  <template #title>
                     <span>
                       {{ $t("my_favorite") }}
                     </span>
@@ -80,9 +80,6 @@
 
                   <a-badge
                     @click="$event.stopPropagation()"
-                    :count="
-                      loggedIn ? getFavoriteCount : getFavoriteProducts.length
-                    "
                     :number-style="{
                       backgroundColor: '#FCD34D',
                       color: '#065F46',
@@ -91,6 +88,7 @@
                       lineHeight: '15px',
                     }"
                   >
+                    <!-- :count="loggedIn ? getFavoriteCount : getFavoriteProducts.length" -->
                     <nuxt-link
                       tag="a"
                       class="relative p-0 m-0 cursor-pointer"
@@ -99,7 +97,7 @@
                       <favorite_icon />
                     </nuxt-link>
                   </a-badge>
-                </a-tooltip> -->
+                </a-tooltip>
               </div>
               <nuxt-link
                 v-if="useAuthenticator().getToken"
@@ -135,7 +133,7 @@
                     @click="$event.stopPropagation()"
                     :count="
                       useAuthenticator().getToken
-                        ? useComparisonStore().getComparisonCount
+                        ? useComparisonBasketsStore().getComparisonCount
                         : useProductsStore().getProducts.length
                     "
                     :number-style="{
@@ -200,7 +198,7 @@
               </div>
               <div>
                 <button
-                  v-if="useAuthenticator().getToken"
+                  v-if="!useAuthenticator().getToken"
                   class="flex flex-row justify-center items-center cursor-pointer px-5 py-3 rounded-xl border border-lime-700"
                 >
                   <!-- @click="SSO.generateLoginUrl" -->
@@ -229,83 +227,89 @@
                         <a-icon type="down" />
                       </span>
                     </a>
-                    <a-menu slot="overlay">
-                      <a-menu-item
-                        class="border-b border-gray-300 !mb-1"
-                        key="0"
-                      >
-                        <p class="p-0 m-0 font-medium text-base text-[#9CA3AF]">
-                          loggedUser
-                          <!-- {{
+                    <template #overlay>
+                      <a-menu>
+                        <a-menu-item
+                          class="border-b border-gray-300 !mb-1"
+                          key="0"
+                        >
+                          <p
+                            class="p-0 m-0 font-medium text-base text-[#9CA3AF]"
+                          >
+                            loggedUser
+                            <!-- {{
                             loggedUser &&
                             `${loggedUser.firstName} ${loggedUser.lastName}`
                           }} -->
-                        </p>
-                      </a-menu-item>
-                      <a-menu-item key="1">
-                        <nuxt-link
-                          to="/kabinet/tenzimlemelerim"
-                          tag="a"
-                          active-class="text-emerald-600"
-                          style="
-                            display: flex;
-                            justify-content: flex-start;
-                            align-items: center;
-                          "
-                          class="flex m-0 p-0"
-                        >
-                          <span
-                            class="w-4 h-4 rounded-full inline-flex justify-center items-center m-0 p-0 mr-3"
-                          >
-                            <svg
-                              width="18"
-                              height="18"
-                              viewBox="0 0 20 20"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M3.12104 15.8037C5.15267 14.6554 7.4998 14 10 14C12.5002 14 14.8473 14.6554 16.879 15.8037M13 8C13 9.65685 11.6569 11 10 11C8.34315 11 7 9.65685 7 8C7 6.34315 8.34315 5 10 5C11.6569 5 13 6.34315 13 8ZM19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"
-                                stroke="#374151"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </span>
-                          <p class="p-0 m-0 font-medium text-base inline-block">
-                            {{ $t("my_account") }}
                           </p>
-                        </nuxt-link>
-                      </a-menu-item>
-                      <a-menu-item key="1">
-                        <!-- @click="SSO.logout" -->
-                        <div class="flex flex-row items-center m-0 p-0">
-                          <span
-                            class="w-4 h-4 rounded-full flex justify-center items-center m-0 p-0 mr-3"
+                        </a-menu-item>
+                        <a-menu-item key="1">
+                          <nuxt-link
+                            to="/kabinet/tenzimlemelerim"
+                            tag="a"
+                            active-class="text-emerald-600"
+                            style="
+                              display: flex;
+                              justify-content: flex-start;
+                              align-items: center;
+                            "
+                            class="flex m-0 p-0"
                           >
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 20 18"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+                            <span
+                              class="w-4 h-4 rounded-full inline-flex justify-center items-center m-0 p-0 mr-3"
                             >
-                              <path
-                                d="M15 13L19 9M19 9L15 5M19 9L5 9M11 13V14C11 15.6569 9.65686 17 8 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H8C9.65686 1 11 2.34315 11 4V5"
-                                stroke="#374151"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </span>
-                          <p class="p-0 m-0 font-medium text-base">
-                            {{ $t("log_out") }}
-                          </p>
-                        </div>
-                      </a-menu-item>
-                    </a-menu>
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M3.12104 15.8037C5.15267 14.6554 7.4998 14 10 14C12.5002 14 14.8473 14.6554 16.879 15.8037M13 8C13 9.65685 11.6569 11 10 11C8.34315 11 7 9.65685 7 8C7 6.34315 8.34315 5 10 5C11.6569 5 13 6.34315 13 8ZM19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"
+                                  stroke="#374151"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </span>
+                            <p
+                              class="p-0 m-0 font-medium text-base inline-block"
+                            >
+                              {{ $t("my_account") }}
+                            </p>
+                          </nuxt-link>
+                        </a-menu-item>
+                        <a-menu-item key="1">
+                          <!-- @click="SSO.logout" -->
+                          <div class="flex flex-row items-center m-0 p-0">
+                            <span
+                              class="w-4 h-4 rounded-full flex justify-center items-center m-0 p-0 mr-3"
+                            >
+                              <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 20 18"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M15 13L19 9M19 9L15 5M19 9L5 9M11 13V14C11 15.6569 9.65686 17 8 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H8C9.65686 1 11 2.34315 11 4V5"
+                                  stroke="#374151"
+                                  stroke-width="2"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </span>
+                            <p class="p-0 m-0 font-medium text-base">
+                              {{ $t("log_out") }}
+                            </p>
+                          </div>
+                        </a-menu-item>
+                      </a-menu>
+                    </template>
                   </a-dropdown>
                 </div>
               </div>
@@ -390,14 +394,14 @@
             </a>
           </div>
           <div class="m-0 p-0 mx-6">
-            <!-- <a-tooltip placement="bottom">
-              <template slot="title">
+            <a-tooltip placement="bottom">
+              <template #title>
                 <span>{{ $t("compare") }}</span>
               </template>
 
               <a-badge
                 @click="$event.stopPropagation()"
-                :count="loggedIn ? getCount : getCompareProducts.length"
+                :count="3"
                 :number-style="{
                   backgroundColor: '#FCD34D',
                   color: '#065F46',
@@ -406,6 +410,7 @@
                   lineHeight: '15px',
                 }"
               >
+                <!-- :count="loggedIn ? getCount : getCompareProducts.length" -->
                 <nuxt-link
                   tag="a"
                   class="relative p-0 m-0 cursor-pointer"
@@ -414,7 +419,7 @@
                   <scale_logo_in_header />
                 </nuxt-link>
               </a-badge>
-            </a-tooltip> -->
+            </a-tooltip>
           </div>
           <div
             @click="mobileMenu"
@@ -543,14 +548,17 @@
                 {{ $t("my_account") }}
               </nuxt-link>
             </li> -->
-            <!-- <li @click="mobileMenuShow = false" v-if="loggedIn">
+            <li
+              @click="mobileMenuShow = false"
+              v-if="useAuthenticator().getToken"
+            >
               <div
                 class="cursor-pointer py-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
-                @click="SSO.logout"
               >
+                <!-- @click="SSO.logout" -->
                 {{ $t("log_out") }}
               </div>
-            </li> -->
+            </li>
 
             <li class="py-1 px-5">
               <a-dropdown
@@ -603,7 +611,7 @@
         class="flex lg:hidden py-1 pt-4 px-5 justify-start items-center w-full h-auto border-t border-gray-300 bg-white"
       >
         <a-tooltip placement="bottom">
-          <template slot="title">
+          <template #title>
             <span>
               {{ $t("region") }}
             </span>
@@ -704,18 +712,9 @@
   </nav>
 </template>
 <script setup lang="ts">
-import TapagroLogo from "@/components/svg/tapagro_logo.vue";
-// import BasketModal from "../common/BasketModal.vue";
-import scale_logo_in_header from "@/components/svg/scale_logo_in_header.vue";
-import question_icon from "@/components/svg/question_icon.vue";
-import favorite_icon from "@/components/svg/favorite_icon.vue";
 import AZE from "@/components/svg/aze_icon.vue";
-import { useLanguagesStore } from "~/stores/languages.stores";
-import { useAuthenticator } from "~/stores/auth.stores";
 import type { Language } from "~/utils/types/language";
-import { useComparisonBasketsStore } from "~/stores/comparison-baskets.stores";
 // import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
-//variables
 const { locale } = useI18n({ useScope: "global" });
 const baseURL = useRuntimeConfig().public.baseURL;
 const mobileMenuShow = ref(false);
@@ -728,7 +727,11 @@ const showFAQ = function () {
 useLanguagesStore().fetchLanguages();
 
 const fetchData = function () {
-  useAuthenticator().fetchGenerateUrl();
+  useAuthenticator().login({
+    code: "02d14de0385842668dad4ef20df5c632",
+    state: "8232d349-498b-4bea-a214-ed37429fd09c",
+    cabinet: "WEBSITE",
+  });
 };
 const changeLang = function (language: Language) {
   useLanguagesStore().fetchLanguages();

@@ -1,9 +1,10 @@
+import { HeaderConfigs } from "@/utils/configs";
 // import { defineStore } from "@pinia/nuxt";
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Product } from "~/utils/types/product";
+import type { Product, ProductQuery } from "~/utils/types/product";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
@@ -16,9 +17,11 @@ export const useProductsStore = defineStore("products", {
   }),
   getters: {
     getProducts: (state) => state.products,
+    getTotalElements: (state) => state.totalElements,
+    getTotalPages: (state) => state.totalPages,
   },
   actions: {
-    async fetchProducts() {
+    async fetchProducts(queryData: ProductQuery) {
       const config = useRuntimeConfig();
       const baseURL = config.public.baseURL;
 
@@ -27,14 +30,9 @@ export const useProductsStore = defineStore("products", {
         () =>
           $fetch(`${baseURL}${urls.products}`, {
             headers: {
-              "Accept-Language": "AZE",
+              ...HeaderConfigs(),
             },
-            query: {
-              page: 0,
-              size: 12,
-              sortBy: "createdAt",
-              sortDirection: "DESC",
-            },
+            query: queryData,
           })
       );
       this.totalElements = data.value?.totalElements!;

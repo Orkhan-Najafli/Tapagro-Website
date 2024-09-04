@@ -27,4 +27,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  components: [
+    {
+      path: "@/components",
+      pathPrefix: false,
+    },
+  ],
 });
