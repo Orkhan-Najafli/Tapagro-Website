@@ -1,6 +1,6 @@
 <template>
-  <footer class="w-full bg-gray-50 z-30">
-    <div style="max-width: 1224px" class="px-6 md:container mx-auto">
+  <footer class="flex w-full min-w-full h-auto bg-gray-50 z-30">
+    <div class="px-6 xl:px-0 max-w-[1224px] container mx-auto">
       <div class="block md:pt-10 pt-9 md:flex">
         <div class="md:w-1/2 w-full mb-7 md:mb-0">
           <div class="flex-shrink-0 cursor-pointer">
