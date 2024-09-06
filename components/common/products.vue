@@ -94,7 +94,6 @@
         </div>
       </div>
     </div>
-    <div>{{ props.classGridSize }}</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -112,7 +111,6 @@ let props = defineProps({
     type: String,
   },
 });
-console.log("in products: ", props);
 </script>
 <style>
 .scroll::-webkit-scrollbar {

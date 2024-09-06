@@ -332,8 +332,6 @@ let props = defineProps({
   },
 });
 
-console.log("in productCard: ", props);
-
 const stopPropagationProduct = function (event: Event | any) {
   event.stopPropagation();
   event.preventDefault();

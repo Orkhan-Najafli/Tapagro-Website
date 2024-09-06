@@ -2,8 +2,7 @@
   <nav class="flex flex-col w-full bg-white">
     <div id="navbar" class="w-full h-auto min-w-full z-50 bg-white">
       <div
-        style="max-width: 1224px"
-        class="h-auto w-full flex items-start justify-between px-6 lg:container mx-auto"
+        class="h-auto w-full flex items-start justify-between mx-auto px-6 xl:px-0 max-w-[1224px] container"
       >
         <div class="flex flex-col items-center w-full h-auto justify-between">
           <div class="flex flex-row justify-between items-center w-full h-auto">
@@ -708,7 +707,6 @@
       </div>
     </div>
     <!-- <FAQ @handleCancel="visibleFAQ = false" v-if="visibleFAQ" /> -->
-    <button @click="fetchData">Click here</button>
   </nav>
 </template>
 <script setup lang="ts">
@@ -727,11 +725,11 @@ const showFAQ = function () {
 useLanguagesStore().fetchLanguages();
 
 const fetchData = function () {
-  useAuthenticator().login({
-    code: "02d14de0385842668dad4ef20df5c632",
-    state: "8232d349-498b-4bea-a214-ed37429fd09c",
-    cabinet: "WEBSITE",
-  });
+  // useAuthenticator().login({
+  //   code: "02d14de0385842668dad4ef20df5c632",
+  //   state: "8232d349-498b-4bea-a214-ed37429fd09c",
+  //   cabinet: "WEBSITE",
+  // });
 };
 const changeLang = function (language: Language) {
   useLanguagesStore().fetchLanguages();

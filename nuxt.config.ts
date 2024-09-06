@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const envFile = `.env.${process.env.NODE_NUXT_PUBLIC_BASE_URL || "staging"}`;
+require("dotenv").config({ path: envFile });
 export default defineNuxtConfig({
   pinia: {
     storesDirs: ["./stores/**", "./custom-folder/stores/**"],
@@ -8,6 +11,7 @@ export default defineNuxtConfig({
       baseURL:
         process.env.NUXT_PUBLIC_BASE_URL ||
         "https://api-staging.tapagro.az/tapagro/api",
+      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     },
   },
   modules: [
