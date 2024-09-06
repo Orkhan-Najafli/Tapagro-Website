@@ -6,7 +6,6 @@
 </template>
 
 <script setup lang="ts">
-console.log("gettoken: ", useAuthenticator().getToken);
 ref(useCookie("token")).value = useAuthenticator().getToken;
 useAuthenticator().login();
 definePageMeta({

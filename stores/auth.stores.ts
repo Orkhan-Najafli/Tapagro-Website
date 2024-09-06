@@ -42,8 +42,6 @@ export const useAuthenticator = defineStore("Authenticator", {
     //login
     async login(bodyData?: { code: string; state: string; cabinet: string }) {
       const { code, state } = useRoute().query;
-      console.log(code);
-      console.log(state);
 
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
@@ -66,8 +64,8 @@ export const useAuthenticator = defineStore("Authenticator", {
       this.refresh_token = data.value?.refresh;
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
-      console.log("Error message: ", error.value?.statusCode);
-      console.log("Status message: ", status);
+      // console.log("Error message: ", error.value?.statusCode);
+      // console.log("Status message: ", status);
     },
   },
 });

@@ -2,25 +2,25 @@ import { HeaderConfigs } from "@/utils/configs";
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
-import type { Language } from "~/utils/types/language";
+import type { Categories } from "~/utils/types/categories";
 
-export const useLanguagesStore = defineStore("languages", {
+export const useCategoriesStore = defineStore("categories", {
   state: () => ({
-    languages: [] as Array<Language>,
-    status: "",
+    baseCategories: [] as Array<Categories>,
+    status: "" as string,
     error: null as null | Error,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
-    getLanguages: (state) => state.languages,
+    getBaseCategories: (state) => state.baseCategories,
   },
   actions: {
-    async fetchLanguages() {
-      const { data, status, error } = await useAsyncData<Language[]>(
-        "languages",
+    async fetchBaseCategories() {
+      const { data, status, error } = await useAsyncData<Categories[]>(
+        "base-categories",
         () =>
           $fetch(
-            `${this.baseURL}${urls.languages}`,
+            `${this.baseURL}${urls["base-categories"]}`,
 
             {
               headers: {
@@ -30,7 +30,7 @@ export const useLanguagesStore = defineStore("languages", {
             }
           )
       );
-      this.languages = data!.value!;
+      this.baseCategories = data!.value!;
       this.status = status.value;
       this.error = error?.value;
     },

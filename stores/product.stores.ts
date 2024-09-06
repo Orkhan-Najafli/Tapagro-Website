@@ -1,5 +1,4 @@
 import { HeaderConfigs } from "@/utils/configs";
-// import { defineStore } from "@pinia/nuxt";
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
@@ -14,6 +13,7 @@ export const useProductsStore = defineStore("products", {
     mountains: null,
     status: "" as string,
     error: null as null | Error,
+    baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
     getProducts: (state) => state.products,
@@ -22,13 +22,10 @@ export const useProductsStore = defineStore("products", {
   },
   actions: {
     async fetchProducts(queryData: ProductQuery) {
-      const config = useRuntimeConfig();
-      const baseURL = config.public.baseURL;
-
       const { data, status, error } = await useAsyncData<ApiBase<Product>>(
         "products",
         () =>
-          $fetch(`${baseURL}${urls.products}`, {
+          $fetch(`${this.baseURL}${urls.products}`, {
             headers: {
               ...HeaderConfigs(),
             },
