@@ -29,15 +29,30 @@
       </div>
     </div>
   </div>
+  <button
+    @click="useAuthenticator().fetchRefresh()"
+    class="border px-3 py-1 rounded"
+  >
+    Refresh Token
+  </button>
 </template>
 <script setup lang="ts">
-// const { locale } = useI18n();
+const query = useRoute().query;
 const queryParams = reactive({
-  page: 0,
-  size: 12,
+  page: useRoute().query.page ? Number(useRoute().query.page) : 0,
+  // page: 0,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 2 : 2,
+  // size: 2,
   sortBy: "createdAt",
   sortDirection: "DESC",
 });
 useProductsStore().fetchProducts({ ...queryParams });
-const loadMoreProducts = function () {};
+const loadMoreProducts = function () {
+  console.log(useRoute().query.page);
+  queryParams.page++;
+  useRouter().replace({ query: { ...queryParams } });
+};
+watch(queryParams, () => {
+  useProductsStore().fetchProducts({ ...queryParams });
+});
 </script>

@@ -24,7 +24,7 @@ export const useLanguagesStore = defineStore("languages", {
 
             {
               headers: {
-                ...HeaderConfigs(),
+                ...HeaderConfigs(useCookie("token") || ""),
               },
               method: "GET",
             }
