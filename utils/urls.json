@@ -3,7 +3,9 @@
   "languages": "public/ecommerce/languages",
   "generate-url": "authentication/asan-login/generate-url",
   "login": "authentication/asan-login/login",
+  "refresh": "authentication/refresh",
   "comparison-count": "ecommerce/comparison-baskets/count",
   "comparison-baskets-count": "ecommerce/comparison-baskets/count",
-  "base-categories": "public/ecommerce/products/base-categories"
+  "base-categories": "public/ecommerce/products/base-categories",
+  "users": "ecommerce/users"
 }

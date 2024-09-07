@@ -6,11 +6,17 @@
 </template>
 
 <script setup lang="ts">
-ref(useCookie("token")).value = useAuthenticator().getToken;
-useAuthenticator().login();
 definePageMeta({
-  middleware: ["guest"],
+  layout: "blank",
 });
+useAuthenticator()
+  .fetchLogin()
+  .then(() => {
+    useUsers().fetchUserData();
+  });
+// definePageMeta({
+//   middleware: ["guest"],
+// });
 
 // export default {
 // layout: "blank",

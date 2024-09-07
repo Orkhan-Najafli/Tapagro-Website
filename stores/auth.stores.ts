@@ -7,9 +7,13 @@ import type { Login } from "~/utils/types/auth";
 export const useAuthenticator = defineStore("Authenticator", {
   state: () => ({
     url: "",
-    status: "",
     access: {} as Login,
-    error: null as any,
+    refreshError: null as null | Error,
+    refreshStatus: "",
+    loginError: null as any,
+    loginStatus: "",
+    generateUrlError: null as any,
+    generateUrlStatus: "",
     token: useCookie("token"),
     refresh_token: useCookie("refresh_token"),
     baseURL: useRuntimeConfig().public.baseURL,
@@ -36,16 +40,20 @@ export const useAuthenticator = defineStore("Authenticator", {
       );
       this.url = data.value?.url || "";
       window.location.href = String(data.value?.url) || "";
-      this.status = status.value;
-      this.error = error.value || null;
+      this.generateUrlStatus = status.value;
+      this.generateUrlError = error.value || null;
     },
     //login
-    async login(bodyData?: { code: string; state: string; cabinet: string }) {
+    async fetchLogin(bodyData?: {
+      code: string;
+      state: string;
+      cabinet: string;
+    }) {
       const { code, state } = useRoute().query;
-
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
           headers: {
+            // useCookie("token") != null ? `Bearer ${useCookie("token")}` : "",
             ...HeaderConfigs(),
           },
           method: "POST",
@@ -53,19 +61,33 @@ export const useAuthenticator = defineStore("Authenticator", {
             code: code,
             state: state,
             cabinet: "WEBSITE",
-            // ...bodyData,
+            ...bodyData,
           },
         })
       );
       this.access = data.value!;
-      this.status = status.value;
-      this.error = error.value || null;
+      this.loginStatus = status.value;
+      this.loginError = error.value || null;
       this.token = data.value?.access;
-      this.refresh_token = data.value?.refresh;
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
       // console.log("Error message: ", error.value?.statusCode);
       // console.log("Status message: ", status);
+    },
+    //refresh
+    async fetchRefresh() {
+      const { data, status, error } = await useAsyncData<any>("Refresh", () =>
+        $fetch(`${this.baseURL}${urls.refresh}`, {
+          headers: {
+            ...HeaderConfigs(),
+          },
+          method: "POST",
+        })
+      );
+      this.refreshStatus = status.value;
+      this.refreshError = error.value || null;
+      this.token = data.value?.access;
+      useCookie("token").value = data.value?.access;
     },
   },
 });

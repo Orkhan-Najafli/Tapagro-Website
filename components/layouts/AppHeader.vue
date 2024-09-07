@@ -197,11 +197,10 @@
               </div>
               <div>
                 <button
+                  @click="useAuthenticator().fetchGenerateUrl()"
                   v-if="!useAuthenticator().getToken"
                   class="flex flex-row justify-center items-center cursor-pointer px-5 py-3 rounded-xl border border-lime-700"
                 >
-                  <!-- @click="SSO.generateLoginUrl" -->
-
                   <Digital />
                   <Login class="mx-1" />
                   <span
@@ -725,7 +724,7 @@ const showFAQ = function () {
 useLanguagesStore().fetchLanguages();
 
 const fetchData = function () {
-  // useAuthenticator().login({
+  // useAuthenticator().fetchLogin({
   //   code: "02d14de0385842668dad4ef20df5c632",
   //   state: "8232d349-498b-4bea-a214-ed37429fd09c",
   //   cabinet: "WEBSITE",

@@ -24,7 +24,7 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(),
+                ...HeaderConfigs(useCookie("token") || ""),
               },
               method: "GET",
             }

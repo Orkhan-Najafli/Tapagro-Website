@@ -9,7 +9,7 @@
     "postinstall": "nuxt prepare",
     "dev": "nuxt dev --host 127.0.0.1 --port 4572",
     "dev:staging": "set NODE_ENV=staging && nuxt dev --dotenv .env.staging",
-    "dev:production": "set NODE_ENV=production && nuxt dev --dotenv .env.production",
+    "dev:production": "set NODE_ENV=production && nuxt dev --host 127.0.0.1 --port 4572 --dotenv .env.production",
     "build:staging": "set NODE_ENV=staging && nuxt build --dotenv .env.staging",
     "build:production": "set NODE_ENV=production && nuxt build --dotenv .env.production",
     "generate:staging": "set NODE_ENV=staging && nuxt generate --dotenv .env.staging",
