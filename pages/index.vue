@@ -19,22 +19,22 @@
         class="flex flex-row w-full lg:container mx-auto"
       >
         <div class="flex w-full flex-col px-6">
-          <!-- <a-spin
+          <a-spin
             :spinning="
               useDiscountedProductsStore().getProductsStatus !== 'success'
             "
             size="large"
             wrapper-class-name="text-green-800"
-          > -->
-          <discountedProducts
+          >
+            <!-- <discountedProducts
             :products="useDiscountedProductsStore().getProducts"
-          />
-          <products
-            :products="useDiscountedProductsStore().getProducts"
-            :link="'mehsullar'"
-            :classGridSize="true"
-          />
-          <!-- </a-spin> -->
+          /> -->
+            <products
+              :products="useDiscountedProductsStore().getProducts"
+              :link="'mehsullar'"
+              :classGridSize="true"
+            />
+          </a-spin>
         </div>
       </div>
     </section>
