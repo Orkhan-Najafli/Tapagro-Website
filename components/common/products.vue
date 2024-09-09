@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <div v-if="products.length == 0">
+      <div v-if="props.products.size == 0">
         <div class="text-base text-gray-600">
           {{ $t("no_products_matching_your_search_were_found") }}
         </div>
@@ -17,12 +17,12 @@
         >
           <div
             class="flex w-full min-w-full"
-            v-for="(product, index) in products"
+            v-for="(product, index) in props.products"
             :key="index"
           >
             <!-- <div class="min-w-full"> -->
             <product
-              :link="link"
+              :link="props.link"
               class="responsiveProductCard w-full min-w-full border-2 border-gray-[#E5E7EB] rounded p-3"
               :product="product"
             >
@@ -104,8 +104,8 @@ let props = defineProps({
     required: true,
   },
   products: {
-    type: Object as PropType<Array<Product>>,
-    default: "bu default deyerdir",
+    type: Object as PropType<Set<Product>>,
+    default: [],
   },
   link: {
     type: String,

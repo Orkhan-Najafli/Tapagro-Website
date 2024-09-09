@@ -5,13 +5,11 @@ import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
 import type { Product, ProductQuery } from "~/utils/types/product";
 
-export const useProductsStore = defineStore("products", {
+export const useDiscountedProductsStore = defineStore("discountedProducts", {
   state: () => ({
-    // products: [] as Array<Product>,
-    products: new Set() || ([] as Array<Product>),
+    products: new Set<Product>() || ([] as Array<Product>),
     totalElements: 0 as number,
     totalPages: 0 as number,
-    mountains: null,
     status: "" as string,
     error: null as null | Error,
     baseURL: useRuntimeConfig().public.baseURL,
@@ -20,11 +18,12 @@ export const useProductsStore = defineStore("products", {
     getProducts: (state) => state.products,
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
+    getProductsStatus: (state) => state.status,
   },
   actions: {
     async fetchProducts(queryData: ProductQuery) {
       const { data, status, error } = await useAsyncData<ApiBase<Product>>(
-        "products",
+        "discounted-products",
         () =>
           $fetch(`${this.baseURL}${urls.products}`, {
             headers: {
@@ -35,17 +34,12 @@ export const useProductsStore = defineStore("products", {
       );
       this.totalElements = data.value?.totalElements!;
       this.totalPages = data.value?.totalPages!;
-      // this.products = data.value?.content!;
-      // Number(useRoute().query.page) > 0
-      //   ? this.products.push(...data.value?.content!)
-      //   : (this.products = data.value?.content!);
-      // this.products.push(...data.value?.content!);
-      // this.productList = new Set(data.value?.content);
       data.value?.content.forEach((item: Product) => {
         this.products.add(item);
       });
       this.status = status.value;
       this.error = error.value;
+      console.log("p:  ", data.value);
     },
   },
 });
