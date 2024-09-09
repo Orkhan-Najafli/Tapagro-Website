@@ -18,17 +18,6 @@ useAuthenticator()
 //   middleware: ["guest"],
 // });
 
-// export default {
-// layout: "blank",
-// created() {
-// const {
-//   query: { code, state },
-// } = this.$route;
-
-// if (code && state) {
-//   this.login({ code, state });
-// }
-// },
 // methods: {
 // login(data) {
 //   process.browser &&
@@ -49,6 +38,4 @@ useAuthenticator()
 //         this.$router.push("/");
 //       });
 // },
-// },
-// };
 </script>
