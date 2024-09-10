@@ -10,5 +10,6 @@
   "base-categories": "public/ecommerce/products/base-categories",
   "users": "ecommerce/users",
   "farmer-products": "public/ecommerce/farmer-products",
-  "banner": "public/ecommerce/banners"
+  "banner": "public/ecommerce/banners",
+  "stores": "public/ecommerce/stores"
 }

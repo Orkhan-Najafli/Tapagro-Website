@@ -1,7 +1,7 @@
 <template>
   <nuxt-link
     tag="span"
-    :to="localePath(`/magazalar/${data.id}`)"
+    :to="`/magazalar/${props.store.id}`"
     class="flex flex-col justify-between w-full my-2 shadow-sm hover:shadow-md p-4 rounded-md bg-white border border-gray-200"
   >
     <div
@@ -12,47 +12,43 @@
       >
         <img
           class="w-full h-full"
-          :src="`${baseURL}${data.logoPath}`"
+          :src="`${baseURL}${props.store.logoPath}`"
           @error="setDefaultStoreImage"
-          :alt="data.name"
+          :alt="store.name"
         />
       </div>
       <h4
         class="font-medium text-lg text-center text-gray-600 mt-5 mb-4 md:mt-6 md:mb-8"
       >
-        {{ data.name }}
+        {{ props.store.name }}
       </h4>
 
       <div>
         <span class="font-normal text-sm text-center text-gray-400"
-          >{{ data.productCount }} {{ $t("product") }}</span
+          >{{ props.store.productCount }} {{ $t("product") }}</span
         >
       </div>
     </div>
   </nuxt-link>
 </template>
 
-<script>
-import urls from "@/configs/urls";
+<script setup lang="ts">
+import type { Store } from "~/utils/types/stores";
 
-export default {
-  data() {
-    return {
-      baseURL: urls.getParam("API_BASE_URL"),
-    };
-  },
-  methods: {
-    setDefaultStoreImage(event) {
-      event.target.src = require(`@/assets/img/all_logos/store_logo.svg`);
-      event.target.className = "p-1";
-    },
-  },
-  props: {
-    data: {
-      type: Object,
-    },
-  },
+// variables
+const baseURL = useRuntimeConfig().public.baseURL;
+
+// methods
+const setDefaultStoreImage = function (event: Event | any) {
+  event.target.src = require(`@/assets/img/all_logos/store_logo.svg`);
+  event.target.className = "p-1";
 };
+let props = defineProps({
+  store: {
+    type: Object as PropType<Store>,
+    default: new Set(),
+  },
+});
 </script>
 
 <style scoped>

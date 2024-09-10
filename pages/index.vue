@@ -177,8 +177,6 @@
   </button> -->
 </template>
 <script setup lang="ts">
-import { useMostPurchasedProductsStore } from "~/stores/products-module/most-purchased-products";
-
 // variables
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
