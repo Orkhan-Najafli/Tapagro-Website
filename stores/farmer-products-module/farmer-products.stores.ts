@@ -3,11 +3,11 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Product, ProductQuery } from "~/utils/types/product";
+import type { FarmerProduct, ProductQuery } from "~/utils/types/farmer-product";
 
-export const useProductsStore = defineStore("products", {
+export const useFarmerProductsStore = defineStore("farmer-products", {
   state: () => ({
-    products: new Set<Product>() || ([] as Array<Product>),
+    products: new Set<FarmerProduct>() || ([] as Array<FarmerProduct>),
     totalElements: 0 as number,
     totalPages: 0 as number,
     status: "" as string,
@@ -29,19 +29,19 @@ export const useProductsStore = defineStore("products", {
       this.error = null;
     },
     async fetchProducts(queryData: ProductQuery) {
-      const { data, status, error } = await useAsyncData<ApiBase<Product>>(
-        "products",
-        () =>
-          $fetch(`${this.baseURL}${urls.products}`, {
-            headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
-            },
-            query: queryData,
-          })
+      const { data, status, error } = await useAsyncData<
+        ApiBase<FarmerProduct>
+      >("farmer-products", () =>
+        $fetch(`${this.baseURL}${urls["farmer-products"]}`, {
+          headers: {
+            ...HeaderConfigs(useCookie("token") || ""),
+          },
+          query: queryData,
+        })
       );
       this.totalElements = data.value?.totalElements!;
       this.totalPages = data.value?.totalPages!;
-      data.value?.content.forEach((item: Product) => {
+      data.value?.content.forEach((item: FarmerProduct) => {
         this.products.add(item);
       });
       this.status = status.value;

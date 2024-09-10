@@ -21,6 +21,13 @@ export const useDiscountedProductsStore = defineStore("discountedProducts", {
     getProductsStatus: (state) => state.status,
   },
   actions: {
+    resetProducts() {
+      this.products = new Set();
+      this.totalElements = 0;
+      this.totalPages = 0;
+      this.status = "";
+      this.error = null;
+    },
     async fetchProducts(queryData: ProductQuery) {
       const { data, status, error } = await useAsyncData<ApiBase<Product>>(
         "discounted-products",

@@ -1,6 +1,6 @@
 <template>
   <nav class="flex flex-col w-full bg-white">
-    <div id="navbar" class="w-full h-auto min-w-full z-50 bg-white">
+    <div ref="navbar" class="w-full h-auto min-w-full z-50 bg-white">
       <div
         class="h-auto w-full flex items-start justify-between mx-auto px-6 xl:px-0 max-w-[1224px] container"
       >
@@ -712,6 +712,7 @@
 import AZE from "@/components/svg/aze_icon.vue";
 import type { Language } from "~/utils/types/language";
 // import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
+// variables
 const { locale } = useI18n({ useScope: "global" });
 const baseURL = useRuntimeConfig().public.baseURL;
 const mobileMenuShow = ref(false);
@@ -719,17 +720,31 @@ const visibleFAQ = ref(false);
 const showFAQ = function () {
   visibleFAQ.value = true;
 };
+const navbar = ref<HTMLElement>();
 
 //methods
 useLanguagesStore().fetchLanguages();
+const scrollListener = function () {
+  var scrollHeight = window.scrollY;
 
-const fetchData = function () {
-  // useAuthenticator().fetchLogin({
-  //   code: "02d14de0385842668dad4ef20df5c632",
-  //   state: "8232d349-498b-4bea-a214-ed37429fd09c",
-  //   cabinet: "WEBSITE",
-  // });
+  if (scrollHeight > 0) {
+    navbar.value?.classList.add("fixed");
+  } else {
+    navbar.value?.classList.remove("fixed");
+  }
 };
+onBeforeMount(() => {
+  window.addEventListener("scroll", scrollListener);
+});
+
+onMounted(() => {
+  scrollListener();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", scrollListener);
+});
+
 const changeLang = function (language: Language) {
   useLanguagesStore().fetchLanguages();
 

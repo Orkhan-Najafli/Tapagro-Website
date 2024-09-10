@@ -8,12 +8,8 @@
     >
       <div class="flex w-full h-auto relative">
         <div>
-          <!-- <template> -->
           <slot name="compare"></slot>
-          <!-- </template> -->
-          <!-- <template> -->
           <slot name="favorite"></slot>
-          <!-- </template> -->
         </div>
         <picture
           class="w-full overflow-hidden flex relative justify-center items-center rounded"
@@ -170,25 +166,23 @@
           }}</span>
           <span class="inline-flex justify-between items-center mx-1 md:mx-2.5">
             <a-rate
-              :default-value="
+              :value="
                 rateSet(
-                  props.product.reviewSummary &&
-                    props.product.reviewSummary.averageRating
+                  product.reviewSummary && product.reviewSummary.averageRating
                 )
               "
-              disabled
-              class="m-0 p-0"
+              class="m-0 p-0 w-full h-auto"
               allow-half
             >
-              <template slot="character">
-                <!-- <rate_icon
+              <template #character>
+                <rate_icon
                   class="inline-block md:hidden -mt-[5px]"
                   :size="{ widht: 15, height: 15 }"
                 />
                 <rate_icon
                   class="hidden md:inline-block -mt-[5px]"
                   :size="{ widht: 20, height: 20 }"
-                /> -->
+                />
               </template>
             </a-rate>
           </span>
@@ -239,7 +233,7 @@
       </div>
     </nuxt-link>
     <nuxt-link
-      v-if="link == 'fermer-mehsullari'"
+      v-if="link === 'fermer-mehsullari'"
       tag="a"
       :to="`/fermer-mehsullari/${props.product.id}`"
       class="flex flex-col group overflow-hidden relative cursor-pointer z-10"
@@ -271,7 +265,7 @@
             @load="setheight"
             :style="{ height: imageHeight + 'px' }"
             class="p-16 duration-300 max-h-[264px] transform group-hover:scale-125"
-            alt="Image not available"
+            alt="Şəkil yoxdur."
           />
         </picture>
 
@@ -279,7 +273,7 @@
           v-if="props.product.vipAt"
           class="absolute left-2 top-2 md:left-5 md:top-5 z-40 w-[30px] h-[30px] py-2 px-1 flex justify-center items-center shadow-lg bg-black rounded-md"
         >
-          <vip_icon2 />
+          <!-- <vip_icon2 /> -->
         </div>
       </div>
       <div class="pt-3 border-t border-gray-100 grow">
@@ -311,6 +305,7 @@
 </template>
 <script setup lang="ts">
 import basket_logo from "@/components/svg/basket_logo.vue";
+import type { FarmerProduct } from "~/utils/types/farmer-product";
 import type { Product } from "~/utils/types/product";
 const baseURL = useRuntimeConfig().public.baseURL;
 const fixed = ref(false);
@@ -318,7 +313,7 @@ const imageHeight = ref(145);
 const tofixed = ref(true);
 let props = defineProps({
   product: {
-    type: Object as PropType<Product>,
+    type: Object as PropType<Product | FarmerProduct>,
     default: "bu default deyerdir",
   },
   link: {
