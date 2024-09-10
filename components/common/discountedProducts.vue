@@ -31,7 +31,6 @@
         </svg>
       </h3>
     </div>
-    <div>Discounted {{ useDiscountedProductsStore().getProducts }}</div>
     <products
       :classGridSize="true"
       :link="'mehsullar'"
@@ -40,14 +39,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Product } from "~/utils/types/product";
-
-let props = defineProps({
-  products: {
-    type: Object as PropType<Set<Product>>,
-    default: [],
-  },
-});
+// import products from "@/components/common/products.vue";
+// import type { Product } from "~/utils/types/product";
 
 const allDiscountProducts = function () {
   useRouter().push({

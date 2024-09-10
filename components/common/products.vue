@@ -97,6 +97,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { FarmerProduct } from "~/utils/types/farmer-product";
 import type { Product } from "~/utils/types/product";
 let props = defineProps({
   classGridSize: {
@@ -104,7 +105,7 @@ let props = defineProps({
     required: true,
   },
   products: {
-    type: Object as PropType<Set<Product>>,
+    type: Object as PropType<Set<Product | FarmerProduct>>,
     default: [],
   },
   link: {
