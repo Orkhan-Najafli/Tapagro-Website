@@ -167,6 +167,11 @@
         </button>
       </div>
     </section>
+    <section
+      class="flex flex-col px-6 xl:px-0 w-full h-auto max-w-[1224px] container mx-auto mb-11"
+    >
+      <store-list />
+    </section>
   </div>
 
   <!-- <button

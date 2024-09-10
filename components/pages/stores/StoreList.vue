@@ -89,92 +89,46 @@ watch(useStoresStore().getStores, () => {
       storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
   });
 });
-</script>
-//
-<script>
-// export default {
+// methods
+const scroll = function (direction: number) {
+  if (
+    direction === 1 &&
+    useStoresStore().getStores.size != useStoresStore().getTotalElements
+  ) {
+    queryParams.page++;
+    useStoresStore().fetchStores({ ...queryParams });
+  }
+  const delta = direction * storeContainer.value?.offsetWidth!;
+  const duration = 500;
+  const startTime = Date.now();
 
-//   props: {
-//     // stores: {
-//     //   type: Array,
-//     // },
-//   },
-//   data() {
-//     return {
-//       stores: [],
-//       scrollPosition: 0,
-//       maxScrollPosition: 0,
+  const animateScroll = () => {
+    const elapsedTime = Date.now() - startTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+    const displacement = delta * progress;
 
-//       page: 0,
-//       totalElements: 0,
-//       totalPages: 0,
-//     };
-//   },
-//   computed: {
-//     canScrollLeft() {
-//       return this.scrollPosition > 0;
-//     },
-//     canScrollRight() {
-//       return this.scrollPosition < this.maxScrollPosition - 1;
-//     },
-//   },
-//   mounted() {
-//     this.loadStores();
-//     this.maxScrollPosition =
-//       this.$refs.storeContainer.scrollWidth -
-//       this.$refs.storeContainer.offsetWidth;
-//   },
-//   watch: {
-//     stores() {
-//       this.$nextTick(() => {
-//         this.maxScrollPosition =
-//           this.$refs.storeContainer.scrollWidth -
-//           this.$refs.storeContainer.offsetWidth;
-//       });
-//     },
-//   },
-//   methods: {
-//     loadStores(page = 0) {
-//       this.$stores
-//         .getStoreList({
-//           page: this.page,
-//           size: 12,
-//         })
-//         .then((response) => {
-//           this.totalElements = response.metadata.totalElements;
-//           this.stores.push(...response.stores);
-//         })
-//
-//     },
-//     scroll(direction) {
-//       if (direction === 1 && this.stores.length != this.totalElements) {
-//         this.page++;
-//         this.loadStores();
-//       }
-//       const container = this.$refs.storeContainer;
-//       const delta = direction * container.offsetWidth;
-//       const duration = 500;
-//       const startTime = Date.now();
+    storeContainer.value?.scrollBy({
+      top: undefined,
+      left: -(scrollPosition.value + displacement),
+      behavior: "smooth",
+    });
 
-//       const animateScroll = () => {
-//         const elapsedTime = Date.now() - startTime;
-//         const progress = Math.min(elapsedTime / duration, 1);
-//         const displacement = delta * progress;
+    if (progress < 1) {
+      requestAnimationFrame(animateScroll);
+    } else {
+      scrollPosition.value = storeContainer.value?.scrollLeft!;
+    }
+  };
 
-//         container.scrollLeft = this.scrollPosition + displacement;
-
-//         if (progress < 1) {
-//           requestAnimationFrame(animateScroll);
-//         } else {
-//           this.scrollPosition = container.scrollLeft;
-//         }
-//       };
-
-//       requestAnimationFrame(animateScroll);
-//     },
-//   },
-// };
-//
+  requestAnimationFrame(animateScroll);
+};
+//computed
+const canScrollLeft = computed(() => {
+  return scrollPosition.value > 0;
+});
+const canScrollRight = computed(() => {
+  return scrollPosition.value < maxScrollPosition.value - 1;
+});
 </script>
 
 <style>
