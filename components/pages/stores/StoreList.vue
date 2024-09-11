@@ -37,9 +37,9 @@
           <StoreCardSliderItem
             style="min-width: 240px; min-height: 270px"
             class="w-60 h-auto cursor-pointer mr-6"
-            v-for="(store, index) in stores"
+            v-for="(store, index) in useStoresStore().getStores"
             :key="index"
-            :data="store"
+            :store="store"
           />
         </div>
       </div>
@@ -72,99 +72,63 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+const scrollPosition = ref(0);
+const maxScrollPosition = ref(0);
+const storeContainer = ref<HTMLElement>();
+const queryParams = reactive({
+  page: 0,
+  size: 12,
+});
+useStoresStore().fetchStores({ ...queryParams });
+maxScrollPosition.value =
+  storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
+watch(useStoresStore().getStores, () => {
+  nextTick(() => {
+    maxScrollPosition.value =
+      storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
+  });
+});
+// methods
+const scroll = function (direction: number) {
+  if (
+    direction === 1 &&
+    useStoresStore().getStores.size != useStoresStore().getTotalElements
+  ) {
+    queryParams.page++;
+    useStoresStore().fetchStores({ ...queryParams });
+  }
+  const delta = direction * storeContainer.value?.offsetWidth!;
+  const duration = 500;
+  const startTime = Date.now();
 
-<script>
-import StoreCardSliderItem from "./StoreCardSliderItem.vue";
-import { FetchingStores } from "../../../app/store/waiting-types";
+  const animateScroll = () => {
+    const elapsedTime = Date.now() - startTime;
+    const progress = Math.min(elapsedTime / duration, 1);
+    const displacement = delta * progress;
 
-export default {
-  components: {
-    StoreCardSliderItem,
-  },
-  props: {
-    // stores: {
-    //   type: Array,
-    // },
-  },
-  data() {
-    return {
-      FetchingStores: FetchingStores,
-      stores: [],
-      scrollPosition: 0,
-      maxScrollPosition: 0,
-      page: 0,
+    storeContainer.value?.scrollBy({
+      top: undefined,
+      left: -(scrollPosition.value + displacement),
+      behavior: "smooth",
+    });
 
-      totalElements: 0,
-      totalPages: 0,
-    };
-  },
-  computed: {
-    canScrollLeft() {
-      return this.scrollPosition > 0;
-    },
-    canScrollRight() {
-      return this.scrollPosition < this.maxScrollPosition - 1;
-    },
-  },
-  mounted() {
-    this.loadStores();
-    this.maxScrollPosition =
-      this.$refs.storeContainer.scrollWidth -
-      this.$refs.storeContainer.offsetWidth;
-  },
-  watch: {
-    stores() {
-      this.$nextTick(() => {
-        this.maxScrollPosition =
-          this.$refs.storeContainer.scrollWidth -
-          this.$refs.storeContainer.offsetWidth;
-      });
-    },
-  },
-  methods: {
-    loadStores(page = 0) {
-      this.$wait.start(FetchingStores);
-      this.$stores
-        .getStoreList({
-          page: this.page,
-          size: 12,
-        })
-        .then((response) => {
-          this.totalElements = response.metadata.totalElements;
-          this.stores.push(...response.stores);
-        })
-        .finally(() => {
-          this.$wait.end(FetchingStores);
-        });
-    },
-    scroll(direction) {
-      if (direction === 1 && this.stores.length != this.totalElements) {
-        this.page++;
-        this.loadStores();
-      }
-      const container = this.$refs.storeContainer;
-      const delta = direction * container.offsetWidth;
-      const duration = 500;
-      const startTime = Date.now();
-
-      const animateScroll = () => {
-        const elapsedTime = Date.now() - startTime;
-        const progress = Math.min(elapsedTime / duration, 1);
-        const displacement = delta * progress;
-
-        container.scrollLeft = this.scrollPosition + displacement;
-
-        if (progress < 1) {
-          requestAnimationFrame(animateScroll);
-        } else {
-          this.scrollPosition = container.scrollLeft;
-        }
-      };
-
+    if (progress < 1) {
       requestAnimationFrame(animateScroll);
-    },
-  },
+    } else {
+      scrollPosition.value = storeContainer.value?.scrollLeft!;
+    }
+  };
+
+  requestAnimationFrame(animateScroll);
 };
+//computed
+const canScrollLeft = computed(() => {
+  return scrollPosition.value > 0;
+});
+const canScrollRight = computed(() => {
+  return scrollPosition.value < maxScrollPosition.value - 1;
+});
 </script>
 
 <style>
