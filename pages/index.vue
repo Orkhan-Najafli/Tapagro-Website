@@ -82,7 +82,9 @@
         </button>
       </div>
     </section>
-    <!-- <vipFarmerProducts class="mt-7 md:mt-11" :size="12" /> -->
+    <section class="px-6 xl:px-0 max-w-[1224px] container mx-auto">
+      <vipFarmerProducts class="mt-7 md:mt-11" :size="12" />
+    </section>
     <section
       class="flex flex-col px-6 xl:px-0 w-full h-auto max-w-[1224px] container mx-auto mb-11"
     >
@@ -122,7 +124,6 @@
         </a-spin>
       </div>
     </section>
-
     <section
       class="my-11 flex flex-col px-6 xl:px-0 w-full h-auto max-w-[1224px] container mx-auto overflow-hidden"
     >
@@ -173,13 +174,6 @@
       <store-list />
     </section>
   </div>
-
-  <!-- <button
-    @click="useAuthenticator().fetchRefresh()"
-    class="border px-3 py-1 rounded"
-  >
-    Refresh Token
-  </button> -->
 </template>
 <script setup lang="ts">
 // variables
@@ -204,6 +198,7 @@ useProductsStore().resetProducts();
 useDiscountedProductsStore().resetProducts();
 useFarmerProductsStore().resetProducts();
 useMostPurchasedProductsStore().resetProducts();
+
 useDiscountedProductsStore().fetchProducts({
   ...queryParams,
   page: 0,
@@ -212,6 +207,7 @@ useDiscountedProductsStore().fetchProducts({
 });
 useProductsStore().fetchProducts({ ...queryParams, page: 0 });
 useFarmerProductsStore().fetchProducts({ page: 0, size: 4 });
+// useFarmerProductsStore().fetchVipProducts({ page: 0, size: 4 });
 useMostPurchasedProductsStore().fetchProducts({
   ...queryParamsMostPurchasedProducts,
   page: 0,
