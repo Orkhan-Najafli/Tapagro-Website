@@ -44,7 +44,7 @@
         </li>
       </ul>
     </div>
-    <div class="flex flex-row justify-end items-center">
+    <div class="flex flex-row justify-end items-center my-2">
       <span
         @click="IsGoingLeft"
         :class="{

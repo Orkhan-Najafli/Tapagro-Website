@@ -67,6 +67,7 @@ const queryParams = reactive({
   size: useRoute().query.vipPage
     ? (Number(useRoute().query.vipPage) + 1) * props.size
     : props.size,
+  isVip: true,
   // sortBy: "createdAt",
   // sortDirection: "DESC",
 });
@@ -94,6 +95,7 @@ const convertSortByForFarmer = function (direction: boolean) {
     }
   }
 };
+useVipFarmerProductsStore().resetVipProducts();
 useVipFarmerProductsStore().fetchVipProducts({
   ...queryParams,
   sortList: [

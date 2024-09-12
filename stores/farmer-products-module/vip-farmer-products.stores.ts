@@ -33,7 +33,8 @@ export const useVipFarmerProductsStore = defineStore("vip-farmer-products", {
         encode: false,
         indices: true,
         allowDots: true,
-        arrayFormat: "indices",
+        // arrayFormat: "indices", //sortList[0].sortDirection: DESC
+        arrayFormat: "repeat", //sortList.sortDirection: DESC
       });
 
       const { data, status, error } = await useAsyncData<
@@ -43,15 +44,6 @@ export const useVipFarmerProductsStore = defineStore("vip-farmer-products", {
           headers: {
             ...HeaderConfigs(useCookie("token") || ""),
           },
-          //   query: queryData,
-          //   paramsSerializer: function (queryData: any) {
-          //     return stringify(queryData, {
-          //       encode: true,
-          //       indices: true,
-          //       allowDots: false,
-          //       arrayFormat: "comma",
-          //     });
-          //   },
         })
       );
       this.vipProductsTotalElements = data.value?.totalElements!;
