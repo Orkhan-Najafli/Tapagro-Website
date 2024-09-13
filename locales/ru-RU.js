@@ -46,7 +46,7 @@ export default {
   contanct_us: "Контактная информация",
   social_media: "Социальные сети",
   copyright: `COPYRIGHT © 2021 -  ${new Date().getFullYear()}. Все права защищены.`,
-  // platform: `Платформу разработана компанией  <a href="https://digirella.az/" target="_blank" class="text-[#7DC819] hover:text-[#7DC819]" >Digital Umbrella</a>`,
+  platform: `Платформу разработана компанией  {tag}`,
   more_products: "Больше продуктов",
   discounted_products: "Товары со скидкой",
   all_discounted_products: "Все товары со скидкой",
@@ -300,8 +300,8 @@ export default {
   you_must_select_a_unit_of_measure: "Вам необходимо выбрать единицу измерения",
   product_more_description:
     "Опишите свой товар как можно подробнее, напоминаем, что в описании объявления запрещено размещать контактный номер и ссылки на другие сайты.",
-  ad_use_rules:
-    "Размещая объявление, вы соглашаетесь с <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> условиями использования </a> сайта.",
+  // ad_use_rules:
+  //   "Размещая объявление, вы соглашаетесь с <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> условиями использования </a> сайта.",
   create_an_ad: "Создать объявление",
   enter_a_valid_phone_number:
     "Введите действительный номер телефона (например: 501234567).",
@@ -325,8 +325,7 @@ export default {
     "Вы уверены, что хотите переместить объявление дальше?",
   ad_will_be_featured_further_in_the_Farm_Products_directory:
     "Ваше объявление будет размещено далее в каталоге 'Сельскохозяйственная продукция'.",
-  platform_developed_by_the_company:
-    'Платформу разработала компания <a href="https://digirella.az/" цель="_blank" class="text-[#7DC819] hover:text-[#7DC819]"> Digital Umbrella </a>',
+  platform_developed_by_the_company: "Платформу разработала компания {tag}",
   your_request_has_been_registered: "Ваш запрос зарегистрирован",
   we_will_contact_you_soon: "Мы свяжемся с вами в ближайшее время!",
   thank_you: "Спасибо!",
@@ -360,8 +359,8 @@ export default {
     "Вы сможете найти ответы на интересующие вас вопросы",
   still_have_questions: "Остались вопросы?",
   do_not_hesitate_to_contact_us: "Не стесняйтесь обращаться к нам",
-  by_confirming_the_order:
-    "Подтверждая заказ, вы соглашаетесь с  <a href='/policy' target='_blank' class='text-emerald-700 hover:text-emerald-700'>Условиями использования и условиями оплаты. </a> ",
+  // by_confirming_the_order:
+  //   "Подтверждая заказ, вы соглашаетесь с  <a href='/policy' target='_blank' class='text-emerald-700 hover:text-emerald-700'>Условиями использования и условиями оплаты. </a> ",
   confirm: "Подтверждать",
   no_point_of_sale_selected: "Точка продаж не выбрана",
   no_delivery_method_selected: "Способ доставки не выбран",

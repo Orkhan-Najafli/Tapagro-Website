@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const envFile = `.env.${process.env.NODE_NUXT_PUBLIC_BASE_URL || "staging"}`;
+require("dotenv").config({ path: envFile });
 export default defineNuxtConfig({
   pinia: {
     storesDirs: ["./stores/**", "./custom-folder/stores/**"],
@@ -8,6 +11,7 @@ export default defineNuxtConfig({
       baseURL:
         process.env.NUXT_PUBLIC_BASE_URL ||
         "https://api-staging.tapagro.az/tapagro/api",
+      RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     },
   },
   modules: [
@@ -15,41 +19,9 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@ant-design-vue/nuxt",
     "@ant-design-vue/nuxt",
+    "@vee-validate/nuxt",
   ],
-  i18n: {
-    lazy: true,
-    langDir: "locales/",
-    defaultLocale: "az",
-    // fallbackLocale: "az",
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "lang",
-      // secure: true,
-    },
-    locales: [
-      {
-        code: "az",
-        name: "Azərbaycan",
-        iso: "az-AZ",
-        file: "az-AZ.js",
-      },
-      {
-        code: "en",
-        name: "English",
-        iso: "en-US",
-        file: "en-US.js",
-      },
-      {
-        code: "ru",
-        name: "Rus",
-        iso: "ru-RU",
-        file: "ru-RU.js",
-      },
-    ],
-    // vueI18n: {
-    //   fallbackLocale: "az",
-    // },
-  },
+
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
@@ -59,4 +31,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  components: [
+    {
+      path: "@/components",
+      pathPrefix: false,
+    },
+  ],
 });

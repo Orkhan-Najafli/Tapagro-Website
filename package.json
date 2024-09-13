@@ -4,27 +4,47 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "dev": "nuxt dev --host 127.0.0.1 --port 4572",
+    "dev:staging": "set NODE_ENV=staging && nuxt dev --dotenv .env.staging",
+    "dev:production": "set NODE_ENV=production && nuxt dev --host 127.0.0.1 --port 4572 --dotenv .env.production",
+    "build:staging": "set NODE_ENV=staging && nuxt build --dotenv .env.staging",
+    "build:production": "set NODE_ENV=production && nuxt build --dotenv .env.production",
+    "generate:staging": "set NODE_ENV=staging && nuxt generate --dotenv .env.staging",
+    "generate:production": "set NODE_ENV=production && nuxt generate --dotenv .env.production",
+    "pm2-start:staging": "set NODE_ENV=staging && nuxt build && pm2 start npm --name tapagro_website -- start",
+    "pm2-restart:staging": "set NODE_ENV=staging && nuxt build && pm2 restart tapagro_website",
+    "pm2-start:production": "set NODE_ENV=production && nuxt build && pm2 start npm --name tapagro_website -- start",
+    "pm2-restart:production": "set NODE_ENV=production && nuxt build && pm2 restart tapagro_website"
   },
   "dependencies": {
     "@ant-design-vue/nuxt": "^1.4.2",
     "@nuxtjs/i18n": "^8.5.1",
     "@pinia/nuxt": "^0.5.4",
+    "@vee-validate/i18n": "^4.13.2",
+    "@vee-validate/nuxt": "^4.13.2",
+    "ant-design-vue": "^4.2.3",
+    "dotenv": "^16.4.5",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
+    "qs": "^6.13.0",
+    "vee-validate": "^3.4.15",
     "vue": "latest"
   },
   "overrides": {
     "vue": "latest"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.15",
     "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
     "eslint": "^9.9.1",
     "eslint-plugin-vue": "^9.27.0",
     "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.10"
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4",
+    "vue-i18n": "^9.14.0"
   }
 }

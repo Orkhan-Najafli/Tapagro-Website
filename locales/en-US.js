@@ -297,8 +297,8 @@ export default {
   you_must_select_a_unit_of_measure: "You must select a unit of measure",
   product_more_description:
     "Describe your product in as much detail as possible, we remind you that it is forbidden to place a contact number and links to other sites in the description of the ad.",
-  ad_use_rules:
-    "By posting an ad, you agree to the site's <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> terms of use </a>.",
+  // ad_use_rules:
+  //   "By posting an ad, you agree to the site's <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> terms of use </a>.",
   create_an_ad: "Create an ad",
   enter_a_valid_phone_number: "Enter a valid phone number (ex: 501234567)",
   advertisement_texts: [
@@ -322,7 +322,7 @@ export default {
   ad_will_be_featured_further_in_the_Farm_Products_directory:
     "Your ad will be featured further in the 'Farm Products' directory",
   platform_developed_by_the_company:
-    'The platform was developed by <a href="https://digirella.az/" target="_blank" class="text-[#7DC819] hover:text-[#7DC819]"> Digital Umbrella </a> company',
+    "The platform was developed by {tag} company",
   your_request_has_been_registered: "Your request has been registered",
   we_will_contact_you_soon: "We will contact you soon!",
   thank_you: "Thank you!",
@@ -359,8 +359,8 @@ export default {
     "You can find answers to the questions that interest you",
   still_have_questions: "Still have questions?",
   do_not_hesitate_to_contact_us: "Do not hesitate to contact us",
-  by_confirming_the_order:
-    "By confirming the order, you agree to <a href='/policy' target='_blank' class='text-emerald-700 hover:text-emerald-700'>the Terms of Use and payment terms. </a> ",
+  // by_confirming_the_order:
+  //   "By confirming the order, you agree to <a href='/policy' target='_blank' class='text-emerald-700 hover:text-emerald-700'>the Terms of Use and payment terms. </a> ",
   confirm: "Confirm",
   no_point_of_sale_selected: "No point of sale selected",
   no_delivery_method_selected: "No delivery method selected",

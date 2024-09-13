@@ -1,21 +1,14 @@
 <template>
-  <footer class="w-full bg-gray-50 z-30">
-    <div style="max-width: 1224px" class="px-6 md:container mx-auto">
+  <footer class="flex w-full min-w-full h-auto bg-gray-50 z-30">
+    <div class="px-6 xl:px-0 max-w-[1224px] container mx-auto">
       <div class="block md:pt-10 pt-9 md:flex">
         <div class="md:w-1/2 w-full mb-7 md:mb-0">
           <div class="flex-shrink-0 cursor-pointer">
-            <a
-              v-if="
-                $route.path == '/en' ||
-                $route.path == '/ru' ||
-                $route.path == '/'
-              "
-              href="/"
-            >
+            <a v-if="$route.path == '/'" href="/">
               <TapagroLogo />
             </a>
             <nuxt-link
-              :to="localePath(`/`)"
+              to="/"
               tag="a"
               v-else
               href="/"
@@ -42,25 +35,25 @@
             >
               <nuxt-link
                 tag="li"
-                :to="localePath('/magazalar')"
+                to="/magazalar"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("stores") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/mehsullar')"
+                to="/mehsullar"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("products") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/fermer-mehsullari/yeni-elan')"
+                to="/fermer-mehsullari/yeni-elan"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("post_an_ad") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/fermerler')"
+                to="/fermerler"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3"
                 >{{ $t("farmers") }}
               </nuxt-link>
@@ -75,25 +68,25 @@
             >
               <nuxt-link
                 tag="li"
-                :to="localePath('/haqqimizda')"
+                to="/haqqimizda"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("about") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/')"
+                to="/"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("terms_of_use") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/advertising')"
+                to="/advertising"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-normal text-gray-600 mb-3 md:mb-2"
                 >{{ $t("ad_banner") }}
               </nuxt-link>
               <nuxt-link
                 tag="li"
-                :to="localePath('/bize-qosul')"
+                to="/bize-qosul"
                 class="block cursor-pointer hover:text-green-500 text-sm leading-4 font-medium text-gray-600 mb-3 md:mb-2"
                 >{{ $t("join_us") }}
               </nuxt-link>
@@ -198,31 +191,25 @@
         >
           {{ $t("copyright") }}
         </p>
-        <!-- <p class="text-gray-500 text-sm p-0 m-0" v-html="formattedProducts"></p> -->
+
+        <p
+          class="text-gray-500 text-sm p-0 m-0"
+          v-html="
+            $t('platform_developed_by_the_company', {
+              tag: `<a
+          href=&quot;https://digirella.az/&quot;
+          target=&quot;_blank&quot;
+          class=&quot;text-[#7DC819] hover:text-[#7DC819]&quot;
+          >Digital Umbrella </a
+        >`,
+            })
+          "
+        ></p>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-// import json from "@/utils/textFooterSection/text.json"
-
-// const text = computed(()=>json)
-const localePath = useLocalePath();
-// import TapagroLogo from "@/components/inc/svg/tapagro_logo.vue";
-
-// export default {
-//   components: { TapagroLogo },
-//   data() {
-//     return {
-//       text: json,
-//     };
-//   },
-//   computed: {
-//     formattedProducts() {
-//       return this.$t("platform_developed_by_the_company");
-//     },
-//   },
-//   methods: {},
-// };
+import TapagroLogo from "@/components/svg/tapagro_logo.vue";
 </script>
