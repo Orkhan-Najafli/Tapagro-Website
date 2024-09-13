@@ -21,12 +21,12 @@
     </div>
     <form class="hidden md:block">
       <a-select
-        style="outline: none; border: none"
-        class="overflow-hidden outline-none border border-gray-400 hover:border-gray-400 bg-white px-3 py-2 rounded-sm"
+        style="width: 150px"
+        class="bg-white rounded-sm"
         name="sort"
         id="sort"
         :showArrow="true"
-        v-model="sortByData"
+        v-model:value="sortByData"
         @change="handleSortSelect"
       >
         <a-select-option
@@ -42,7 +42,6 @@
   </div>
 </template>
 <script setup lang="ts">
-// import {t} from 'vue-i18n';
 const { t } = useI18n();
 let list = reactive([
   { name: t("sort_by"), value: "default" },
@@ -53,8 +52,8 @@ let list = reactive([
   { name: t("discount"), value: "ecommerceDiscount" },
 ]);
 const sortByData = ref("default");
-const sortBy = ref(null);
-const sortDirection = ref(null);
+// const sortBy = ref(null);
+// const sortDirection = ref(null);
 const showOrderMenu = ref(false);
 const regex = new RegExp("fermer");
 
@@ -69,7 +68,7 @@ const handleSortSelect = function (value?: any) {
     showOrderMenu.value = false;
     sortByData.value = value;
   }
-  useRouter().replace({
+  useRouter().push({
     query: {
       ...useRoute().query,
       sortBy: sortByData.value !== "default" ? sortByData.value : undefined,

@@ -253,7 +253,7 @@ watch(
   () => useRoute().query.searchText,
   (to: any) => {
     useProductsStore().resetProducts();
-    useProductsStore().fetchProducts({ ...useRoute().query, ...queryParams });
+    useProductsStore().fetchProducts({ ...queryParams, ...useRoute().query });
   },
   { flush: "pre", immediate: true, deep: true }
 );

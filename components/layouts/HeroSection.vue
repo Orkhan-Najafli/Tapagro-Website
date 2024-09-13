@@ -5,7 +5,7 @@
         'h-28': scroll,
         'h-48': !scroll,
       }"
-      class="block relative w-full bg-photo max-w-[1224px] transition-all duration-200 container mx-auto lg:px-0"
+      class="block relative w-full bg-photo max-w-[1224px] transition-all duration-200 container mx-auto px-6 xl:px-0"
     >
       <div
         :class="{
@@ -38,7 +38,7 @@
           <a-config-provider
             :theme="{
               token: {
-                colorPrimary: '#00b96b',
+                colorPrimary: '#16a34a',
               },
             }"
           >

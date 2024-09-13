@@ -58,5 +58,5 @@ export interface ProductQuery {
   sortBy: string;
   sortDirection: string;
   excludedProductId?: number;
-  minAverageRating?: number;
+  minAverageRating?: number | undefined;
 }
