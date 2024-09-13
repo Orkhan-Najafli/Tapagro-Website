@@ -9,11 +9,7 @@
 definePageMeta({
   layout: "blank",
 });
-useAuthenticator()
-  .fetchLogin()
-  .then(() => {
-    useUsers().fetchUserData();
-  });
+useAuthenticator().fetchLogin();
 // definePageMeta({
 //   middleware: ["guest"],
 // });

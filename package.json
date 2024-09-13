@@ -29,6 +29,7 @@
     "dotenv": "^16.4.5",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
+    "qs": "^6.13.0",
     "vee-validate": "^3.4.15",
     "vue": "latest"
   },
@@ -36,6 +37,7 @@
     "vue": "latest"
   },
   "devDependencies": {
+    "@types/qs": "^6.9.15",
     "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
     "eslint": "^9.9.1",

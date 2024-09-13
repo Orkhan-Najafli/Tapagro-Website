@@ -3,8 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { FarmerProduct, ProductQuery } from "~/utils/types/farmer-product";
-
+import type { FarmerProduct, QueryParams } from "~/utils/types/farmer-product";
 export const useFarmerProductsStore = defineStore("farmer-products", {
   state: () => ({
     products: new Set<FarmerProduct>() || ([] as Array<FarmerProduct>),
@@ -28,7 +27,7 @@ export const useFarmerProductsStore = defineStore("farmer-products", {
       this.status = "";
       this.error = null;
     },
-    async fetchProducts(queryData: ProductQuery) {
+    async fetchProducts(queryData: QueryParams) {
       const { data, status, error } = await useAsyncData<
         ApiBase<FarmerProduct>
       >("farmer-products", () =>

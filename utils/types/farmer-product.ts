@@ -18,7 +18,14 @@ export interface FarmerProduct {
   compareIsActive?: boolean;
   favoriteIsActive?: any;
 }
-export interface ProductQuery {
+export interface QueryParams {
   page: number;
   size: number;
+  sortList?: sortList[];
+  isVip?: boolean;
+}
+
+interface sortList {
+  sortBy: string;
+  sortDirection: string;
 }

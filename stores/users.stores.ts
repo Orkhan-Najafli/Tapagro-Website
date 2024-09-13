@@ -17,7 +17,7 @@ export const useUsers = defineStore("Users", {
   actions: {
     //userData
     async fetchUserData() {
-      // navigateTo("/");
+      navigateTo("/");
       const { data, status, error } = await useAsyncData<User>("Users", () =>
         $fetch(`${this.baseURL}${urls.users}`, {
           headers: {

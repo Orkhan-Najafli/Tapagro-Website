@@ -47,13 +47,12 @@ export const useAuthenticator = defineStore("Authenticator", {
     async fetchLogin(bodyData?: {
       code: string;
       state: string;
-      cabinet: string;
+      cabinet?: string;
     }) {
       const { code, state } = useRoute().query;
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
           headers: {
-            // useCookie("token") != null ? `Bearer ${useCookie("token")}` : "",
             ...HeaderConfigs(),
           },
           method: "POST",
@@ -65,14 +64,17 @@ export const useAuthenticator = defineStore("Authenticator", {
           },
         })
       );
+      console.log("status: ", status.value);
+
       this.access = data.value!;
       this.loginStatus = status.value;
       this.loginError = error.value || null;
       this.token = data.value?.access;
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
-      // console.log("Error message: ", error.value?.statusCode);
-      // console.log("Status message: ", status);
+      if (status.value === "success") {
+        useUsers().fetchUserData();
+      }
     },
     //refresh
     async fetchRefresh() {

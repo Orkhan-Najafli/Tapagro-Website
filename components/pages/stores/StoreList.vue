@@ -78,16 +78,35 @@ const maxScrollPosition = ref(0);
 const storeContainer = ref<HTMLElement>();
 const queryParams = reactive({
   page: 0,
-  size: 12,
+  size: 6,
 });
 useStoresStore().fetchStores({ ...queryParams });
-maxScrollPosition.value =
-  storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
+const scrollPositionCalculate = function () {
+  console.log("div: ", storeContainer.value);
+
+  maxScrollPosition.value =
+    storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
+
+  console.log("maxScrollPosition.value : ", maxScrollPosition.value);
+  console.log(
+    "storeContainer.value?.scrollWidth! : ",
+    storeContainer.value?.scrollWidth!
+  );
+  console.log(
+    "storeContainer.value?.offsetWidth! : ",
+    storeContainer.value?.offsetWidth!
+  );
+};
+
 watch(useStoresStore().getStores, () => {
   nextTick(() => {
     maxScrollPosition.value =
       storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
   });
+});
+
+onMounted(() => {
+  scrollPositionCalculate();
 });
 // methods
 const scroll = function (direction: number) {
@@ -98,6 +117,7 @@ const scroll = function (direction: number) {
     queryParams.page++;
     useStoresStore().fetchStores({ ...queryParams });
   }
+
   const delta = direction * storeContainer.value?.offsetWidth!;
   const duration = 500;
   const startTime = Date.now();
@@ -106,10 +126,10 @@ const scroll = function (direction: number) {
     const elapsedTime = Date.now() - startTime;
     const progress = Math.min(elapsedTime / duration, 1);
     const displacement = delta * progress;
-
     storeContainer.value?.scrollBy({
       top: undefined,
-      left: -(scrollPosition.value + displacement),
+      // left: scrollPosition.value + displacement,
+      left: displacement,
       behavior: "smooth",
     });
 
@@ -124,9 +144,13 @@ const scroll = function (direction: number) {
 };
 //computed
 const canScrollLeft = computed(() => {
+  console.log("scrollPosition.value: ", scrollPosition.value);
+
   return scrollPosition.value > 0;
 });
 const canScrollRight = computed(() => {
+  console.log("scrollPosition.value: ", scrollPosition.value);
+
   return scrollPosition.value < maxScrollPosition.value - 1;
 });
 </script>

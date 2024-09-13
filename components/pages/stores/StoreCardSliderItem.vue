@@ -40,7 +40,7 @@ const baseURL = useRuntimeConfig().public.baseURL;
 
 // methods
 const setDefaultStoreImage = function (event: Event | any) {
-  event.target.src = require(`@/assets/img/all_logos/store_logo.svg`);
+  // event.target.src = import(`@/assets/img/store_logo.svg`);
   event.target.className = "p-1";
 };
 let props = defineProps({
