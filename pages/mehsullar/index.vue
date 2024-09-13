@@ -130,8 +130,8 @@ const visible = ref(false);
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 2 : 2,
-  sortBy: "createdAt",
-  sortDirection: "DESC",
+  // sortBy: "createdAt",
+  // sortDirection: "DESC",
 });
 
 // methods
@@ -171,7 +171,6 @@ const loadMoreProducts = function () {
 };
 
 // watch
-
 watch(
   () => useRoute().query,
   (value: any, oldValue: any) => {
