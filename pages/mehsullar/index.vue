@@ -1,15 +1,22 @@
 <template>
-  <div class="pt-3 md:px-0 overflow-y-auto">
-    <section class="flex flex-row max-w-[1224px] w-full lg:container mx-auto">
+  <div class="">
+    <section
+      class="flex flex-row max-w-[1224px] w-full px-6 xl:px-0 container mx-auto"
+    >
       <div class="flex flex-row w-full relative mb-6 md:mb-10">
-        <div class="w-full relative px-6">
+        <div class="w-full relative">
           <categories />
           <section class="mt-10 mb-11">
             <div class="flex w-full flex-row justify-between items-center">
               <div
                 class="flex flex-col w-full justify-center items-start h-9 relative"
               >
-                <div v-if="true">
+                <div
+                  v-if="
+                    checkSearch &&
+                    useProductsStore().getProductsStatus !== 'success'
+                  "
+                >
                   <!-- v-if="checkSearch && !$wait.is(FetchingProducts)" -->
 
                   <h2
@@ -17,11 +24,17 @@
                   >
                     <span class="whitespace-nowrap"
                       >{{ $t("search_results") }}:
-                      {{ this.productData.totalElements }}</span
+                      {{ useProductsStore().getTotalElements }}</span
                     >
                   </h2>
                 </div>
-                <div class="text-gray-600 font-medium text-2xl p-0 m-0 mr-2">
+                <div
+                  v-if="
+                    !checkSearch &&
+                    useProductsStore().getProductsStatus !== 'success'
+                  "
+                  class="text-gray-600 font-medium text-2xl p-0 m-0 mr-2"
+                >
                   <!-- v-if="!checkSearch && !$wait.is(FetchingProducts)" -->
 
                   <h2
@@ -29,7 +42,7 @@
                   >
                     <span>{{ $t("products") }} : </span>
                     <span class="whitespace-nowrap">
-                      {{ this.productData.totalElements }}</span
+                      {{ useProductsStore().getTotalElements }}</span
                     >
                   </h2>
                 </div>
@@ -66,7 +79,7 @@
             <div class="flex flex-col justify-start w-full">
               <div class="flex w-full flex-col">
                 <a-spin
-                  :spinning="$wait.is(FetchingProducts)"
+                  :spinning="useProductsStore().getProductsStatus !== 'success'"
                   size="large"
                   wrapper-class-name="text-green-800"
                 >
@@ -104,6 +117,9 @@
   </div>
 </template>
 <script setup lang="ts">
+definePageMeta({
+  layout: "hero",
+});
 // variables
 const searchParams = reactive({
   sortBy: "createdAt",
@@ -111,104 +127,83 @@ const searchParams = reactive({
 });
 const filterShowOrHide = ref(false);
 const visible = ref(false);
+const queryParams = reactive({
+  page: useRoute().query.page ? Number(useRoute().query.page) : 0,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 2 : 2,
+  sortBy: "createdAt",
+  sortDirection: "DESC",
+});
+
 // methods
+const convertSortBy = function (direction: any) {
+  if (useRoute().query && useRoute().query.sortBy) {
+    let item = new String(useRoute().query.sortBy)?.split("-");
+
+    if (direction) {
+      return item[1] || searchParams.sortDirection;
+    } else {
+      return item[0] || searchParams.sortBy;
+    }
+  } else {
+    if (direction) {
+      return searchParams.sortDirection;
+    } else {
+      return searchParams.sortBy;
+    }
+  }
+};
 const showFilterModal = function () {
   visible.value = true;
 };
-const loadMoreProducts = function () {};
+useProductsStore().resetProducts();
+useProductsStore().fetchProducts({
+  ...queryParams,
+  page: 0,
+  sortBy: convertSortBy(false),
+  sortDirection: convertSortBy(true),
+  isDiscounted: !!useRoute().query.endirimli || undefined,
+  minAverageRating: Number(useRoute().query.minAverageRating) || undefined,
+});
+const loadMoreProducts = function () {
+  queryParams.page++;
+  queryParams.size = 2;
+  useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
+};
 
-// export default {
+// watch
 
-//   created() {
-//     this.currentPageNumber = Number(this.$route.query.page) || 1;
-//     this.$store.commit("setAppHeroShowAndHide", true);
-//     this.$fetch();
-//   },
-//   methods: {
-
-// loadMoreProducts() {
-//   let page = 0;
-//   if (this.$route.query && this.$route.query.page) {
-//     page = parseInt(this.$route.query.page);
-//   }
-//   this.$router.replace({
-//     query: {
-//       ...this.$route.query,
-//       page: ++page,
-//     },
-//   });
-//   this.more = true;
-// },
-
-//     convertSortBy(direction) {
-//       if (this.$route.query && this.$route.query.sortBy) {
-//         let item = this.$route.query.sortBy.split("-");
-
-//         if (direction) {
-//           return item[1] || this.searchParams.sortDirection;
-//         } else {
-//           return item[0] || this.searchParams.sortBy;
-//         }
-//       } else {
-//         if (direction) {
-//           return this.searchParams.sortDirection;
-//         } else {
-//           return this.searchParams.sortBy;
-//         }
-//       }
-//     },
-//     loadProducts() {
-//       this.visible = false;
-//       this.$product
-//         .getProductList({
-//           ...this.$route.query,
-//           sortBy: this.convertSortBy(false),
-//           sortDirection: this.convertSortBy(true),
-//           page: this.productData.list.length == 0 ? 0 : this.$route.query.page,
-//           size:
-//             this.productData.list.length == 0
-//               ? (parseInt(this.$route.query.page || 0) + 1) * 12
-//               : 12,
-//           isDiscounted: !!this.$route.query.endirimli || undefined,
-//           minAverageRating: this.$route.query.minAverageRating || undefined,
-//         })
-//         .then((response) => {
-//           this.productData.list.push(...response.products);
-//           this.productData.totalElements = response.metadata.totalElements;
-//           this.productData.totalPages = response.metadata.totalPages;
-//           this.more = false;
-//           this.$nuxt.$emit("checkNewProducts", {});
-//         });
-//     },
-//   },
-//   computed: {
-//     checkSearch() {
-//       if (this.$route.query) {
-//         let queryString = this.$route.query;
-
-//         return (
-//           queryString.maxPrice ||
-//           queryString.minPrice ||
-//           queryString.productTypeIds ||
-//           queryString.searchText ||
-//           queryString.minAverageRating ||
-//           (queryString.storeIds && queryString.storeIds.length > 0) ||
-//           (queryString.cityIds && queryString.cityIds.length > 0)
-//         );
-//       }
-//       return false;
-//     },
-//   },
-//   watch: {
-//     "$route.query": "$fetch",
-//   },
-
-//   async fetch() {
-//     !this.more && (this.productData.list = []);
-//     await this.$store.dispatch("productCategories/getBaseCategoryList");
-//     await this.loadProducts();
-//   },
-// };
+watch(
+  () => useRoute().query,
+  (value: any, oldValue: any) => {
+    if (value?.sortBy !== oldValue?.sortBy) {
+      queryParams.page = 0;
+      useProductsStore().resetProducts();
+    }
+    useProductsStore().fetchProducts({
+      ...useRoute().query,
+      ...queryParams,
+      sortBy: convertSortBy(false),
+      sortDirection: convertSortBy(true),
+      isDiscounted: !!useRoute().query.endirimli || undefined,
+      minAverageRating: Number(useRoute().query.minAverageRating) || undefined,
+    });
+  },
+  { deep: true }
+);
+const checkSearch = computed(() => {
+  if (useRoute().query) {
+    return (
+      useRoute().query.maxPrice ||
+      useRoute().query.minPrice ||
+      useRoute().query.productTypeIds ||
+      useRoute().query.searchText ||
+      useRoute().query.minAverageRating ||
+      (useRoute().query.storeIds && useRoute().query.storeIds!.length > 0) ||
+      (useRoute().query.cityIds && useRoute().query.cityIds!.length > 0)
+    );
+  }
+  return false;
+});
 </script>
 <style>
 .ant-select-selection,
