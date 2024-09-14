@@ -175,8 +175,8 @@ watch(
   () => useRoute().query,
   (value: any, oldValue: any) => {
     if (value?.sortBy !== oldValue?.sortBy) {
-      queryParams.page = 0;
       useProductsStore().resetProducts();
+      queryParams.page = 0;
     }
     useProductsStore().fetchProducts({
       ...useRoute().query,
