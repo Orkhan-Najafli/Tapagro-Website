@@ -52,8 +52,6 @@ let list = reactive([
   { name: t("discount"), value: "ecommerceDiscount" },
 ]);
 const sortByData = ref("default");
-// const sortBy = ref(null);
-// const sortDirection = ref(null);
 const showOrderMenu = ref(false);
 const regex = new RegExp("fermer");
 

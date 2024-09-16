@@ -8,8 +8,11 @@
   "comparison-count": "ecommerce/comparison-baskets/count",
   "comparison-baskets-count": "ecommerce/comparison-baskets/count",
   "base-categories": "public/ecommerce/products/base-categories",
+  "categories": "public/ecommerce/products/base-categories/${baseCategoryId}/categories",
+  "product-types": "public/ecommerce/products/base-categories/${baseCategoryId}/categories/${categoryId}/types",
   "users": "ecommerce/users",
   "farmer-products": "public/ecommerce/farmer-products",
   "banner": "public/ecommerce/banners",
-  "stores": "public/ecommerce/stores"
+  "stores": "public/ecommerce/stores",
+  "cities": "public/ecommerce/cities"
 }
