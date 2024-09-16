@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="min-h-screen">
     <section
       class="flex flex-row max-w-[1224px] w-full px-6 xl:px-0 container mx-auto"
     >
@@ -35,8 +35,6 @@
                   "
                   class="text-gray-600 font-medium text-2xl p-0 m-0 mr-2"
                 >
-                  <!-- v-if="!checkSearch && !$wait.is(FetchingProducts)" -->
-
                   <h2
                     class="text-gray-600 font-medium text-sm md:text-2xl p-0 m-0 mr-2"
                   >
@@ -71,10 +69,10 @@
               style="width: 294px; min-width: 294px"
               class="h-auto hidden lg:flex mr-6"
             >
-              <!-- <MainProductFilter
+              <MainProductFilter
                 style="height: fit-content"
                 class="sticky top-28"
-              /> -->
+              />
             </div>
             <div class="flex flex-col justify-start w-full">
               <div class="flex w-full flex-col">
@@ -158,6 +156,7 @@ const showFilterModal = function () {
 useProductsStore().resetProducts();
 useProductsStore().fetchProducts({
   ...queryParams,
+  ...useRoute().query,
   page: 0,
   sortBy: convertSortBy(false),
   sortDirection: convertSortBy(true),
@@ -174,7 +173,11 @@ const loadMoreProducts = function () {
 watch(
   () => useRoute().query,
   (value: any, oldValue: any) => {
-    if (value?.sortBy !== oldValue?.sortBy) {
+    if (
+      value?.sortBy !== oldValue?.sortBy ||
+      value?.endirimli !== oldValue?.endirimli ||
+      value?.storeIds !== oldValue?.storeIds
+    ) {
       useProductsStore().resetProducts();
       queryParams.page = 0;
     }
