@@ -4,6 +4,7 @@ import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
 import type { FarmerProduct, QueryParams } from "~/utils/types/farmer-product";
+import { stringify } from "qs";
 export const useFarmerProductsStore = defineStore("farmer-products", {
   state: () => ({
     products: new Set<FarmerProduct>() || ([] as Array<FarmerProduct>),
@@ -28,14 +29,20 @@ export const useFarmerProductsStore = defineStore("farmer-products", {
       this.error = null;
     },
     async fetchProducts(queryData: QueryParams) {
+      const queryString = stringify(queryData, {
+        encode: true,
+        indices: false,
+        allowDots: true,
+        arrayFormat: "indices", //sortList[0].sortDirection: DESC
+        // arrayFormat: "repeat", //sortList.sortDirection: DESC
+      });
       const { data, status, error } = await useAsyncData<
         ApiBase<FarmerProduct>
       >("farmer-products", () =>
-        $fetch(`${this.baseURL}${urls["farmer-products"]}`, {
+        $fetch(`${this.baseURL}${urls["farmer-products"]}?${queryString}`, {
           headers: {
             ...HeaderConfigs(useCookie("token") || ""),
           },
-          query: queryData,
         })
       );
       this.totalElements = data.value?.totalElements!;

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col w-full">
-    <section class="flex flex-col w-full h-auto">
+  <div class="flex flex-col w-full min-h-screen">
+    <section v-if="props.mobile" class="flex flex-col w-full h-auto">
       <div class="flex flex-row justify-between items-center">
         <span class="text-gray-700 text-base font-medium">{{
           $t("filter")
@@ -44,7 +44,7 @@
       </label>
     </section>
     <section
-      v-if="useRoute().params && useRoute().params.category"
+      v-if="useRoute().params.id === 'fermer-mehsullari'"
       class="flex flex-col w-full h-auto"
     >
       <hr class="mb-6 bg-gray-200" />
@@ -53,16 +53,18 @@
         @click="categoriesBoxShow = !categoriesBoxShow"
       >
         <span class="">{{ $t("subcategories") }}</span>
-        <a-icon
+
+        <DownOutlined
           :class="{
             'rotate-180': categoriesBoxShow,
             'rotate-0': !categoriesBoxShow,
           }"
           class="transform"
-          type="down"
         />
       </button>
-      <tree v-show="categoriesBoxShow" />
+      <div v-show="categoriesBoxShow">
+        <tree />
+      </div>
       <!-- <categories-tree
         v-show="categoriesBoxShow"
         :baseCategoryId="baseCategory ? baseCategory.id : undefined"
@@ -129,10 +131,10 @@
                       -moz-appearance: none;
                       appearance: none;
                     "
+                    :checked="selectedRegions.includes(region.id)"
                     @change="changeUrlCity"
                     class="form-checkbox inline-flex justify-center items-center h-4 w-4 bg-white border border-gray-200 rounded checked:bg-green-600 checked:border-green-600 checked:text-white appearance-none mr-2"
                     type="checkbox"
-                    v-model="selectedRegions"
                     :value="region.id"
                   />
                   <span class="font-medium text-base text-gray-800">
@@ -236,7 +238,7 @@
                 <a-rate
                   disabled
                   class="m-0 p-0 cursor-pointer"
-                  v-model:value="rating.rating"
+                  :value="rating.rating"
                 />
               </span>
               <span class="text-xs font-medium text-[#1F2937]"
@@ -260,17 +262,13 @@
 <script setup lang="ts">
 const categoriesBoxShow = ref(true);
 const regionBoxShow = ref(true);
-const storeBoxShow = ref(true);
 const priceBoxShow = ref(true);
 const raitingBoxShow = ref(true);
 const minPrice = ref<number | undefined>(undefined);
 const maxPrice = ref<number | undefined>(undefined);
 const minAverageRating = ref<number | undefined>(undefined);
 const isDiscount = ref(false);
-const regions = reactive([]);
 let selectedRegions = reactive<Array<number>>([]);
-let selectedStores = reactive<Array<number>>([]);
-const regionSearchValue = ref("");
 const ratings = reactive<Array<{ rating: number }>>([
   { rating: 4 },
   { rating: 3 },
@@ -279,6 +277,12 @@ const ratings = reactive<Array<{ rating: number }>>([
 ]);
 const num = ref<HTMLElement | any>();
 const resetFilter = ref(false);
+const props = defineProps({
+  mobile: {
+    type: Boolean,
+    default: true,
+  },
+});
 
 useCitiesStore().fetchCities();
 
@@ -325,7 +329,15 @@ const check = function (event: Event | any) {
     }
   } else event.preventDefault();
 };
-const changeUrlCity = function () {
+const changeUrlCity = function (event: Event | any) {
+  if (event.target.checked) {
+    selectedRegions.push(event.target.value);
+  } else {
+    const index = selectedRegions.indexOf(event.target.value);
+    if (index > -1) {
+      selectedRegions.splice(index, 1);
+    }
+  }
   useRouter().replace({
     query: {
       ...useRoute().query,
@@ -397,7 +409,6 @@ const resetFilterFields = function () {
     },
   });
 };
-// };
 </script>
 <style>
 div.scroll-design::-webkit-scrollbar {
