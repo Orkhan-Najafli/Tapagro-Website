@@ -783,4 +783,13 @@ const setDefaultImage = async (event: Event | any) => {
   event.target.src = noImage.default;
   event.target.className = "w-[28px] h-[21px]";
 };
+// watch
+// watch(
+//   () => useCookie("token"),
+//   (value: any, oldValue: any) => {
+//     console.log("token watch....", value, oldValue);
+//     useCookie("refresh-token") && useAuthenticator().fetchRefresh();
+//   },
+//   { deep: true }
+// );
 </script>

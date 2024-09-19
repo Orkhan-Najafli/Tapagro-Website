@@ -62,7 +62,7 @@
           class="transform"
         />
       </button>
-      <div v-show="categoriesBoxShow">
+      <div>
         <tree />
       </div>
       <!-- <categories-tree
