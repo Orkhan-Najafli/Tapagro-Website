@@ -6,6 +6,8 @@ import type { Categories } from "~/utils/types/categories";
 
 export const useCategoriesStore = defineStore("categories", {
   state: () => ({
+    baseCategoryID: undefined as undefined | number,
+
     baseCategories: [] as Array<Categories>,
     status: "" as string,
     error: null as null | Error,
@@ -17,8 +19,12 @@ export const useCategoriesStore = defineStore("categories", {
   }),
   getters: {
     getBaseCategories: (state) => state.baseCategories,
+    getBaseCategoryID: (state) => state.baseCategoryID,
   },
   actions: {
+    setBaseCategoryID(id: number | undefined) {
+      this.baseCategoryID = id;
+    },
     async fetchBaseCategories() {
       const { data, status, error } = await useAsyncData<Categories[]>(
         "base-categories",

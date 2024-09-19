@@ -14,11 +14,9 @@
                 <div
                   v-if="
                     checkSearch &&
-                    useProductsStore().getProductsStatus !== 'success'
+                    useProductsStore().getProductsStatus === 'success'
                   "
                 >
-                  <!-- v-if="checkSearch && !$wait.is(FetchingProducts)" -->
-
                   <h2
                     class="text-gray-600 font-medium text-sm md:text-2xl p-0 m-0 mr-2"
                   >
@@ -31,7 +29,7 @@
                 <div
                   v-if="
                     !checkSearch &&
-                    useProductsStore().getProductsStatus !== 'success'
+                    useProductsStore().getProductsStatus === 'success'
                   "
                   class="text-gray-600 font-medium text-2xl p-0 m-0 mr-2"
                 >
@@ -108,10 +106,11 @@
         </div>
       </div>
     </section>
-    <!-- <MainProductFilterMobile
-      :visible="visible"
-      @handleCancel="visible = false"
-    /> -->
+    <main-product-filter-modal
+      @handle-ok="openMobileFilter = false"
+      @handle-cancel="openMobileFilter = false"
+      v-if="openMobileFilter"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -123,13 +122,10 @@ const searchParams = reactive({
   sortBy: "createdAt",
   sortDirection: "DESC",
 });
-const filterShowOrHide = ref(false);
-const visible = ref(false);
+const openMobileFilter = ref(false);
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
-  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 2 : 2,
-  // sortBy: "createdAt",
-  // sortDirection: "DESC",
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 12 : 12,
 });
 
 // methods
@@ -151,7 +147,7 @@ const convertSortBy = function (direction: any) {
   }
 };
 const showFilterModal = function () {
-  visible.value = true;
+  openMobileFilter.value = true;
 };
 useProductsStore().resetProducts();
 useProductsStore().fetchProducts({
@@ -168,27 +164,33 @@ const loadMoreProducts = function () {
   queryParams.size = 2;
   useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
 };
-
+const filter = function (value: any, oldValue: any) {
+  if (
+    value?.sortBy !== oldValue?.sortBy ||
+    value?.endirimli !== oldValue?.endirimli ||
+    value?.storeIds !== oldValue?.storeIds ||
+    value?.maxPrice !== oldValue?.maxPrice ||
+    value?.minPrice !== oldValue?.minPrice ||
+    value?.minAverageRating !== oldValue?.minAverageRating ||
+    value?.cityIds !== oldValue?.cityIds
+  ) {
+    useProductsStore().resetProducts();
+    queryParams.page = 0;
+  }
+  useProductsStore().fetchProducts({
+    ...useRoute().query,
+    ...queryParams,
+    sortBy: convertSortBy(false),
+    sortDirection: convertSortBy(true),
+    isDiscounted: !!useRoute().query.endirimli || undefined,
+    minAverageRating: Number(useRoute().query.minAverageRating) || undefined,
+  });
+};
 // watch
 watch(
   () => useRoute().query,
   (value: any, oldValue: any) => {
-    if (
-      value?.sortBy !== oldValue?.sortBy ||
-      value?.endirimli !== oldValue?.endirimli ||
-      value?.storeIds !== oldValue?.storeIds
-    ) {
-      useProductsStore().resetProducts();
-      queryParams.page = 0;
-    }
-    useProductsStore().fetchProducts({
-      ...useRoute().query,
-      ...queryParams,
-      sortBy: convertSortBy(false),
-      sortDirection: convertSortBy(true),
-      isDiscounted: !!useRoute().query.endirimli || undefined,
-      minAverageRating: Number(useRoute().query.minAverageRating) || undefined,
-    });
+    !openMobileFilter.value && filter(value, oldValue);
   },
   { deep: true }
 );

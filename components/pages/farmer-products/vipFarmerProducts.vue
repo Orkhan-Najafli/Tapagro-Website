@@ -81,7 +81,7 @@ const convertSortByForFarmer = function (direction: boolean) {
   console.log("item: ", direction);
 
   if (useRoute().query && useRoute().query.sortBy) {
-    let item = useRoute().query.sortBy!.split("-");
+    let item = String(useRoute().query.sortBy).split("-");
     if (direction) {
       return item[1] || sortList[0].sortDirection;
     } else {

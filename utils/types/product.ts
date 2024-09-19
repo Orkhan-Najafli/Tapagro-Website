@@ -47,7 +47,7 @@ export interface ProductQuery {
   page: number;
   size: number;
   searchText?: string;
-  productCategoryLabels?: string[];
+  productCategoryLabels?: string | string[];
   productBaseCategoryLabel?: string;
   storeIds?: number[];
   cityIds?: number[];

@@ -39,10 +39,10 @@
           :placeholder="$t('search_the_store')"
         />
       </div>
-      <ul class="w-full mt-3 flex place-content-center" id="scroll-style">
+      <ul class="w-full mt-3" id="scroll-style">
         <a-spin
           size="large"
-          class="mt-20"
+          class="mt-20 flex justify-center"
           :spinning="useStoresStore().getStoresStatus !== 'success'"
         >
           <li
@@ -106,7 +106,6 @@ const loadStores = function (event?: Event | undefined | any) {
 loadStores();
 
 const changeUrlStore = function (event: Event | any) {
-  console.log(event.target.checked);
   if (event.target.checked) {
     selectedStores.push(event.target.value);
   } else {
@@ -115,7 +114,6 @@ const changeUrlStore = function (event: Event | any) {
       selectedStores.splice(index, 1);
     }
   }
-  console.log("changeUrlStore", selectedStores);
   useRouter().push({
     query: {
       ...useRoute().query,

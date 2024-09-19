@@ -15,6 +15,7 @@
         <li
           v-for="(item, index) in useCategoriesStore().getBaseCategories || []"
           :key="index"
+          @click="setBaseCategoryID(item.id)"
           class="flex flex-row w-auto mr-6"
         >
           <nuxt-link
@@ -114,6 +115,7 @@ const initialScrollValue = function () {
     arrowScroll.value = false;
   }
 };
+
 initialScrollValue();
 const scrollParent = function (event: Event) {
   if (divScrollWidth.value?.scrollLeft! > 10) {
@@ -135,6 +137,9 @@ const IsGoingRight = function () {
     left: divScrollWidth.value?.scrollWidth! - ulWidth.value?.offsetWidth!,
     behavior: "smooth",
   });
+};
+const setBaseCategoryID = function (id: number) {
+  useCategoriesStore().setBaseCategoryID(id);
 };
 </script>
 <style scoped>
