@@ -46,7 +46,9 @@
                 <h2
                   class="text-gray-600 font-medium text-sm md:text-2xl p-0 m-0 mr-2"
                 >
-                  <!-- <span v-if="baseCategory">{{ baseCategory.name }} :</span> -->
+                  <span
+                    >{{ useCategoriesStore().getBaseCategory?.name }} :</span
+                  >
                   <span class="whitespace-nowrap">
                     {{ useProductsStore().getTotalElements }}</span
                   >
@@ -134,20 +136,22 @@
           </div>
           <div class="flex flex-col w-full">
             <vipFarmerProducts
-              v-if="new RegExp('fermer').test(useRouter().fullPath)"
+              v-if="new RegExp('fermer').test(useRoute().fullPath)"
               :classGridSize="false"
               :size="9"
             />
             <div class="flex flex-col w-full">
               <p
-                v-if="new RegExp('fermer').test(useRouter().fullPath)"
+                v-if="new RegExp('fermer').test(useRoute().fullPath)"
                 class="text-gray-500 font-semibold text-bold text-base mb-4 md:mb-6"
               >
                 <span> {{ $t("farmer_products") }} </span>
               </p>
               <div class="flex w-full flex-col">
                 <a-spin
-                  :spinning="false"
+                  :spinning="
+                    useFarmerProductsStore().getProductsStatus !== 'success'
+                  "
                   size="large"
                   wrapper-class-name="text-green-800"
                 >
@@ -324,7 +328,7 @@ useFarmerProductsStore().fetchProducts({
     },
   ],
 });
-useCategoriesStore().fetchCategories(useCategoriesStore().getBaseCategoryID);
+useCategoriesStore().fetchCategories(useCategoriesStore().getBaseCategory?.id);
 // watch
 watch(
   () => useRoute().query,

@@ -15,7 +15,7 @@
         <li
           v-for="(item, index) in useCategoriesStore().getBaseCategories || []"
           :key="index"
-          @click="setBaseCategoryID(item.id)"
+          @click="setBaseCategory(item)"
           class="flex flex-row w-auto mr-6"
         >
           <nuxt-link
@@ -24,7 +24,6 @@
             active-class="border-green-500 border-2 "
             class="flex flex-row w-auto min-h-[134px] min-w-[180px] group hover:border-2 hover:border-green-500 hover:shadow-lg bg-green-50 rounded cursor-pointer transition-all duration-100 mr-6"
           >
-            <!--          @click="loadSubCategories(item.id, item.name)"-->
             <div
               class="flex flex-col justify-center items-center w-full min-w-full h-auto py-3 z-30"
             >
@@ -101,6 +100,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Categories } from "~/utils/types/categories";
+
 //data
 const divScrollWidth = ref<HTMLElement>();
 const ulWidth = ref<HTMLElement>();
@@ -138,8 +139,14 @@ const IsGoingRight = function () {
     behavior: "smooth",
   });
 };
-const setBaseCategoryID = function (id: number) {
-  useCategoriesStore().setBaseCategoryID(id);
+
+useCategoriesStore().getBaseCategories.filter((category: Categories) => {
+  if (useRoute().params.id === category.label) {
+    useCategoriesStore().setBaseCategory(category);
+  }
+});
+const setBaseCategory = function (category: Categories) {
+  useCategoriesStore().setBaseCategory(category);
 };
 </script>
 <style scoped>
