@@ -140,7 +140,7 @@ const IsGoingRight = function () {
   });
 };
 
-useCategoriesStore().getBaseCategories.filter((category: Categories) => {
+useCategoriesStore().getBaseCategories.forEach((category: Categories) => {
   if (useRoute().params.id === category.label) {
     useCategoriesStore().setBaseCategory(category);
   }

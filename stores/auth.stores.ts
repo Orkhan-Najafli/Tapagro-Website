@@ -64,7 +64,6 @@ export const useAuthenticator = defineStore("Authenticator", {
           },
         })
       );
-      console.log("status: ", status.value);
 
       this.access = data.value!;
       this.loginStatus = status.value;

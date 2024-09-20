@@ -82,20 +82,8 @@ const queryParams = reactive({
 });
 useStoresStore().fetchStores({ ...queryParams });
 const scrollPositionCalculate = function () {
-  console.log("div: ", storeContainer.value);
-
   maxScrollPosition.value =
     storeContainer.value?.scrollWidth! - storeContainer.value?.offsetWidth!;
-
-  console.log("maxScrollPosition.value : ", maxScrollPosition.value);
-  console.log(
-    "storeContainer.value?.scrollWidth! : ",
-    storeContainer.value?.scrollWidth!
-  );
-  console.log(
-    "storeContainer.value?.offsetWidth! : ",
-    storeContainer.value?.offsetWidth!
-  );
 };
 
 watch(useStoresStore().getStores, () => {
@@ -144,13 +132,9 @@ const scroll = function (direction: number) {
 };
 //computed
 const canScrollLeft = computed(() => {
-  console.log("scrollPosition.value: ", scrollPosition.value);
-
   return scrollPosition.value > 0;
 });
 const canScrollRight = computed(() => {
-  console.log("scrollPosition.value: ", scrollPosition.value);
-
   return scrollPosition.value < maxScrollPosition.value - 1;
 });
 </script>

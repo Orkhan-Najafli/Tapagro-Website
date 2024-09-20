@@ -2,7 +2,10 @@ import { HeaderConfigs, parseUrl } from "@/utils/configs";
 import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
-import type { Categories } from "~/utils/types/categories";
+import type {
+  Categories,
+  CategoriesProductType,
+} from "~/utils/types/categories";
 
 export const useCategoriesStore = defineStore("categories", {
   state: () => ({
@@ -19,11 +22,33 @@ export const useCategoriesStore = defineStore("categories", {
   }),
   getters: {
     getBaseCategories: (state) => state.baseCategories,
+    getBaseCategoriesStatus: (state) => state.status,
+    getCategories: (state) => state.categories,
+    getCategoriesStatus: (state) => state.categoriesStatus,
     getBaseCategory: (state) => state.baseCategory,
   },
   actions: {
     setBaseCategory(category: Categories) {
       this.baseCategory = category;
+    },
+    setProductTypes(index: number, productTypes: Array<CategoriesProductType>) {
+      this.categories[index].hide = !this.categories[index].hide;
+      this.categories[index].productTypes = productTypes;
+    },
+    setAllProductTypes(
+      index: number,
+      allCategoriesChecked?: boolean,
+      productTypes?: Array<CategoriesProductType>
+    ) {
+      this.categories[index].productTypes = this.categories[
+        index
+      ].productTypes.map((type: CategoriesProductType) => {
+        return {
+          ...type,
+          hide: allCategoriesChecked,
+        };
+      });
+      // this.categories[index].productTypes = productTypes!;
     },
     async fetchBaseCategories() {
       const { data, status, error } = await useAsyncData<Categories[]>(
@@ -40,7 +65,12 @@ export const useCategoriesStore = defineStore("categories", {
             }
           )
       );
-      this.baseCategories = data!.value!;
+      this.baseCategories = data!.value!.map((baseCategory) => {
+        return {
+          ...baseCategory,
+          hide: true,
+        };
+      });
       this.status = status.value;
       this.error = error?.value;
     },
@@ -62,7 +92,13 @@ export const useCategoriesStore = defineStore("categories", {
             }
           )
       );
-      this.categories = data!.value!;
+      this.categories = data!.value!.map((category) => {
+        return {
+          ...category,
+          hide: false,
+        };
+      });
+
       this.categoriesStatus = status.value;
       this.categoriesError = error?.value;
     },
