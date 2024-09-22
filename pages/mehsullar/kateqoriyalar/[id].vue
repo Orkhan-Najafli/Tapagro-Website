@@ -254,7 +254,6 @@ const convertSortBy = function (direction: any) {
     }
   }
 };
-console.log("useRoute().params: ", useRoute().params);
 
 const showFilterModal = function () {
   openMobileFilter.value = true;

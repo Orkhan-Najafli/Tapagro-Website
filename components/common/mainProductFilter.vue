@@ -293,7 +293,6 @@ useCitiesStore().fetchCities();
 //       baseCategory: "productCategories/baseCategory",
 //     }),
 const loadCities: any = function (event?: Event | undefined | any) {
-  console.log("cities: ", useCitiesStore().getCities);
   useCitiesStore().resetCities();
   useCitiesStore().fetchCities(`${event.target.value!}`);
 };

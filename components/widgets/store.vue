@@ -131,8 +131,6 @@ const scroll = function (event: Event | any) {
       Math.ceil(event.target.scrollHeight) -
         Math.ceil(event.target.clientHeight)
   ) {
-    console.log("scroll isleyir.....");
-
     queryParams.page++;
     useStoresStore().fetchStores({
       ...queryParams,

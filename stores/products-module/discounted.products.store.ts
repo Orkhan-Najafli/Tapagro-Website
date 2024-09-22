@@ -46,7 +46,6 @@ export const useDiscountedProductsStore = defineStore("discountedProducts", {
       });
       this.status = status.value;
       this.error = error.value;
-      console.log("p:  ", data.value);
     },
   },
 });

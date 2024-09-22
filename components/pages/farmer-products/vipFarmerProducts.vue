@@ -78,8 +78,6 @@ const sortList = reactive([
   },
 ]);
 const convertSortByForFarmer = function (direction: boolean) {
-  console.log("item: ", direction);
-
   if (useRoute().query && useRoute().query.sortBy) {
     let item = String(useRoute().query.sortBy).split("-");
     if (direction) {
