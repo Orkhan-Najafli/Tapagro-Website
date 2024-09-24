@@ -7,27 +7,19 @@ import type {
   CategoriesProductType,
 } from "~/utils/types/categories";
 
-export const useCategoriesStore = defineStore("categories", {
+export const useFarmerCategoriesStore = defineStore("farmer-categories", {
   state: () => ({
-    baseCategory: undefined as Categories | undefined,
-
-    baseCategories: [] as Array<Categories>,
+    categories: [] as Array<Categories>,
     status: "" as string,
     error: null as null | Error,
-
-    categories: [] as Array<Categories>,
-    categoriesStatus: "" as string,
-    categoriesError: null as null | Error,
-
     productTypes: [] as Array<CategoriesProductType>,
+
+    baseCategory: undefined as Categories | undefined,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
-    getBaseCategories: (state) => state.baseCategories,
-    getBaseCategoriesStatus: (state) => state.status,
+    getStatus: (state) => state.status,
     getCategories: (state) => state.categories,
-    getCategoriesStatus: (state) => state.categoriesStatus,
-    getBaseCategory: (state) => state.baseCategory,
   },
   actions: {
     setBaseCategory(category: Categories) {
@@ -35,14 +27,7 @@ export const useCategoriesStore = defineStore("categories", {
     },
     setProductTypes(index: number) {
       this.categories[index].hide = !this.categories[index].hide;
-      // useRouter().push({
-      //   query: {
-      //     ...useRoute().query,
-      //     productTypeLabels: [...this.categories[index].productTypes],
-      //   },
-      // });
     },
-    setCheckedTypes(typeList: Array<string>) {},
     setAllProductTypes(index: number, allProductTypeChecked?: boolean) {
       this.categories[index].productTypes = this.categories[
         index
@@ -53,55 +38,24 @@ export const useCategoriesStore = defineStore("categories", {
         };
       });
     },
-    async fetchBaseCategories() {
+
+    async fetchCategories() {
       const { data, status, error } = await useAsyncData<Categories[]>(
-        "base-categories",
+        "farmer-categories",
         () =>
-          $fetch(
-            `${this.baseURL}${urls["base-categories"]}`,
-
-            {
-              headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
-              },
-              method: "GET",
-            }
-          )
-      );
-      this.baseCategories = data!.value!.map((baseCategory) => {
-        return {
-          ...baseCategory,
-          hide: true,
-        };
-      });
-      this.status = status.value;
-      this.error = error?.value;
-    },
-
-    async fetchCategories(baseCategoryId: number) {
-      const { data, status, error } = await useAsyncData<Categories[]>(
-        "categories",
-        () =>
-          $fetch(
-            `${this.baseURL}${parseUrl(urls.categories, {
-              baseCategoryId: baseCategoryId,
-            })}`,
-
-            {
-              headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
-              },
-              method: "GET",
-            }
-          )
+          $fetch(`${this.baseURL}${urls.subcategories}`, {
+            headers: {
+              ...HeaderConfigs(useCookie("token") || ""),
+            },
+            method: "GET",
+          })
       );
 
       for (const category of data!.value!) {
         try {
           await $fetch(
-            `${this.baseURL}${parseUrl(urls["product-types"], {
-              baseCategoryId: baseCategoryId,
-              categoryId: category.id,
+            `${this.baseURL}${parseUrl(urls["farmer-product-types"], {
+              id: category.id,
             })}`,
 
             {
@@ -133,8 +87,8 @@ export const useCategoriesStore = defineStore("categories", {
 
       // Finally update categories
       this.categories = data!.value!;
-      this.categoriesStatus = status.value;
-      this.categoriesError = error?.value;
+      this.status = status.value;
+      this.error = error?.value;
     },
   },
 });

@@ -1,30 +1,29 @@
 <template>
   <div class="w-full">
-    <h2 class="my-4">Kateqoriyalar</h2>
     <ul class="w-auto h-auto m-0 p-0 max-w-[350px]">
       <li
         class="w-full h-auto m-0 p-0"
-        v-for="(category, index) in useCategoriesStore().getCategories"
+        v-for="(category, index) in useRoute().params.id === 'fermer-mehsullari'
+          ? useFarmerCategoriesStore().getCategories
+          : useCategoriesStore().getCategories"
         :key="index"
       >
         <div
-          @click="getProductTypes(4, category.id, index)"
+          @click="getProductTypes(index)"
           class="flex flex-row justify-between items-center w-full h-auto min-w-full cursor-pointer hover:bg-[#f9fafb] p-2 rounded"
         >
-          <span class="block">
+          <span class="flex justify-start items-center">
             <input
-              class="cursor-pointer outline-none accent-[#16A34A] h-4 w-4 border-[#d9d9d9]"
-              @click="setQuery($event, index)"
+              class="cursor-pointer outline-none accent-[#16A34A] h-4 w-4 border-[#d9d9d9] mr-2"
+              @click="getProductTypesWithChecked($event, index, category)"
               type="checkbox"
               :id="`${category.name}-${category.id}`"
               :name="`${category.name}-${category.id}`"
             />
-            <label class="cursor-pointer">
-              <!-- :for="`${category.name}-${category.id}`" -->
-              {{ category.name }} --- {{ category.hide }}</label
-            >
+            <label class="cursor-pointer"> {{ category.name }} </label>
           </span>
           <DownOutlined
+            v-if="category.productTypes.length > 0"
             class="text-sm transform transition-transform"
             :class="{
               '-rotate-180': category.hide,
@@ -33,9 +32,11 @@
           />
         </div>
         <ul
-          class="w-auto overflow-hidden h-0 transition-all duration-500 pl-8 my-0"
+          v-if="category.productTypes.length > 0"
+          class="w-auto overflow-hidden transition-all duration-500 pl-7"
           :class="{
             'h-auto my-3': category.hide,
+            'h-0 my-0': !category.hide,
           }"
         >
           <li
@@ -43,18 +44,18 @@
             v-for="(productType, index) in category.productTypes"
             :key="index"
           >
-            <span>
+            <span class="flex flex-row justify-start items-center">
               <input
                 type="checkbox"
-                class="h-4 w-4 mr-2.5 accent-[#16A34A]"
+                class="h-4 w-4 mr-2.5 accent-[#16A34A] block"
                 :id="`${productType.name}-${productType.id}`"
                 :name="`${productType.name}-${productType.id}`"
-                :checked="productType.hide"
+                :checked="productType.checked"
               />
               <label
                 class="cursor-pointer text-[#6B7280]"
                 :for="`${productType.name}-${productType.id}`"
-                >{{ productType.name }} ---{{ productType.hide }}</label
+                >{{ productType.name }}</label
               >
             </span>
             <span
@@ -68,24 +69,43 @@
   </div>
 </template>
 <script setup lang="ts">
-// useCategoriesStore().fetchBaseCategories();
-const checkedProductType = ref(false);
-const checkedCategory = ref(false);
-// methods
-useCategoriesStore().fetchCategories(4);
+import type {
+  Categories,
+  CategoriesProductType,
+} from "~/utils/types/categories";
 
-const getProductTypes = function (
-  baseCategoryId: number = 4,
-  categoryId: number,
-  index: number
-) {
-  useProductTypesStore().fetchProductTypes(baseCategoryId, categoryId, index);
+// methods
+const getProductTypes = function (index: number) {
+  useRoute().params.id === "fermer-mehsullari"
+    ? useFarmerCategoriesStore().setProductTypes(index)
+    : useCategoriesStore().setProductTypes(index);
 };
-const setQuery = function (event: Event | any, index: number) {
+console.log("query: ", useRoute().query.productTypeLabels);
+
+const getProductTypesWithChecked = function (
+  event: Event | any,
+  index: number,
+  category: Categories
+) {
   event.stopPropagation();
-  if (event.target.checked) {
-    useCategoriesStore().setAllProductTypes(index, true);
-  }
+
+  let productTypeLabels = [] as string[];
+  event.target.checked
+    ? category.productTypes.forEach((type: CategoriesProductType, index) => {
+        productTypeLabels.push(type.label);
+      })
+    : (productTypeLabels = []);
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      productTypeLabels:
+        productTypeLabels.length > 0 ? productTypeLabels.join(",") : undefined,
+    },
+  });
+
+  useRoute().params.id === "fermer-mehsullari"
+    ? useFarmerCategoriesStore().setAllProductTypes(index, event.target.checked)
+    : useCategoriesStore().setAllProductTypes(index, event.target.checked);
 };
 </script>
 <style>

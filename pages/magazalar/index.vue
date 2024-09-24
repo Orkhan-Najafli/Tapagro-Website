@@ -3,4 +3,6 @@
     <Tree />
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+useCategoriesStore().fetchCategories(Number(useCookie("categoryID").value));
+</script>

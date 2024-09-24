@@ -142,11 +142,14 @@ const IsGoingRight = function () {
 
 useCategoriesStore().getBaseCategories.forEach((category: Categories) => {
   if (useRoute().params.id === category.label) {
+    console.log("id: ", useRoute().params.id, "  label: ", category.label);
     useCategoriesStore().setBaseCategory(category);
   }
 });
 const setBaseCategory = function (category: Categories) {
   useCategoriesStore().setBaseCategory(category);
+  useCategoriesStore().fetchCategories(category.id);
+  useCookie<number>("categoryID").value = category.id;
 };
 </script>
 <style scoped>

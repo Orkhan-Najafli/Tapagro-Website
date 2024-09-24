@@ -1,8 +1,7 @@
 <template>
   <div class="pt-3 md:px-0 mb-32">
     <div
-      style="max-width: 1224px"
-      class="flex flex-row w-full lg:container mx-auto px-6"
+      class="flex flex-row max-w-[1224px] w-full px-6 xl:px-0 container mx-auto"
     >
       <div class="w-full relative">
         <categories />
@@ -274,6 +273,13 @@ const checkSearch = computed(() => {
   }
   return false;
 });
+
+if (useRoute().params.id === "fermer-mehsullari") {
+  useFarmerCategoriesStore().fetchCategories();
+} else {
+  useCategoriesStore().fetchCategories(Number(useCookie("categoryID").value));
+}
+
 useProductsStore().resetProducts();
 useProductsStore().fetchProducts({
   ...queryParams,
@@ -298,7 +304,8 @@ const filter = function (value: any, oldValue: any) {
     value?.maxPrice !== oldValue?.maxPrice ||
     value?.minPrice !== oldValue?.minPrice ||
     value?.minAverageRating !== oldValue?.minAverageRating ||
-    value?.cityIds !== oldValue?.cityIds
+    value?.cityIds !== oldValue?.cityIds ||
+    value?.productTypeLabels !== oldValue.productTypeLabels
   ) {
     useProductsStore().resetProducts();
     queryParams.page = 0;
@@ -327,7 +334,6 @@ useFarmerProductsStore().fetchProducts({
     },
   ],
 });
-useCategoriesStore().fetchCategories(useCategoriesStore().getBaseCategory?.id);
 // watch
 watch(
   () => useRoute().query,
@@ -526,10 +532,7 @@ watch(
 //     },
 //     "$route.query": "$fetch",
 //   },
-//   async fetch() {
-//     !this.more && (this.productData.list = []);
-//     await this.loadListData();
-//   },
+
 // };
 </script>
 <style>
