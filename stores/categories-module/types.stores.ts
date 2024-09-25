@@ -21,10 +21,15 @@ export const useProductTypesStore = defineStore("types", {
     getError: (state) => state.error,
   },
   actions: {
+    resetProductTypes() {
+      this.productTypes = [];
+      this.status = "";
+      this.error = null;
+    },
     async fetchProductTypes(
       baseCategoryId: number = 4,
       categoryId: number,
-      index: number
+      checked?: boolean
     ) {
       const { data, status, error } = await useAsyncData<
         CategoriesProductType[]
@@ -43,15 +48,17 @@ export const useProductTypesStore = defineStore("types", {
           }
         )
       );
+
       this.productTypes = data!.value!.map((type) => {
         return {
           ...type,
           hide: false,
+          checked: false,
         };
       });
-      useCategoriesStore().setProductTypes(index, this.productTypes);
-      this.status = status.value;
-      this.error = error?.value;
+
+      this.status = status!.value;
+      this.error = error!.value;
     },
   },
 });

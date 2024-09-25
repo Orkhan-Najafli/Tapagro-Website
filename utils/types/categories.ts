@@ -4,8 +4,10 @@ export interface Categories {
   name: string;
   iconPath: string;
   rank: number;
-  hide?: boolean;
   productTypes: Array<CategoriesProductType>;
+  // static
+  hide?: boolean;
+  apiCalled?: boolean;
 }
 export interface CategoriesProductType {
   id: number;
@@ -13,4 +15,5 @@ export interface CategoriesProductType {
   name: string;
   productCount: number;
   hide?: boolean;
+  checked?: boolean;
 }

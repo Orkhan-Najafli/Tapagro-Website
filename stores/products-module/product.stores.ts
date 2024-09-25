@@ -4,6 +4,7 @@ import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
 import type { Product, ProductQuery } from "~/utils/types/product";
+import { stringify } from "qs";
 
 export const useProductsStore = defineStore("products", {
   state: () => ({
@@ -29,14 +30,21 @@ export const useProductsStore = defineStore("products", {
       this.error = null;
     },
     async fetchProducts(queryData: ProductQuery) {
+      const queryString = stringify(queryData, {
+        encode: false,
+        indices: true,
+        allowDots: false,
+        arrayFormat: "comma", //sortList[0].sortDirection: DESC
+        // arrayFormat: "repeat", //sortList.sortDirection: DESC
+      });
       const { data, status, error } = await useAsyncData<ApiBase<Product>>(
         "products",
         () =>
-          $fetch(`${this.baseURL}${urls.products}`, {
+          $fetch(`${this.baseURL}${urls.products}?${queryString}`, {
             headers: {
               ...HeaderConfigs(useCookie("token") || ""),
             },
-            query: queryData,
+            // query: queryData,
           })
       );
       this.totalElements = data.value?.totalElements!;

@@ -31,7 +31,6 @@
           </h1>
         </div>
         <div
-          style=""
           class="bg-white w-full rounded-md flex flex-row min-w-full"
           id="responsive-mobile"
         >

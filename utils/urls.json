@@ -10,6 +10,8 @@
   "base-categories": "public/ecommerce/products/base-categories",
   "categories": "public/ecommerce/products/base-categories/${baseCategoryId}/categories",
   "product-types": "public/ecommerce/products/base-categories/${baseCategoryId}/categories/${categoryId}/types",
+  "subcategories": "public/ecommerce/farmer-products/subcategories",
+  "farmer-product-types": "public/ecommerce/farmer-products/subcategories/${id}/types",
   "users": "ecommerce/users",
   "farmer-products": "public/ecommerce/farmer-products",
   "banner": "public/ecommerce/banners",

@@ -43,10 +43,7 @@
         </span>
       </label>
     </section>
-    <section
-      v-if="useRoute().params.id === 'fermer-mehsullari'"
-      class="flex flex-col w-full h-auto"
-    >
+    <section v-if="useRoute().params.id" class="flex flex-col w-full h-auto">
       <hr class="mb-6 bg-gray-200" />
       <button
         class="text-gray-700 text-base font-bold hover:text-gray-700 flex flex-row items-center justify-between mb-3"
@@ -63,7 +60,7 @@
         />
       </button>
       <div>
-        <tree />
+        <tree v-show="categoriesBoxShow" />
       </div>
       <!-- <categories-tree
         v-show="categoriesBoxShow"
