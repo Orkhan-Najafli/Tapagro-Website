@@ -81,6 +81,8 @@ const getProductTypes = function (index: number) {
     : useCategoriesStore().setProductTypes(index);
 };
 console.log("query: ", useRoute().query.productTypeLabels);
+if (useRoute().query.productTypeLabels) {
+}
 
 const getProductTypesWithChecked = function (
   event: Event | any,
@@ -103,9 +105,9 @@ const getProductTypesWithChecked = function (
     },
   });
 
-  useRoute().params.id === "fermer-mehsullari"
-    ? useFarmerCategoriesStore().setAllProductTypes(index, event.target.checked)
-    : useCategoriesStore().setAllProductTypes(index, event.target.checked);
+  // useRoute().params.id === "fermer-mehsullari"
+  //   ? useFarmerCategoriesStore().setAllProductTypes(index, event.target.checked)
+  //   : useCategoriesStore().setAllProductTypes(index, event.target.checked);
 };
 </script>
 <style>
