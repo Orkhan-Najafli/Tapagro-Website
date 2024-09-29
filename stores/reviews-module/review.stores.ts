@@ -3,12 +3,11 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Product, ProductQuery } from "~/utils/types/product";
-import { stringify } from "qs";
+import type { Review } from "~/utils/types/reviews";
 
-export const useProductsStore = defineStore("products", {
+export const useReviewsStore = defineStore("reviews", {
   state: () => ({
-    products: new Set<Product>() || ([] as Array<Product>),
+    reviews: new Set<Review>() || ([] as Array<Review>),
     totalElements: 0 as number,
     totalPages: 0 as number,
     status: "" as string,
@@ -16,41 +15,34 @@ export const useProductsStore = defineStore("products", {
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
-    getProducts: (state) => state.products,
+    getReviews: (state) => state.reviews,
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
     getProductsStatus: (state) => state.status,
   },
   actions: {
-    async resetProducts() {
-      this.products = new Set();
+    async resetReviews() {
+      this.reviews = new Set();
       this.totalElements = 0;
       this.totalPages = 0;
       this.status = "";
       this.error = null;
     },
-    async fetchProducts(queryData: ProductQuery) {
-      const queryString = stringify(queryData, {
-        encode: false,
-        indices: true,
-        allowDots: false,
-        arrayFormat: "comma", //sortList[0].sortDirection: DESC
-        // arrayFormat: "repeat", //sortList.sortDirection: DESC
-      });
-      const { data, status, error } = await useAsyncData<ApiBase<Product>>(
-        "products",
+    async fetchReviews(queryData: any) {
+      const { data, status, error } = await useAsyncData<ApiBase<Review>>(
+        "reviews-list",
         () =>
-          $fetch(`${this.baseURL}${urls.products}?${queryString}`, {
+          $fetch(`${this.baseURL}${urls.reviews}`, {
             headers: {
               ...HeaderConfigs(useCookie("token") || ""),
             },
-            // query: queryData,
+            query: queryData,
           })
       );
       this.totalElements = data.value?.totalElements!;
       this.totalPages = data.value?.totalPages!;
-      data.value?.content.forEach((item: Product) => {
-        this.products.add(item);
+      data.value?.content.forEach((item: Review) => {
+        this.reviews.add(item);
       });
       this.status = status.value;
       this.error = error.value;

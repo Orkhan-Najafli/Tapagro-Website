@@ -1,9 +1,12 @@
 <template>
-  <div v-if="props.product">
+  <div
+    @click="useProductDetailStore().fetchProduct(Number(props.product.id))"
+    v-if="props.product"
+  >
     <nuxt-link
       v-if="link == 'mehsullar'"
       tag="a"
-      :to="`/mehsullar/${props.product?.id}`"
+      :to="`/mehsullar/mehsul-etraflisi/${props.product?.id}`"
       class="flex flex-col group overflow-hidden relative cursor-pointer z-10 align-baseline h-full"
     >
       <div class="flex w-full h-auto relative">
@@ -157,7 +160,7 @@
         <nuxt-link
           @click="$event.stopPropagation()"
           tag="a"
-          :to="`/mehsullar/${props.product.id}#rating`"
+          :to="`/mehsullar/mehsul-etraflisi/${props.product.id}#rating`"
           class="flex flex-row items-center justify-start mb-5 mt-3"
         >
           <span class="text-[#1F2937] text-xs md:text-sm font-medium">{{
