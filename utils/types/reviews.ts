@@ -1,3 +1,5 @@
+import type { Store } from "./stores";
+
 export interface ReviewDetail {
   id: number;
   rating: number;
@@ -39,4 +41,19 @@ export interface Review {
     label: string;
     status: string;
   };
+}
+export interface ReviewSummary {
+  reviews: Array<{ rating: number; count: number; percentage: number }>;
+}
+export interface ProductReview {
+  reviewer: string;
+  publishedAt: Date | string;
+  rating: number;
+  comment: string;
+  photos: Array<string>;
+  reply: {
+    reply: string;
+    repliedAt: Date | string;
+  };
+  store?: Store | any;
 }

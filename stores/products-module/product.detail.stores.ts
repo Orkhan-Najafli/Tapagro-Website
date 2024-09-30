@@ -27,7 +27,7 @@ export const useProductDetailStore = defineStore("product-detail", {
         () =>
           $fetch(`${this.baseURL}${urls.products}/${productId}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             // query: queryData,
           })

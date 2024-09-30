@@ -45,7 +45,7 @@ export const useFarmerCategoriesStore = defineStore("farmer-categories", {
         () =>
           $fetch(`${this.baseURL}${urls.subcategories}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             method: "GET",
           })
@@ -60,7 +60,7 @@ export const useFarmerCategoriesStore = defineStore("farmer-categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
+                ...HeaderConfigs(useCookie("token").value || ""),
               },
               method: "GET",
             }

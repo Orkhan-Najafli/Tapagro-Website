@@ -12,6 +12,10 @@ export const useReviewsStore = defineStore("reviews", {
     totalPages: 0 as number,
     status: "" as string,
     error: null as null | Error,
+
+    reviewed: {},
+    reviewedStatus: "" as string,
+    reviewedError: null as null | Error,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
@@ -19,6 +23,10 @@ export const useReviewsStore = defineStore("reviews", {
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
     getProductsStatus: (state) => state.status,
+
+    getReviewed: (state) => state.reviewed,
+    getReviewedStatus: (state) => state.reviewedStatus,
+    getReviewedError: (state) => state.reviewedError,
   },
   actions: {
     async resetReviews() {
@@ -34,7 +42,7 @@ export const useReviewsStore = defineStore("reviews", {
         () =>
           $fetch(`${this.baseURL}${urls.reviews}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             query: queryData,
           })
@@ -46,6 +54,24 @@ export const useReviewsStore = defineStore("reviews", {
       });
       this.status = status.value;
       this.error = error.value;
+    },
+    async fetchReviewed(queryData: any) {
+      const { data, status, error } = await useAsyncData<
+        ApiBase<{
+          reviewed: boolean;
+        }>
+      >("reviewed", () =>
+        $fetch(`${this.baseURL}${urls.reviewed}`, {
+          headers: {
+            ...HeaderConfigs(useCookie("token").value || ""),
+          },
+          query: queryData,
+          method: "POST",
+        })
+      );
+      this.reviewed = data!.value!;
+      this.reviewedStatus = status.value;
+      this.reviewedError = error.value;
     },
   },
 });

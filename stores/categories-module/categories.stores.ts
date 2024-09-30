@@ -62,7 +62,7 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
+                ...HeaderConfigs(useCookie("token").value || ""),
               },
               method: "GET",
             }
@@ -89,7 +89,7 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
+                ...HeaderConfigs(useCookie("token").value || ""),
               },
               method: "GET",
             }
@@ -106,7 +106,7 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token") || ""),
+                ...HeaderConfigs(useCookie("token").value || ""),
               },
               method: "GET",
             }

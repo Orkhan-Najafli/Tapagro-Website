@@ -42,7 +42,7 @@ export const useVipFarmerProductsStore = defineStore("vip-farmer-products", {
       >("vip-farmer-products", () =>
         $fetch(`${this.baseURL}${urls["farmer-products"]}?${queryString}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token") || ""),
+            ...HeaderConfigs(useCookie("token").value || ""),
           },
         })
       );

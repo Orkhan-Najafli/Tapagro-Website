@@ -15,7 +15,7 @@
             {{ $t("products") }}
           </span>
         </nuxt-link>
-        <!-- <a-breadcrumb separator=">" class="hidden md:block">
+        <a-breadcrumb separator=">" class="hidden md:block">
           <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
             <nuxt-link
               tag="span"
@@ -38,7 +38,7 @@
               {{ $t("see_product_in_details") }}
             </span>
           </a-breadcrumb-item>
-        </a-breadcrumb> -->
+        </a-breadcrumb>
       </div>
     </section>
     <section
@@ -740,7 +740,7 @@
         </div>
       </div>
 
-      <!--///////////////////////////////////// Məhsulun qiymətləndirilməsi //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+      <!-- ///////////////////////////////////// Məhsulun qiymətləndirilməsi ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
       <div
         id="rating"
@@ -768,17 +768,18 @@
                 ).toFixed(1)
               }}</span>
               <span class="mx-2.5 -mt-1">
-                <a-rate
-                  disabled
-                  class="m-0 p-0 cursor-pointer"
-                  v-model="averageRating"
-                  allow-half
-                />
+                <ClientOnly fallback-tag="" fallback="">
+                  <a-rate
+                    class="m-0 p-0 cursor-pointer"
+                    disabled
+                    v-model="averageRating"
+                    allow-half
+                  />
+                </ClientOnly>
               </span>
               <span class="text-[#1F2937] text-sm font-medium">
                 ({{
-                  useProductDetailStore().getProduct?.reviewSummary!
-                    .reviewCount
+                  useProductDetailStore().getProduct.reviewSummary.reviewCount
                 }})
               </span>
             </div>
@@ -786,7 +787,7 @@
               class="inline-flex justify-start items-center order-1 md:order-2 w-auto h-auto"
             >
               <div
-                v-if="reviewed"
+                v-if="useReviewsStore().getReviewed"
                 class="inline-flex justify-center items-center w-auto h-auto"
               >
                 <a-tooltip placement="bottom">
@@ -842,13 +843,13 @@
                 <span
                   class="whitespace-nowrap w-auto mx-2.5 -mt-1 -ml-1 cursor-pointer"
                 >
-                  <ClientOnly fallback-tag="div" fallback="Şəkil yüklənir...">
-                    <a-rate
-                      disabled
-                      class="m-0 p-0 cursor-pointer"
-                      v-model:value="raiting.rating"
-                    />
-                  </ClientOnly>
+                  <!-- <ClientOnly fallback-tag="div" fallback="..."> -->
+                  <a-rate
+                    disabled
+                    class="m-0 p-0 cursor-pointer"
+                    v-model="raiting.rating"
+                  />
+                  <!-- </ClientOnly> -->
                 </span>
                 <span class="w-auto text-[#1F2937] text-xs font-normal">
                   {{ `(${raiting.count})` }}
@@ -872,30 +873,37 @@
           </ul>
           <hr class="w-full min-w-full h-[1px] bg-[#CBD5E1] mt-12 mb-3" />
         </section>
-        <!-- <section class="w-full min-w-full h-auto">
+        <section class="w-full min-w-full h-auto">
           <div class="m-0 p-0 flex flex-col justify-start items-start">
-            <Raiting
-              v-for="(review, index) in productReview.list"
+            <raiting
+              v-for="(review, index) in usePublicReviewsStore()
+                .getProductReviews"
               :key="index"
-              :review="review"
+              :review="{
+                ...review,
+                store: useProductDetailStore().getProduct.store,
+              }"
             />
           </div>
 
           <div
-            v-if="productReview.list.length != productReview.totalElements"
+            v-if="
+              usePublicReviewsStore().getProductReviews.length !==
+              usePublicReviewsStore().getProductReviewTotalElements
+            "
             class="flex justify-center items-center mt-9"
           >
             <a-pagination
               size="small"
-              :current="productReview.current"
-              v-model="productReview.current"
-              :total="productReview.totalElements"
+              :current="current"
+              v-model="current"
+              :total="usePublicReviewsStore().getProductReviewTotalElements"
               @change="onChangePage"
               :defaultPageSize="5"
               show-less-items
             />
           </div>
-        </section> -->
+        </section>
       </div>
     </section>
     <!-- <Page404
@@ -919,7 +927,7 @@
 </template>
 
 <script setup lang="ts">
-import type { VueNode } from "ant-design-vue/es/_util/type";
+import { usePublicReviewsStore } from "~/stores/reviews-module/public.product.review.stores";
 import type { ProductDetail } from "~/utils/types/product";
 
 //variables
@@ -929,20 +937,24 @@ let compareFarmerProductList = new Set();
 let compareProductList = new Set();
 let favoriteProductList = new Set();
 const isActive = ref(false);
-const averageRating = ref(null);
+const averageRating = ref();
 const errorMessage = ref(undefined);
 const { t } = useI18n();
 const baseURL = useRuntimeConfig().public.baseURL;
 const selectIndex = ref();
 const reviewed = ref(true);
 const isValuationRateModal = ref(false);
-const raitings = reactive([
+const raiting = reactive({ rating: undefined });
+let raitings = reactive([
   { count: 0, percentage: 0, rating: 5 },
   { count: 0, percentage: 0, rating: 4 },
   { count: 0, percentage: 0, rating: 3 },
   { count: 0, percentage: 0, rating: 2 },
   { count: 0, percentage: 0, rating: 1 },
 ]);
+const showSameProduct = ref(true);
+const reviewIsSucces = ref(false);
+const current = ref(1);
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 3 : 3,
@@ -956,22 +968,26 @@ const queryParams = reactive({
   productBaseCategoryLabel:
     useProductDetailStore().getProduct?.productBaseCategoryLabel,
 });
-
+const queryParamsProductReviews = reactive({
+  page: useRoute().query.page ? Number(useRoute().query.page) : 0,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 3 : 3,
+  productId: Number(useRoute().params.productdetail),
+});
 // methods
 useProductDetailStore().fetchProduct(Number(useRoute().params.productdetail));
+usePublicReviewsStore().fetchReviewSummary({
+  productId: Number(useRoute().params.productdetail),
+});
 
-const handleProducts = async () => {
-  if (useProductDetailStore().getProductStatus === "success") {
-    try {
-      await useProductsStore().resetProducts();
-      await useProductsStore().fetchProducts({ ...queryParams, page: 0 });
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  }
-};
 onMounted(async () => {
-  await handleProducts();
+  // await handleProducts();
+  await useProductsStore().resetProducts();
+  await useProductsStore().fetchProducts({ ...queryParams, page: 0 });
+  loadRaitings();
+  if (useProductDetailStore().getProductStatus === "success") {
+    reviewInit();
+    setCompare();
+  }
 });
 
 const loadMoreProducts = function () {
@@ -994,61 +1010,9 @@ watch(
 );
 
 // export default {
-//   components: {
-//     // Page404,
-//     basket_icon,
-//     scale_logo,
-//     monetary_unit_logo,
-//     Valuation,
-//     Raiting,
-//     review_is_succes,
-//     favorite_icon,
-//     info_icon,
-//   },
+
 //   // layout: "landing-page-layout",
-//   data() {
-//     return {
-//       baseURL: urls.getParam("API_BASE_URL"),
-//       FetchingProducts: FetchingProducts,
-//       addCount: 1,
-//       metaData: {},
-//       selectIndex: undefined,
-//       pagination: {
-//         page: 0,
-//         current: 1,
-//         totalPages: null,
-//         totalElements: null,
-//       },
-//       showSameProduct: true,
-//       products: [],
-//       basketProductCount: 1,
-//       productViewShowButton: false,
-//       compareProductList: compareProductListInSet,
-//       compareFarmerProductList: compareFarmerProductListInSet,
-//       favoriteProductList: favoriteProductList,
-// favoriteIsActive: false,
-//       reviewIsSucces: false,
 
-//       productReview: {
-//         list: [],
-//         page: 1,
-//         current: 1,
-//         totalPages: null,
-//         totalElements: null,
-//       },
-//       averageRating: null,
-//       filterData: {
-//         rating: undefined,
-//       },
-
-//       isValuationRateModal: false,
-//       reviewed: true,
-//       isSuccesData: {
-//         title: this.$t("review_title"),
-//         link: this.$t("review_link"),
-//         description: this.$t("review_description"),
-//         section: "addreview",
-//       },
 // errorMessage: undefined,
 //     };
 //   },
@@ -1078,14 +1042,6 @@ watch(
 //     this.$store.commit("setAppHeroShowAndHide", false);
 //     this.$store.commit("setBasketModalShow", false);
 
-//     if (this.product) {
-//       this.loadProducts();
-//       this.setCompare();
-//     }
-//   },
-//   created() {
-//     this.product && this.product.isActive && this.reviewInit();
-//   },
 //   methods: {
 const setCompare = function () {
   compareFarmerProductList = new Set();
@@ -1118,123 +1074,110 @@ const setCompare = function () {
     }
   }
 };
-setCompare();
-//     reviewInit() {
-//       this.loadRaitings();
-//       if (this.loggedIn) {
-//         this.controlReview();
-//         if (this.$route.query && this.$route.query.reviewId) {
-//           this.isValuationRateModal = true;
-//         }
-//       } else {
-//         this.reviewed = false;
-//       }
-//       this.loadReviews();
-//       this.averageRating = !Number.isInteger(
-//         Number(this.product.reviewSummary.averageRating)
-//       )
-//         ? Number(`${Math.floor(this.product.reviewSummary.averageRating)}.${5}`)
-//         : this.product.reviewSummary.averageRating;
+const reviewInit = function () {
+  loadRaitings();
+  if (useAuthenticator().getToken) {
+    controlReview();
+    if (useRoute().query.reviewId) {
+      isValuationRateModal.value = true;
+    }
+  } else {
+    reviewed.value = false;
+  }
+  loadReviews();
+  averageRating.value = !Number.isInteger(
+    Number(useProductDetailStore().getProduct.reviewSummary.averageRating)
+  )
+    ? Number(
+        `${Math.floor(
+          useProductDetailStore().getProduct.reviewSummary.averageRating
+        )}.${5}`
+      )
+    : useProductDetailStore().getProduct.reviewSummary.averageRating;
 
-//       setTimeout(() => {
-//         this.products.length > 0
-//           ? (this.showSameProduct = false)
-//           : (this.showSameProduct = true);
-//       }, 100);
-//     },
-const loadFilter = function (raiting, index: number) {
+  setTimeout(() => {
+    useProductsStore().getProducts.size > 0
+      ? (showSameProduct.value = false)
+      : (showSameProduct.value = true);
+  }, 100);
+};
+const loadFilter = function (raitingValue: any, index: number) {
   if (selectIndex.value == index) {
     selectIndex.value = undefined;
-    // this.filterData.rating = undefined;
+    raiting.rating = undefined;
   } else {
     selectIndex.value = index;
-    // this.filterData.rating = raiting.rating;
+    raiting.rating = raitingValue.rating;
   }
-  // this.productReview.page = 1;
-  // this.loadReviews(this.filterData);
+  queryParamsProductReviews.page = 1;
+  loadReviews(raiting);
 };
 const resetFilter = function () {
   selectIndex.value = undefined;
-  // this.filterData.rating = undefined;
-  // this.productReview.page = 1;
-  // this.loadReviews(this.filterData);
+  raiting.rating = undefined;
+  queryParamsProductReviews.page = 1;
+  loadReviews(raiting);
 };
-//     onChangePage(current) {
-//       this.productReview.page = current;
-//       this.loadReviews(this.filterData);
-//     },
-//     controlReview() {
-//       let ID = Number(this.$route.params.productDetails);
-//       this.$store.dispatch("review/controlProductReview", ID).then((res) => {
-//         this.reviewed = res.reviewed;
-//       });
-//     },
-//     loadRaitings() {
-//       let ID = Number(this.$route.params.productDetails);
-//       this.$store.dispatch("review/getRaitings", ID).then((res) => {
-//         this.raitings = this.raitings.map((el) => {
-//           res.reviews.filter((rating) => {
-//             if (el.rating == rating.rating) {
-//               el = rating;
-//             }
-//           });
-//           return el;
-//         });
-//       });
-//     },
-//     loadReviews(filter) {
-//       let filterData = {
-//         page: this.productReview.page - 1,
-//         size: 5,
-//         productId: Number(this.$route.params.productDetails),
-//       };
-//       this.$store
-//         .dispatch("review/getReviews", { ...filterData, ...filter })
-//         .then((response) => {
-//           this.productReview.list = response.content.map((item) => {
-//             return {
-//               ...item,
-//               store: this.product.store,
-//             };
-//           });
-//           this.productReview.totalElements = response.totalElements;
-//           this.productReview.totalPages = response.totalPages;
-//         });
-//     },
-//     closeSuccesMessageModal() {
-//       this.reviewIsSucces = false;
-//     },
-//     hideValuationRateModal(val) {
-//       this.isValuationRateModal = false;
-//       this.$router.push({
-//         path: this.$route.fullPath,
-//         query: { reviewId: undefined },
-//       });
-//       if (val) {
-//         setTimeout(() => {
-//           this.reviewIsSucces = true;
-//         }, 100);
-//         this.controlReview();
-//         this.$product
-//           .getProduct(Number(this.$route.params.productDetails))
-//           .then((res) => {
-//             this.product = res;
-//             this.loadReviews(this.filterData);
-//           });
-//       }
-//     },
+const onChangePage = function (current: Event | any) {
+  queryParamsProductReviews.page = current;
+  loadReviews(raiting);
+};
+
+const loadRaitings = function () {
+  // usePublicReviewsStore().getReviews;
+  raitings = raitings.map((el: any) => {
+    usePublicReviewsStore().getReviews.filter((rating: any) => {
+      if (el.rating == rating.rating) {
+        el = rating;
+      }
+    });
+    return el;
+  });
+};
+const loadReviews = function (filter?: any) {
+  usePublicReviewsStore().fetchProductReviews({
+    ...queryParamsProductReviews,
+    ...filter,
+  });
+};
+const closeSuccesMessageModal = function () {
+  reviewIsSucces.value = false;
+};
+const hideValuationRateModal = function (val: any) {
+  isValuationRateModal.value = false;
+  useRouter().push({
+    path: useRoute().fullPath,
+    query: { reviewId: undefined },
+  });
+  if (val) {
+    setTimeout(() => {
+      reviewIsSucces.value = true;
+    }, 100);
+    controlReview();
+    useProductDetailStore().fetchProduct(
+      Number(useRoute().params.productdetail)
+    );
+    if (useProductDetailStore().getProductStatus === "success") {
+      loadReviews(raiting);
+    }
+  }
+};
 const showValuationRateModal = function (id: number) {
   useRouter().push({
     path: useRouter().currentRoute.value.fullPath,
     query: { reviewId: id },
   });
-  // useAuthenticator().getToken
-  //   ? (isValuationRateModal.value = true)
-  //   : this.$store.commit("setLoginRequiredModal", true);
+  useAuthenticator().getToken ? (isValuationRateModal.value = true) : false;
+  // : this.$store.commit("setLoginRequiredModal", true);
 };
-//     onSuccessOperation(val) {
-//       this.hideValuationRateModal(val);
-//     },
+const controlReview = function () {
+  useReviewsStore().fetchReviewed({
+    productId: Number(useRoute().params.productdetail),
+  });
+};
+const onSuccessOperation = function (val: any) {
+  hideValuationRateModal(val);
+};
 const toggleProductToFavorite = function (
   productDetail: ProductDetail,
   event: Event | any
@@ -1378,29 +1321,10 @@ const addProductInBasket = function (id: number) {
 //       this.loadProducts();
 //     },
 //     loadProducts() {
-//       this.$wait.start(FetchingProducts);
-//       this.$product
-//         .getProductList({
-//           page: this.pagination.page,
-//           size: 3,
-//           productTypeId: this.product.productTypeId,
-//           // sortList: ["id", "DESC"],
-//           sortBy: "id",
-//           sortDirection: "DESC",
-//           productTypeLabels: [`${this.product.productTypeLabel}`],
-//           excludedProductId: this.product.id,
-//           productBaseCategoryLabel: this.product.productBaseCategoryLabel,
-//           // cityIds: this.loggedUser?.city.id,
-//         })
-//         .then((response) => {
-//           this.products.push(...response.products);
-//           this.pagination.totalElements = response.metadata.totalElements;
-//           this.pagination.totalPages = response.metadata.totalPages;
+//          .then({
 //           this.$nuxt.$emit("checkNewProducts", {});
 //         })
-//         .finally(() => {
-//           this.$wait.end(FetchingProducts);
-//         });
+
 //     },
 //     // changeData(index) {
 //     //   this.selectIndex = index;
