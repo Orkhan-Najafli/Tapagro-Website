@@ -4,7 +4,7 @@ export interface Product {
   fullName?: string;
   storeId: number;
   storeName: string;
-  storeStatus: StoreStatus;
+  Status: Status;
   price: Price;
   thumbnailPath: string;
   thumbnailName: string;
@@ -29,9 +29,67 @@ export interface Product {
   compareIsActive?: boolean;
   favoriteIsActive?: any;
 }
-type StoreStatus = {
+export interface ProductDetail {
+  id: number;
+  name: string;
+  store: {
+    id: number;
+    name: string;
+    legalAddress: string;
+    physicalAddress: string;
+    phoneNumber: string;
+    email: string;
+    website: string;
+    deliveryCities: nameID[];
+    logoPath: string;
+    status: Status;
+  };
+  productBaseCategoryLabel: string;
+  productTypeName: string;
+  productTypeLabel: string;
+  productTypeId: number;
+  sourceCountryName: string;
+  measurementValue: number;
+  measurementUnitName: string;
+  description: string;
+  marka: string;
+  price: {
+    initialPrice: number;
+    discount: number;
+    discountedPrice: number;
+  };
+  thumbnailPath: string;
+  thumbnailName: string;
+  productPhotos: Array<{ id: number; path: string }>;
+  eligibleToShoppingCart: boolean;
+  bargainMethod: Status;
+  serviceType: Status;
+  attributeValues: attributeValue[];
+  subcategory: nameID;
+  reviewSummary: {
+    averageRating: number;
+    reviewCount: number;
+  };
+  addedToComparisonBasket: boolean;
+  addedToFavoriteBasket: boolean;
+  isActive: true;
+}
+type nameID = {
+  id: number;
+  name: string;
+};
+type deliveryCity = {
+  id: number;
+  name: string;
+};
+type Status = {
   label: string;
   status: string;
+};
+type attributeValue = {
+  attributeLabel: string;
+  attributeName: string;
+  value: string;
 };
 type Price = {
   initialPrice: number;
