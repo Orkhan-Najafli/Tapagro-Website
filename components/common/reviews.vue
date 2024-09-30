@@ -41,68 +41,33 @@
           <p class="m-0 p-0 my-2 text-[#4B5563] text-sm font-normal leading-5">
             {{ props.review.comment }}
           </p>
-          <section id="components-upload-demo-pictures-wall" class="code-box">
-            <section class="code-box-demo">
-              <div class="clearfix">
-                <span class="ant-upload-picture-card-wrapper">
-                  <div class="ant-upload-list ant-upload-list-picture-card">
-                    <div
-                      style="width: 44px; height: 44px"
-                      class="ant-upload-list-picture-card-container"
-                      v-for="(photo, index) in props.review.photos"
-                      :key="index"
-                    >
-                      <span>
-                        <div
-                          style="width: 44px; height: 44px; padding: 3px"
-                          class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card"
-                        >
-                          <div class="ant-upload-list-item-info">
-                            <span>
-                              <img
-                                :src="`${baseURL}${photo}`"
-                                alt="image.png"
-                                class="ant-upload-list-item-thumbnail ant-upload-list-item-image"
-                              />
-                            </span>
-                          </div>
-                          <span class="ant-upload-list-item-actions">
-                            <span
-                              class="cursor-pointer"
-                              @click="handlePreview(photo)"
-                            >
-                              <a-icon
-                                style="color: white"
-                                type="eye"
-                                class="text-lg"
-                              />
-                            </span>
-                          </span>
-                          <a-modal
-                            :centered="true"
-                            :visible="previewVisible"
-                            :footer="null"
-                            @cancel="handleCancel"
-                            width="500px"
-                            height="500px"
-                          >
-                            <img
-                              alt="example"
-                              style="
-                                width: 100%;
-                                height: 100%;
-                                max-height: 500px;
-                              "
-                              :src="`${baseURL}${previewImage}`"
-                            />
-                          </a-modal>
-                        </div>
-                      </span>
-                    </div></div
-                ></span>
-              </div>
-            </section>
+          <section>
+            <div
+              class="inline-flex justify-center items-center group relative rounded-sm border border-[#d9d9d9]"
+              v-for="(photo, index) in props.review.photos"
+              :key="index"
+            >
+              <img
+                :src="`${baseURL}${photo}`"
+                alt="image.png"
+                class="w-[86px] max-w-[86px] h-[86px] max-h-[86px] m-2"
+              />
+              <EyeOutlined
+                @click="handlePreview(photo)"
+                class="hidden group-hover:inline-block transition-all duration-100 absolute text-lg text-white cursor-pointer"
+              />
+            </div>
+
+            <a-modal
+              :open="previewVisible"
+              :title="previewTitle"
+              :footer="null"
+              @cancel="handleCancel"
+            >
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
           </section>
+
           <ul
             v-if="props.review.reply"
             class="flex flex-col w-full h-auto m-0 p-0"
@@ -174,12 +139,14 @@ const baseURL = useRuntimeConfig().public.baseURL;
 const previewVisible = ref(false);
 const visibleReply = ref(false);
 const previewImage = ref("");
+const previewTitle = ref("");
 const props = defineProps({
   review: {
     type: Object as PropType<ProductReview>,
     default: {},
   },
 });
+
 const date = useI18n().t("months");
 const handleCancel = function () {
   previewVisible.value = false;
@@ -191,9 +158,21 @@ const setDefaultStoreImage = async function (event: Event | any) {
   event.target.src = await require(`@/assets/img/all_logos/store.svg`);
   event.target.className = "p-.5";
 };
-const handlePreview = async function (file: any) {
-  previewImage.value = file;
+
+const handlePreview = async (file: string) => {
+  previewImage.value = `${baseURL}${file}`;
   previewVisible.value = true;
+  previewTitle.value = "Şəkil";
 };
-// },
 </script>
+<style scoped>
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+</style>

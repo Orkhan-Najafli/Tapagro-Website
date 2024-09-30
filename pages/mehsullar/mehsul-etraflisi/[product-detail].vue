@@ -744,7 +744,7 @@
 
       <div
         id="rating"
-        class="flex min-w-full w-full h-auto mt-16 pb-10"
+        class="flex flex-col min-w-full w-full h-auto mt-16 pb-10"
         v-if="useProductDetailStore().getProduct.isActive"
       >
         <section class="w-full min-w-full h-auto">
@@ -768,14 +768,12 @@
                 ).toFixed(1)
               }}</span>
               <span class="mx-2.5 -mt-1">
-                <ClientOnly fallback-tag="" fallback="">
-                  <a-rate
-                    class="m-0 p-0 cursor-pointer"
-                    disabled
-                    v-model="averageRating"
-                    allow-half
-                  />
-                </ClientOnly>
+                <a-rate
+                  class="m-0 p-0 cursor-pointer"
+                  disabled
+                  v-model:value="averageRating"
+                  allow-half
+                />
               </span>
               <span class="text-[#1F2937] text-sm font-medium">
                 ({{
@@ -843,13 +841,11 @@
                 <span
                   class="whitespace-nowrap w-auto mx-2.5 -mt-1 -ml-1 cursor-pointer"
                 >
-                  <!-- <ClientOnly fallback-tag="div" fallback="..."> -->
                   <a-rate
                     disabled
                     class="m-0 p-0 cursor-pointer"
-                    v-model="raiting.rating"
+                    v-model:value="raiting.rating"
                   />
-                  <!-- </ClientOnly> -->
                 </span>
                 <span class="w-auto text-[#1F2937] text-xs font-normal">
                   {{ `(${raiting.count})` }}
@@ -875,7 +871,7 @@
         </section>
         <section class="w-full min-w-full h-auto">
           <div class="m-0 p-0 flex flex-col justify-start items-start">
-            <raiting
+            <reviews
               v-for="(review, index) in usePublicReviewsStore()
                 .getProductReviews"
               :key="index"
@@ -927,7 +923,6 @@
 </template>
 
 <script setup lang="ts">
-import { usePublicReviewsStore } from "~/stores/reviews-module/public.product.review.stores";
 import type { ProductDetail } from "~/utils/types/product";
 
 //variables
@@ -937,7 +932,7 @@ let compareFarmerProductList = new Set();
 let compareProductList = new Set();
 let favoriteProductList = new Set();
 const isActive = ref(false);
-const averageRating = ref();
+const averageRating = ref(0);
 const errorMessage = ref(undefined);
 const { t } = useI18n();
 const baseURL = useRuntimeConfig().public.baseURL;
@@ -1017,17 +1012,8 @@ watch(
 //     };
 //   },
 
-//   async asyncData({ $product, route, store }) {
-//     const product = await $product.getProduct(
-//       Number(route.params.productDetails)
-//     );
-
-//     return { product };
-//   },
 //   computed: {
-//     ...mapGetters({
-//       loggedIn: "auth/loggedIn",
-//     }),
+
 //     images() {
 //       if (this.product) {
 //         return [

@@ -1,3 +1,4 @@
+import type { UploadFile } from "ant-design-vue";
 import type { Store } from "./stores";
 
 export interface ReviewDetail {
