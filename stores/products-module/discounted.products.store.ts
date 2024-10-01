@@ -34,7 +34,7 @@ export const useDiscountedProductsStore = defineStore("discountedProducts", {
         () =>
           $fetch(`${this.baseURL}${urls.products}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             query: queryData,
           })

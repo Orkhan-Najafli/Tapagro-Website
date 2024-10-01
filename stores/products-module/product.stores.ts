@@ -42,7 +42,7 @@ export const useProductsStore = defineStore("products", {
         () =>
           $fetch(`${this.baseURL}${urls.products}?${queryString}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             // query: queryData,
           })

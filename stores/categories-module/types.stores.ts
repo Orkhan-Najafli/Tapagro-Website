@@ -42,7 +42,7 @@ export const useProductTypesStore = defineStore("types", {
 
           {
             headers: {
-              ...HeaderConfigs(useCookie("token") || ""),
+              ...HeaderConfigs(useCookie("token").value || ""),
             },
             method: "GET",
           }

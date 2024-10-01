@@ -20,7 +20,7 @@ export const useBannerStore = defineStore("banner", {
       const { data, status, error } = await useAsyncData<Banner>("banner", () =>
         $fetch(`${this.baseURL}${urls.banner}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token") || ""),
+            ...HeaderConfigs(useCookie("token").value || ""),
           },
           query: queryData,
         })

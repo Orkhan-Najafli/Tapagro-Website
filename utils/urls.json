@@ -17,5 +17,8 @@
   "banner": "public/ecommerce/banners",
   "stores": "public/ecommerce/stores",
   "cities": "public/ecommerce/cities",
-  "reviews": "ecommerce/product-reviews"
+  "reviews": "ecommerce/product-reviews",
+  "product_reviews_summary": "public/ecommerce/product-reviews/summary",
+  "public_product_reviews": "public/ecommerce/product-reviews",
+  "reviewed": "ecommerce/product-reviews/reviewed"
 }

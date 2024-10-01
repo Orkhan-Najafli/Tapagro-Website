@@ -27,6 +27,7 @@
     "@vee-validate/nuxt": "^4.13.2",
     "ant-design-vue": "^4.2.3",
     "dotenv": "^16.4.5",
+    "moment": "^2.30.1",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
     "qs": "^6.13.0",
