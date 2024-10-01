@@ -11,5 +11,5 @@ export interface Store {
 export interface QueryParams {
   page: number;
   size: number;
-  storeNamePhrase?: string;
+  storeNamePhrase?: string | undefined;
 }

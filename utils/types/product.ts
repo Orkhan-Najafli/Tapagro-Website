@@ -73,6 +73,14 @@ export interface ProductDetail {
   addedToComparisonBasket: boolean;
   addedToFavoriteBasket: boolean;
   isActive: true;
+  createdAt?: Date | string;
+  publishedAt?: Date | string;
+  rejection?: {
+    reason: string;
+    rejectedAt: Date | string;
+  };
+  comment?: string | any;
+  status?: Status;
 }
 type nameID = {
   id: number;

@@ -29,3 +29,8 @@ interface sortList {
   sortBy: string;
   sortDirection: string;
 }
+export interface Farmer {
+  id: string;
+  name: string;
+  farmerProductCount: number;
+}

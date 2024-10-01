@@ -908,12 +908,12 @@
         :subTitle="$t('no_products_matching_your_search_were_found')"
       /> -->
 
-    <!-- <Valuation
-        v-if="isValuationRateModal"
-        :product="product"
-        @close="hideValuationRateModal"
-        @ok="onSuccessOperation"
-      />  -->
+    <Valuation
+      v-if="isValuationRateModal"
+      :product="useProductDetailStore().getProduct"
+      @close="hideValuationRateModal"
+      @ok="onSuccessOperation"
+    />
     <!-- <review_is_succes
         :data="isSuccesData"
         @handleCancel="closeSuccesMessageModal"
@@ -1004,16 +1004,7 @@ watch(
   // { flush: "pre", deep: true }
 );
 
-// export default {
-
-//   // layout: "landing-page-layout",
-
-// errorMessage: undefined,
-//     };
-//   },
-
 //   computed: {
-
 //     images() {
 //       if (this.product) {
 //         return [
@@ -1153,6 +1144,8 @@ const showValuationRateModal = function (id: number) {
     path: useRouter().currentRoute.value.fullPath,
     query: { reviewId: id },
   });
+  console.log();
+
   useAuthenticator().getToken ? (isValuationRateModal.value = true) : false;
   // : this.$store.commit("setLoginRequiredModal", true);
 };

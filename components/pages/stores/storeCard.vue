@@ -28,14 +28,17 @@
 </template>
 
 <script setup lang="ts">
+import storeImage from "@/assets/img/store_logo.svg";
+
 const props = defineProps({
   data: {
     type: Object,
     default: {},
+    required: true,
   },
 });
 const setDefaultStoreImage = function (event: Event | any) {
-  event.target.src = require(`@/assets/img/all_logos/store.svg`);
+  event.target.src = storeImage;
   event.target.className = "p-2";
 };
 </script>

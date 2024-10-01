@@ -30,7 +30,7 @@
                     v-else
                     :src="require(`@/assets/img/no-image.svg`)"
                     style="width: 86px; height: 86px"
-                    :alt="product.product.name"
+                    :alt="props.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover p-0"
                   />
                 </picture>
@@ -41,11 +41,11 @@
                     >{{ $t("product") }}:
                   </span>
                   <a
-                    :href="`/mehsullar/${product.product.id}`"
+                    :href="`/mehsullar/${props.product.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ product.product.name }}</a
+                    {{ props.product.name }}</a
                   >
                 </span>
                 <span class="flex flex-col md:flex-row w-full h-auto">
@@ -53,11 +53,11 @@
                     >{{ $t("store") }}:
                   </span>
                   <a
-                    :href="`/magazalar/${product.store.id}`"
+                    :href="`/magazalar/${props.product.store.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ product.store.name }}</a
+                    {{ props.product.store.name }}</a
                   >
                 </span>
               </div>
@@ -71,9 +71,9 @@
                   class="m-0 p-0 mr-6 w-auto overflow-hidden inline-flex relative justify-center items-center"
                 >
                   <img
-                    v-if="hasValidThumbnail(product)"
-                    :src="`${baseURL}${product.thumbnailPath}`"
-                    :alt="product.name"
+                    v-if="hasValidThumbnail(props.product)"
+                    :src="`${baseURL}${props.product.thumbnailPath}`"
+                    :alt="props.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover"
                     @error="setDefaultImage"
                   />
@@ -81,7 +81,7 @@
                     v-else
                     :src="require(`@/assets/img/no-image.svg`)"
                     style="width: 86px; height: 86px"
-                    :alt="product.name"
+                    :alt="props.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover p-0"
                   />
                 </picture>
@@ -92,11 +92,11 @@
                     >{{ $t("product") }}:
                   </span>
                   <a
-                    :href="`/mehsullar/${product.id}`"
+                    :href="`/mehsullar/${props.product.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ product.name }}</a
+                    {{ props.product.name }}</a
                   >
                 </span>
                 <span class="flex flex-col md:flex-row w-full h-auto">
@@ -104,11 +104,11 @@
                     >{{ $t("store") }}:
                   </span>
                   <a
-                    :href="`/magazalar/${product.store.id}`"
+                    :href="`/magazalar/${props.product.store.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ product.store.name }}</a
+                    {{ props.product.store.name }}</a
                   >
                 </span>
               </div>
@@ -134,7 +134,7 @@
                   <a-rate
                     @change="changeRate(formData.rating)"
                     :allow-clear="false"
-                    v-model="formData.rating"
+                    v-model:value="formData.rating"
                     name="rating"
                     :disabled="action.action == 'detail'"
                     :default-value="formData.rating"
@@ -165,19 +165,19 @@
                   >
                 </template>
                 <div
-                  v-if="action.action == 'detail'"
+                  v-if="props.action.action == 'detail'"
                   class="flex flex-col justify-start items-start w-full h-auto p-0 m-0"
                 >
                   <span
                     class="text-[#374151] text-xl font-semibold leading-7"
-                    >{{ product.comment }}</span
+                    >{{ props.product.comment }}</span
                   >
                 </div>
                 <a-textarea
                   v-else
                   @change="calculateTextSymbolCount"
                   class="m-0 p-0"
-                  rows="6"
+                  :rows="6"
                   v-model="formData.comment"
                   :maxLength="300"
                   name="comment"
@@ -187,7 +187,7 @@
                 </a-textarea>
               </a-form-model-item>
               <div
-                v-if="action.action != 'detail'"
+                v-if="props.action.action != 'detail'"
                 class="text-right w-full min-w-full h-auto text-[#262626] text-xs font-normal"
               >
                 {{ descriptionLength }}
@@ -322,7 +322,9 @@
             <hr class="w-full min-w-full h-[1px] bg-[#CBD5E1] mb-3" />
           </li>
           <li
-            v-if="action.action == 'detail' || action.action == 'edit'"
+            v-if="
+              props.action.action == 'detail' || props.action.action == 'edit'
+            "
             class="flex flex-col w-full min-w-full h-auto mb-3"
           >
             <ul class="flex flex-col justify-start items-start p-0 m-0">
@@ -334,11 +336,11 @@
                 <span
                   :style="resolveStatusStyle(product)"
                   class="font-semibold text-base leading-5"
-                  >{{ product.status.status }}</span
+                  >{{ props.product.status?.status }}</span
                 >
               </li>
               <li
-                v-if="product.rejection.reason"
+                v-if="props.product.rejection?.reason"
                 class="flex flex-row justify-start items-center m-0 p-0 mb-3"
               >
                 <span
@@ -347,11 +349,11 @@
                 >
                 <span
                   class="text-[#374151] font-semibold text-base leading-5"
-                  >{{ product.rejection.reason }}</span
+                  >{{ props.product.rejection.reason }}</span
                 >
               </li>
               <li
-                v-if="product.status.label == 'REJECTED'"
+                v-if="props.product.status?.label == 'REJECTED'"
                 class="flex flex-row justify-start items-center m-0 p-0"
               >
                 <span
@@ -361,12 +363,13 @@
                 <span
                   class="text-[#374151] font-semibold text-base leading-5"
                   >{{
-                    product.rejection && dateModel(product.rejection.rejectedAt)
+                    props.product.rejection &&
+                    dateModel(props.product.rejection.rejectedAt)
                   }}</span
                 >
               </li>
               <li
-                v-if="product.status.label == 'PUBLISHED'"
+                v-if="props.product.status?.label == 'PUBLISHED'"
                 class="flex flex-row justify-start items-center m-0 p-0"
               >
                 <span
@@ -376,12 +379,13 @@
                 <span
                   class="text-[#374151] font-semibold text-base leading-5"
                   >{{
-                    product.publishedAt && dateModel(product.publishedAt)
+                    props.product.publishedAt &&
+                    dateModel(props.product.publishedAt)
                   }}</span
                 >
               </li>
               <li
-                v-if="product.status.label == 'CREATED'"
+                v-if="props.product.status?.label == 'CREATED'"
                 class="flex flex-row justify-start items-center m-0 p-0"
               >
                 <span
@@ -390,7 +394,10 @@
                 >
                 <span
                   class="text-[#374151] font-semibold text-base leading-5"
-                  >{{ product.createdAt && dateModel(product.createdAt) }}</span
+                  >{{
+                    props.product.createdAt &&
+                    dateModel(props.product.createdAt)
+                  }}</span
                 >
               </li>
             </ul>
@@ -401,8 +408,8 @@
     <template slot="footer">
       <div
         :class="{
-          'justify-end': action.action == 'detail',
-          'justify-between': action.action != 'detail',
+          'justify-end': props.action.action == 'detail',
+          'justify-between': props.action.action != 'detail',
         }"
         class="flex"
       >
@@ -412,9 +419,9 @@
         >
           {{ $t("close_modal") }}
         </button>
-        <div v-if="action.action != 'detail'">
+        <div v-if="props.action.action != 'detail'">
           <button
-            v-if="action.action == 'edit'"
+            v-if="props.action.action == 'edit'"
             :disabled="hasChange"
             :class="{
               'bg-slate-600 text-gray-700':
@@ -447,16 +454,17 @@
 
 <script setup lang="ts">
 import moment from "moment";
-import type { Product } from "~/utils/types/product";
+import type { Product, ProductDetail } from "~/utils/types/product";
 const baseURL = useRuntimeConfig().public.baseURL;
 function getBase64(img: any, callback: any) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+const { t } = useI18n();
 const props = defineProps({
   product: {
-    type: Object as PropType<Product>,
+    type: Object as PropType<ProductDetail>,
     default: {},
   },
   action: {
@@ -467,173 +475,155 @@ const props = defineProps({
 const emit = defineEmits(["handleOk", "close"]);
 const previewVisible = ref(false);
 const previewImage = ref("");
-const otherFileList = reactive([]);
-const photos = reactive([]);
+const otherFileList: any = reactive([]);
+const photos = reactive<any>([]);
 const hasChange = ref(true);
 const allowFileTypes = reactive(["image/jpeg", "image/png", "image/jpg"]);
 const allowFileSize = ref(5242880); //5 mb (binary)
 const rateValueText = ref("");
 const descriptionLength = ref(300);
 const dateFormat = ref("DD/MM/YYYY HH:mm:ss");
-// export default {
-
-//   data() {
-//     return {
-//       baseURL: urls.getParam("API_BASE_URL"),
-//       previewVisible: false,
-//       previewImage: "",
-//       formData: {
-//         rating: 0,
-//         comment: null,
-//       },
-//       otherFileList: [],
-//       photos: [],
-//       allowFileTypes: ["image/jpeg", "image/png", "image/jpg"],
-//       desc: this.$t("desc"),
-//       allowFileSize: 5242880, //5 mb (binary)
-//       rateValueText: "",
-//       descriptionLength: 300,
-//       dateFormat: "DD/MM/YYYY HH:mm:ss",
-//       hasChange: true,
-//     };
-//   },
+const formData = reactive({
+  rating: 0,
+  comment: null,
+});
+const desc = t("desc");
 
 //   mounted() {
-//     if (this.action.action == "detail") {
-//       this.formData.rating = !Number.isInteger(Number(this.product.rating))
-//         ? Number(`${Math.floor(this.product.rating)}.${5}`)
-//         : this.product.rating;
-//     } else if (this.action.action == "edit") {
-//       this.formData.rating = this.product.rating;
-//     }
-//     if (this.action.action == "detail" || this.action.action == "edit") {
-//       this.formData.comment = this.product.comment;
-//       this.changeRate(this.formData.rating);
-//       this.otherFileList = [...this.product.photos];
-//       // this.photos = [...this.product.photos];
-//       this.photos = this.product.photos.map((photo) => {
-//         return {
-//           file: null,
-//           id: photo.id,
-//         };
-//       });
-//       this.descriptionLength -= this.formData.comment
-//         ? this.formData.comment.length
-//         : 0;
-//     }
-//   },
+// if (props.action.action == "detail") {
+//   formData.rating = !Number.isInteger(Number(props.product.rating))
+//     ? Number(`${Math.floor(props.product.rating)}.${5}`)
+//     : props.product.rating;
+// } else if (this.action.action == "edit") {
+//   formData.rating = props.product.rating;
+// }
+// if (props.action.action == "detail" || props.action.action == "edit") {
+//   formData.comment = props.product.comment;
+//   this.changeRate(this.formData.rating);
+//   this.otherFileList = [...this.product.photos];
+//   // this.photos = [...this.product.photos];
+//   this.photos = this.product.photos.map((photo) => {
+//     return {
+//       file: null,
+//       id: photo.id,
+//     };
+//   });
+//   this.descriptionLength -= this.formData.comment
+//     ? this.formData.comment.length
+//     : 0;
+// }
+// },
 //   methods: {
-//     dateModel(value) {
-//       let dat = new Date(value).toString();
-//       return moment(dat).format("DD/MM/yyyy HH:mm:ss");
-//     },
-//     beforeUploadOther(file) {
-//       if (file && this.allowFileTypes.includes(file.type)) {
-//         if (file.size <= this.allowFileSize) {
-//           const obj = {
-//             file,
-//             uid: Date.now(),
-//             name: file && file.name,
-//             data: "",
-//             id: null,
-//           };
-//           getBase64(file, (imageUrl) => {
-//             obj.data = imageUrl;
-//             this.otherFileList.push(obj);
-//             if (this.action.action == "edit") {
-//               this.photos.push({
-//                 file: { data: imageUrl, name: file.name },
-//                 id: null,
-//               });
-//             } else {
-//               this.photos.push({ data: imageUrl, name: file.name });
-//             }
-//             this.hasChange = false;
-//           });
-//         } else {
-//           this.$message.error(this.$t("image_size"));
-//         }
-//       } else {
-//         this.$message.error(this.$t("file_type"));
-//       }
-//       return false;
-//     },
+const dateModel = function (value: any) {
+  let dat = new Date(value).toString();
+  return moment(dat).format("DD/MM/yyyy HH:mm:ss");
+};
+const beforeUploadOther = function (file: any) {
+  if (file && allowFileTypes.includes(file.type)) {
+    if (file.size <= allowFileSize.value) {
+      const obj = {
+        file,
+        uid: Date.now(),
+        name: file && file.name,
+        data: "",
+        id: null,
+      };
+      getBase64(file, (imageUrl: any) => {
+        obj.data = imageUrl;
+        otherFileList.push(obj);
+        if (props.action.action == "edit") {
+          photos.push({
+            file: { data: imageUrl, name: file.name },
+            id: null,
+          });
+        } else {
+          photos.push({ data: imageUrl, name: file.name });
+        }
+        hasChange.value = false;
+      });
+    } else {
+      // this.$message.error(this.$t("image_size"));
+    }
+  } else {
+    // this.$message.error(this.$t("file_type"));
+  }
+  return false;
+};
 const removeOtherImage = function (index: number) {
   otherFileList.splice(index, 1);
   photos.splice(index, 1);
   hasChange.value = false;
 };
-//     calculateTextSymbolCount(val) {
-//       this.hasChange = false;
-//       this.descriptionLength = 300;
-//       this.descriptionLength -= val.srcElement.textLength;
-//     },
-//     changeRate(val) {
-//       if (val != this.product.rating) {
-//         this.hasChange = false;
-//       }
-//       if (val <= 1) {
-//         this.rateValueText = this.$t("descObj").very_bad;
-//       } else if (1 < val && val <= 2) {
-//         this.rateValueText = this.$t("descObj").bad;
-//       } else if (2 < val && val <= 3) {
-//         this.rateValueText = this.$t("descObj").average;
-//       } else if (3 < val && val <= 4) {
-//         this.rateValueText = this.$t("descObj").good;
-//       } else if (4 < val && val <= 5) {
-//         this.rateValueText = this.$t("descObj").very_good;
-//       } else if (val == undefined) {
-//         this.rateValueText = "";
-//       }
-//     },
+const calculateTextSymbolCount = function (val: any) {
+  hasChange.value = false;
+  descriptionLength.value = 300;
+  descriptionLength.value -= val.srcElement.textLength;
+};
+const changeRate = function (val: any) {
+  if (val != props.product.rating) {
+    hasChange.value = false;
+  }
+  if (val <= 1) {
+    rateValueText.value = t("descObj", { returnObjects: true }).very_bad;
+  } else if (1 < val && val <= 2) {
+    rateValueText.value = t("descObj").bad;
+  } else if (2 < val && val <= 3) {
+    rateValueText.value = t("descObj").average;
+  } else if (3 < val && val <= 4) {
+    rateValueText.value = t("descObj").good;
+  } else if (4 < val && val <= 5) {
+    rateValueText.value = t("descObj").very_good;
+  } else if (val == undefined) {
+    rateValueText.value = "";
+  }
+};
 
-//     resolveStatusStyle(record) {
-//       if (record.status?.label == "CREATED") {
-//         return "color:#1890FF";
-//       } else if (record.status?.label == "PUBLISHED") {
-//         return "color:#389E0D";
-//       } else if (record.status?.label == "REJECTED") {
-//         return "color:#F5222D";
-//       } else if (record.status?.label == "DELETED") {
-//         return "color:#EB2F96";
-//       } else if (record.status?.label == "IN_INSPECTION") {
-//         return "color:#FAAD14";
-//       }
-//     },
-//     handleOk() {
-//       this.formData.comment =
-//         this.formData.comment == "" ? null : this.formData.comment;
-//       if (this.action.action == "edit") {
-//         // this.formData.comment =
-//         //   this.formData.comment == "" ? null : this.formData.comment;
-//         let sendFormData = {
-//           ...this.formData,
-//           photos: this.photos,
-//         };
-//         this.$store
-//           .dispatch("review/editReview", {
-//             sendFormData: sendFormData,
-//             productId: this.product.id,
-//           })
-//           .then((res) => {
-//             this.$emit("ok", true);
-//             this.hasChange = true;
-//           })
-//           .catch(() => {
-//             this.hasChange = false;
-//           });
-//       } else {
-//         this.$store
-//           .dispatch("review/addReview", {
-//             ...this.formData,
-//             productId: this.product.id,
-//             photos: this.photos,
-//           })
-//           .then((res) => {
-//             this.$emit("ok", true);
-//           });
-//       }
-//     },
+const resolveStatusStyle = function (record: any) {
+  if (record.status?.label == "CREATED") {
+    return "color:#1890FF";
+  } else if (record.status?.label == "PUBLISHED") {
+    return "color:#389E0D";
+  } else if (record.status?.label == "REJECTED") {
+    return "color:#F5222D";
+  } else if (record.status?.label == "DELETED") {
+    return "color:#EB2F96";
+  } else if (record.status?.label == "IN_INSPECTION") {
+    return "color:#FAAD14";
+  }
+};
+const handleOk = function () {
+  formData.comment = formData.comment == "" ? null : formData.comment;
+  if (props.action.action == "edit") {
+    // this.formData.comment =
+    //   this.formData.comment == "" ? null : this.formData.comment;
+    //   let sendFormData = {
+    //     ...formData,
+    //     photos: photos,
+    //   };
+    //   this.$store
+    //     .dispatch("review/editReview", {
+    //       sendFormData: sendFormData,
+    //       productId: this.product.id,
+    //     })
+    //     .then((res) => {
+    //       this.$emit("ok", true);
+    //       this.hasChange = true;
+    //     })
+    //     .catch(() => {
+    //       this.hasChange = false;
+    //     });
+    // } else {
+    //   this.$store
+    //     .dispatch("review/addReview", {
+    //       ...this.formData,
+    //       productId: this.product.id,
+    //       photos: this.photos,
+    //     })
+    //     .then((res) => {
+    //       this.$emit("ok", true);
+    //     });
+  }
+};
 const handlePreview = function (file: any) {
   previewImage.value = file;
   previewVisible.value = true;
@@ -648,7 +638,7 @@ const setDefaultImage = async function (event: Event | any) {
   event.target.src = await require(`@/assets/img/no-image.svg`);
   event.target.className = "p-16";
 };
-const hasValidThumbnail = function (product: Product) {
+const hasValidThumbnail = function (product: ProductDetail) {
   if (props.action.action === "edit" || props.action.action == "detail") {
     return product.thumbnailPath;
   } else {

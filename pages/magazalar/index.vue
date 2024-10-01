@@ -49,16 +49,15 @@
                   size="large"
                   class="w-full min-w-full h-auto mb-6 md:mb-11"
                   :maxLength="255"
-                  v-model:value="storeNamePhrase"
+                  v-model:value="queryParams.storeNamePhrase"
                   :allowClear="true"
                   enter-button
-                  @search="submitFilter"
+                  @change="submitFilter"
                   @keyup.enter="submitFilter"
                 >
                 </a-input-search>
               </a-config-provider>
             </div>
-
             <a-spin
               :spinning="useStoresStore().getStoresStatus !== 'success'"
               size="large"
@@ -108,10 +107,12 @@
 </template>
 
 <script setup lang="ts">
-const storeNamePhrase = ref(undefined);
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,
+  storeNamePhrase: useRoute().query.storeNamePhrase
+    ? String(useRoute().query.storeNamePhrase)
+    : undefined,
 });
 useStoresStore().resetStores();
 useStoresStore().fetchStores({ ...queryParams, page: 0 });
@@ -128,15 +129,15 @@ const submitFilter = function () {
       ...useRoute().query,
       page: 0,
       size: 15,
-      storeNamePhrase: storeNamePhrase.value,
+      storeNamePhrase: queryParams.storeNamePhrase,
     },
   });
 };
 watch(
-  () => useRoute().query.searchText,
+  () => useRoute().query,
   (to: any) => {
     useStoresStore().fetchStores({ ...queryParams, ...useRoute().query });
   },
-  { flush: "pre", deep: true }
+  { deep: true }
 );
 </script>
