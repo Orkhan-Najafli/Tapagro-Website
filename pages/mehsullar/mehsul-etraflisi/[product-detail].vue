@@ -1309,8 +1309,8 @@ const addProductInBasket = function (id: number) {
 //     //   this.selectIndex = index;
 //     // },
 
-const setDefaultStoreImage = function (event: Event | any) {
-  event.target.src = require(`@/assets/img/all_logos/store.svg`);
+const setDefaultStoreImage = async function (event: Event | any) {
+  event.target.src = await require(`@/assets/img/store_logo.svg`);
   event.target.className = "p-1";
 };
 const isValidImage = function (image: any) {
