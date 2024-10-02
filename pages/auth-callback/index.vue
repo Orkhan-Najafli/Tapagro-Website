@@ -10,6 +10,14 @@ definePageMeta({
   layout: "blank",
 });
 useAuthenticator().fetchLogin();
+// onMounted(async () => {
+//   try {
+//     await useAuthenticator().fetchLogin(); // Birinci fetchLogin çağırılır
+//     await useUsers().fetchUserData(); // fetchLogin bitdikdən sonra fetchUserData çağırılır
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// });
 // definePageMeta({
 //   middleware: ["guest"],
 // });

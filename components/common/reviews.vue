@@ -136,6 +136,7 @@
 <script setup lang="ts">
 import type { ProductReview } from "~/utils/types/reviews";
 const baseURL = useRuntimeConfig().public.baseURL;
+const { t } = useI18n();
 const previewVisible = ref(false);
 const visibleReply = ref(false);
 const previewImage = ref("");
@@ -147,7 +148,9 @@ const props = defineProps({
   },
 });
 
-const date = useI18n().t("months");
+const date = t("months", { returnObjects: true });
+console.log(t("months", { returnObjects: true }));
+
 const handleCancel = function () {
   previewVisible.value = false;
 };

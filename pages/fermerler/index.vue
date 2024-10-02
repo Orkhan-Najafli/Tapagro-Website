@@ -1,71 +1,146 @@
 <template>
-  <ClientOnly fallback-tag="div" fallback="">
-    <a-carousel class="w-full lg:max-w-[673px]" arrows>
-      <template #prevArrow>
-        <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
-          <left-circle-outlined />
+  <main class="overflow-hidden pt-3 min-h-screen">
+    <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
+      <div class="mt-6 mb-5 md:mb-9">
+        <nuxt-link
+          tag="div"
+          class="text-gray-600 flex flex-row justify-start items-center md:hidden font-medium text-sm cursor-pointer"
+          to="/"
+        >
+          <span class="font-semibold mr-0.5"> < </span>
+
+          <span class="ml-3 text-gray-600 font-medium text-sm">
+            {{ $t("main_page") }}</span
+          >
+        </nuxt-link>
+        <div class="hidden md:block">
+          <nuxt-link
+            class="text-gray-600 font-medium text-sm"
+            tag="span"
+            to="/"
+          >
+            {{ $t("main_page") }}</nuxt-link
+          >
+          <span> > </span>
+          <span class="text-gray-800 font-semibold text-sm">{{
+            $t("farmers")
+          }}</span>
         </div>
-      </template>
-      <template #nextArrow>
-        <div class="custom-slick-arrow" style="right: 10px">
-          <right-circle-outlined />
+      </div>
+    </section>
+    <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
+      <div class="flex flex-row w-full mb-6 md:mb-10">
+        <div class="w-full relative overflow-hidden">
+          <section>
+            <div>
+              <div class="mb-6">
+                <h1 class="text-2xl font-bold">{{ $t("farmers") }}</h1>
+              </div>
+
+              <div class="flex flex-row mb-6">
+                <a-config-provider
+                  :theme="{
+                    token: {
+                      colorPrimary: '#16a34a',
+                    },
+                  }"
+                >
+                  <a-input-search
+                    :placeholder="$t('product_name')"
+                    size="large"
+                    class="w-full min-w-full h-auto mb-6 md:mb-11"
+                    :maxLength="255"
+                    v-model:value="queryParams.farmerNamePhrase"
+                    :allowClear="true"
+                    enter-button
+                    @change="onSearch"
+                    @keyup.enter="onSearch"
+                  >
+                  </a-input-search>
+                </a-config-provider>
+              </div>
+            </div>
+
+            <a-spin
+              :spinning="useFarmersStore().getStatus !== 'success'"
+              size="large"
+              wrapper-class-name="text-green-800"
+            >
+              <section class="flex flex-col mb-6 md:mb-10">
+                <div v-if="useFarmersStore().totalElements <= 0">
+                  <div class="text-base text-gray-600">
+                    {{ $t("no_farmer_matching_the_search_was_found") }}
+                  </div>
+                </div>
+                <div
+                  v-if="useFarmersStore().totalElements > 0"
+                  class="grid gap-9 grid-cols-1 md:grid-cols-3"
+                >
+                  <FarmerCard
+                    class="cursor-pointer"
+                    v-for="(farmer, index) in useFarmersStore().getFarmers"
+                    :key="index"
+                    :data="farmer"
+                  />
+                </div>
+              </section>
+            </a-spin>
+          </section>
+          <section
+            class="flex flex-row justify-end mb-6 md:mb-10"
+            v-if="
+              useFarmersStore().getFarmers.size !==
+              useFarmersStore().getTotalElements
+            "
+          >
+            <div class="block w-full min-w-full rounded text-center">
+              <button
+                @click="loadMoreFarmers"
+                class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold"
+              >
+                {{ $t("show_more") }}
+              </button>
+            </div>
+          </section>
         </div>
-      </template>
-      <div><h3>1</h3></div>
-      <div><h3>2</h3></div>
-      <div><h3>3</h3></div>
-      <div><h3>4</h3></div>
-    </a-carousel>
-  </ClientOnly>
+      </div>
+      <!-- </section> -->
+    </section>
+  </main>
 </template>
 
-<style scoped>
-/* For demo */
-:deep(.slick-slide) {
-  text-align: center;
-  height: 360px;
-  line-height: 360px;
-  background: #364d79;
-  overflow: hidden;
-}
-@media only screen and (max-width: 1024px) {
-  :deep(.slick-slide) {
-    text-align: center;
-    height: 300px;
-    line-height: 300px;
-    background: #364d79;
-    overflow: hidden;
-  }
-}
+<script setup lang="ts">
+const queryParams = reactive({
+  page: useRoute().query.page ? Number(useRoute().query.page) : 0,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,
+  farmerNamePhrase: useRoute().query.farmerNamePhrase
+    ? String(useRoute().query.farmerNamePhrase)
+    : undefined,
+});
+useFarmersStore().resetFarmers();
+useFarmersStore().fetchFarmers({ ...queryParams, page: 0 });
 
-@media only screen and (min-width: 1024px) {
-  :deep(.slick-slide) {
-    text-align: center;
-    height: 704px;
-    line-height: 704px;
-    background: #364d79;
-    overflow: hidden;
-  }
-}
-:deep(.slick-arrow.custom-slick-arrow) {
-  width: 25px;
-  height: 25px;
-  font-size: 25px;
-  color: #fff;
-  background-color: rgba(31, 45, 61, 0.11);
-  transition: ease all 0.3s;
-  opacity: 0.3;
-  z-index: 1;
-}
-:deep(.slick-arrow.custom-slick-arrow:before) {
-  display: none;
-}
-:deep(.slick-arrow.custom-slick-arrow:hover) {
-  color: #fff;
-  opacity: 0.5;
-}
-
-:deep(.slick-slide h3) {
-  color: #fff;
-}
-</style>
+const loadMoreFarmers = function () {
+  queryParams.page++;
+  queryParams.size = 15;
+  useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
+};
+const onSearch = function () {
+  useFarmersStore().resetFarmers();
+  useRouter().push({
+    query: {
+      ...useRoute().query,
+      page: 0,
+      size: 15,
+      farmerNamePhrase: queryParams.farmerNamePhrase,
+    },
+  });
+};
+watch(
+  () => useRoute().query,
+  (to: any) => {
+    useFarmersStore().fetchFarmers({ ...queryParams, ...useRoute().query });
+  },
+  { deep: true }
+);
+</script>
