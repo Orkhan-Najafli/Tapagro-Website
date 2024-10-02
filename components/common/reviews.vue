@@ -155,7 +155,7 @@ const showReply = function () {
   visibleReply.value = !visibleReply.value;
 };
 const setDefaultStoreImage = async function (event: Event | any) {
-  event.target.src = await require(`@/assets/img/all_logos/store.svg`);
+  event.target.src = await require(`@/assets/img/store_logo.svg`);
   event.target.className = "p-.5";
 };
 

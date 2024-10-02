@@ -13,3 +13,24 @@ export interface QueryParams {
   size: number;
   storeNamePhrase?: string;
 }
+
+export interface StoreDetail {
+  id: number;
+  name: string;
+  legalAddress: string;
+  physicalAddress: string;
+  phoneNumber: string;
+  email: string;
+  website: string;
+  deliveryCities: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+  logoPath: string;
+  status: {
+    label: string;
+    status: string;
+  };
+}
