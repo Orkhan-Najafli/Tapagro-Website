@@ -14,6 +14,7 @@
           :src="`${useRuntimeConfig().public.baseURL}${props.data.logoPath}`"
           @error="setDefaultStoreImage"
         />
+        <!-- <img src="@/assets/img/no-image.svg" alt="" /> -->
       </div>
 
       <div>
@@ -38,13 +39,9 @@ const props = defineProps({
     required: true,
   },
 });
-<<<<<<< HEAD
-const setDefaultStoreImage = function (event: Event | any) {
-  event.target.src = storeImage;
-=======
+
 const setDefaultStoreImage = async function (event: Event | any) {
   event.target.src = await require(`@/assets/img/store_logo.svg`);
->>>>>>> feature/ECOMM-6223
   event.target.className = "p-2";
 };
 </script>

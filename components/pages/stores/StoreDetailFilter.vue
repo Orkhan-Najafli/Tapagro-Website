@@ -49,7 +49,8 @@
           >
             <li
               @click="changeBaseCategory(category)"
-              v-for="(category, index) in baseCategories"
+              v-for="(category, index) in useCategoriesStore()
+                .getBaseCategories"
               :key="index"
               :class="{
                 'bg-gray-50': baseCategoryId == category.id,
@@ -87,7 +88,7 @@
               :type="categoriesBoxShow ? 'up' : 'down'"
             />
           </button>
-          <categories-tree
+          <Tree
             v-show="categoriesBoxShow"
             :baseCategoryId="baseCategoryId"
             :baseCategoryType="baseCategoryType"
@@ -122,21 +123,7 @@
               <div
                 class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2ZM0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6C12 7.29583 11.5892 8.49572 10.8907 9.47653L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L9.47653 10.8907C8.49572 11.5892 7.29583 12 6 12C2.68629 12 0 9.31371 0 6Z"
-                    fill="#111827"
-                  />
-                </svg>
+                <search-logo-in-store />
               </div>
               <input
                 class="px-4 outline-none h-11 pl-10 w-full border rounded-l-md border-gray-200"
@@ -193,6 +180,7 @@
                 :placeholder="$t('minimum')"
                 allow-clear
                 id="num"
+                ref="num"
                 :maxLength="30"
                 @keypress="check"
                 @paste="pasteNone"
@@ -235,180 +223,190 @@
   </div>
 </template>
 
-<script>
-import CategoriesTree from "../../common/CategoriesTree.vue";
-import { mapGetters } from "vuex";
-import tick_in_filter_rating from "../../inc/svg/tick_in_filter_rating.vue";
-
-export default {
-  components: {
-    CategoriesTree,
-    tick_in_filter_rating,
+<script setup lang="ts">
+let selectedRegions = reactive<any>([]);
+const minPrice = ref();
+const maxPrice = ref();
+const baseCategoryId = ref();
+const isDiscount = ref(false);
+const regionSearchValue = ref("");
+const num = ref();
+const categoriesBoxShow = ref(true);
+const regionBoxShow = ref(true);
+const props = defineProps({
+  deliveryCities: {
+    type: Array,
+    defeault: [],
+    required: true,
   },
-  props: {
-    deliveryCities: Array,
-  },
-  data() {
-    return {
-      categoriesBoxShow: true,
-      regionBoxShow: true,
+});
+// import CategoriesTree from "../../common/CategoriesTree.vue";
+// import { mapGetters } from "vuex";
+// import tick_in_filter_rating from "../../inc/svg/tick_in_filter_rating.vue";
 
-      regions: [],
-      selectedRegions: [],
-      regionSearchValue: "",
+// export default {
+//   components: {
+//     CategoriesTree,
+//     tick_in_filter_rating,
+//   },
+//   props: {
+//     deliveryCities: Array,
+//   },
+//   data() {
+//     return {
+//       categoriesBoxShow: true,
+//       regionBoxShow: true,
 
-      maxPrice: undefined,
-      minPrice: undefined,
-      baseCategoryId: undefined,
-      isDiscount: false,
-    };
-  },
-  created() {
-    // this.$store.dispatch("productCategories/getBaseCategoryListByStoreId", {
-    //   storeId: Number(this.$route.params.storeAboutDetail),
-    // });
+//       regions: [],
+//       selectedRegions: [],
+//       regionSearchValue: "",
 
-    if (this.$route.query) {
-      let queryString = this.$route.query;
-      let cityIdsQueryParam = queryString.cityIds || [];
-      // let baseCategoryId = Number(queryString.baseCategoryId) || undefined;
+//       maxPrice: undefined,
+//       minPrice: undefined,
+//       baseCategoryId: undefined,
+//       isDiscount: false,
+//     };
+//   },
+//   created() {
+useCategoriesStore().fetchBaseCategories();
+if (useRoute().query) {
+  let cityIdsQueryParam = useRoute().query.cityIds || [];
+  // let baseCategoryId = Number(queryString.baseCategoryId) || undefined;
 
-      if (!Array.isArray(cityIdsQueryParam)) {
-        cityIdsQueryParam = cityIdsQueryParam.split(",");
-      }
+  if (!Array.isArray(cityIdsQueryParam)) {
+    cityIdsQueryParam = cityIdsQueryParam.split(",");
+  }
 
-      // this.baseCategoryId = baseCategoryId;
-      this.selectedRegions = cityIdsQueryParam.map((regionId) =>
-        Number(regionId)
-      );
-      this.minPrice = Number(queryString.minPrice) || undefined;
-      this.maxPrice = Number(queryString.maxPrice) || undefined;
-      this.isDiscount = queryString.endirimli === "beli";
-    }
-  },
-  computed: {
-    ...mapGetters({
-      baseCategories: "productCategories/storeBaseCategories",
-    }),
-    baseCategoryType() {
-      let item = this.baseCategories.find((el) => el.id == this.baseCategoryId);
-      return item ? item.label : null;
-    },
-    filteredRegions() {
-      return this.deliveryCities.filter((region) => {
-        return region.name
-          .toLowerCase()
-          .includes(this.regionSearchValue.toLowerCase());
-      });
-    },
-  },
-  watch: {
-    baseCategories: {
-      handler() {
-        let item = this.baseCategories.find(
-          (el) => el.label == this.$route.query.productBaseCategoryLabel
-        );
-        this.baseCategoryId = item ? item.id : undefined;
-      },
-      immediate: true,
-    },
-  },
+  // this.baseCategoryId = baseCategoryId;
+  selectedRegions = cityIdsQueryParam.map((regionId: any) => Number(regionId));
+  minPrice.value = Number(useRoute().query.minPrice) || undefined;
+  maxPrice.value = Number(useRoute().query.maxPrice) || undefined;
+  isDiscount.value = useRoute().query.endirimli === "beli";
+}
 
-  watchQuery: true,
-  methods: {
-    pasteNone(event) {
-      event.preventDefault();
-    },
-    check(evt) {
-      var data = process.browser && document.getElementById("num").value;
-      if (
-        (evt.charCode >= 48 && evt.charCode <= 57) ||
-        evt.charCode == 46 ||
-        evt.charCode == 0
-      ) {
-        if (data.indexOf(".") > -1) {
-          if (evt.charCode == 46) {
-            evt.preventDefault();
-          }
-        }
-      } else evt.preventDefault();
-    },
-    changeBaseCategory(category) {
-      if (this.baseCategoryId == category.id) {
-        this.baseCategoryId = undefined;
-      } else {
-        this.baseCategoryId = category.id;
-      }
-
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          productBaseCategoryLabel: this.baseCategoryType || undefined,
-          productTypeLabels: undefined,
-          page: undefined,
-        },
-      });
-    },
-    changeUrlCity() {
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          cityIds:
-            this.selectedRegions.length > 0
-              ? this.selectedRegions.join(",")
-              : undefined,
-          page: undefined,
-        },
-      });
-    },
-    changeUrlMaxPrice() {
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          maxPrice: this.maxPrice || undefined,
-          page: undefined,
-        },
-      });
-    },
-    changeUrlMinPrice() {
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          minPrice: this.minPrice || undefined,
-          page: undefined,
-        },
-      });
-    },
-    changeDiscountFilter() {
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          endirimli: this.isDiscount ? "beli" : undefined,
-          page: undefined,
-        },
-      });
-      // this.loadProducts();
-    },
-    resetFilterFields() {
-      this.baseCategoryId = undefined;
-      this.selectedRegions = [];
-      this.minPrice = undefined;
-      this.maxPrice = undefined;
-      this.isDiscount = false;
-      this.$router.replace({
-        query: {
-          ...this.$route.query,
-          minPrice: undefined,
-          maxPrice: undefined,
-          cityIds: undefined,
-          productBaseCategoryLabel: undefined,
-          productTypeLabels: undefined,
-          endirimli: undefined,
-        },
-      });
-    },
-  },
+//   computed: {
+//     ...mapGetters({
+//       baseCategories: "productCategories/storeBaseCategories",
+//     }),
+const baseCategoryType = function () {
+  // let item = baseCategories.find((el) => el.id == baseCategoryId.value);
+  // return item ? item.label : null;
 };
+console.log(props.deliveryCities);
+console.log(useStoreDetailStore().getStore.deliveryCities);
+
+const filteredRegions = function () {
+  return props.deliveryCities?.filter((region: any) => {
+    return region.name
+      .toLowerCase()
+      .includes(regionSearchValue.value.toLowerCase());
+  });
+};
+//   watch: {
+//     baseCategories: {
+//       handler() {
+//         let item = this.baseCategories.find(
+//           (el) => el.label == this.$route.query.productBaseCategoryLabel
+//         );
+//         this.baseCategoryId = item ? item.id : undefined;
+//       },
+//       immediate: true,
+//     },
+//   },
+
+//   watchQuery: true,
+//   methods
+const pasteNone = function (event: Event | ayn) {
+  event.preventDefault();
+};
+const check = function (event: Event | any) {
+  var data = num.value;
+  if (
+    (event.charCode >= 48 && event.charCode <= 57) ||
+    event.charCode == 46 ||
+    event.charCode == 0
+  ) {
+    if (data.indexOf(".") > -1) {
+      if (event.charCode == 46) {
+        event.preventDefault();
+      }
+    }
+  } else event.preventDefault();
+};
+const changeBaseCategory = function (category: any) {
+  if (baseCategoryId.value == category.id) {
+    baseCategoryId.value = undefined;
+  } else {
+    baseCategoryId.value = category.id;
+  }
+
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      productBaseCategoryLabel: baseCategoryType || undefined,
+      productTypeLabels: undefined,
+      page: undefined,
+    },
+  });
+};
+const changeUrlCity = function () {
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      cityIds:
+        selectedRegions.length > 0 ? selectedRegions.join(",") : undefined,
+      page: undefined,
+    },
+  });
+};
+const changeUrlMaxPrice = function () {
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      maxPrice: maxPrice.value || undefined,
+      page: undefined,
+    },
+  });
+};
+const changeUrlMinPrice = function () {
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      minPrice: minPrice.value || undefined,
+      page: undefined,
+    },
+  });
+};
+const changeDiscountFilter = function () {
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      endirimli: isDiscount.value ? "beli" : undefined,
+      page: undefined,
+    },
+  });
+  // this.loadProducts();
+};
+const resetFilterFields = function () {
+  baseCategoryId.value = undefined;
+  selectedRegions = [];
+  minPrice.value = undefined;
+  maxPrice.value = undefined;
+  isDiscount.value = false;
+  useRouter().replace({
+    query: {
+      ...useRoute().query,
+      minPrice: undefined,
+      maxPrice: undefined,
+      cityIds: undefined,
+      productBaseCategoryLabel: undefined,
+      productTypeLabels: undefined,
+      endirimli: undefined,
+    },
+  });
+};
+//   },
+// };
 </script>
 <style>
 .ant-btn:hover,

@@ -51,7 +51,10 @@ let list = reactive([
   { name: t("price_high_to_low"), value: "price-DESC" },
   { name: t("discount"), value: "ecommerceDiscount" },
 ]);
-const sortByData = ref("default");
+
+const sortByData = ref(
+  useRoute().query.sortBy ? useRoute().query.sortBy : "default"
+);
 const showOrderMenu = ref(false);
 const regex = new RegExp("fermer");
 
