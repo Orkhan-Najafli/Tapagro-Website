@@ -73,5 +73,23 @@ export const useReviewsStore = defineStore("reviews", {
       this.reviewedStatus = status.value;
       this.reviewedError = error.value;
     },
+    async fetchProductReview(queryData: any) {
+      const { data, status, error } = await useAsyncData<
+        ApiBase<{
+          reviewed: boolean;
+        }>
+      >("product-reviewed", () =>
+        $fetch(`${this.baseURL}${urls.product_reviews}`, {
+          headers: {
+            ...HeaderConfigs(useCookie("token").value || ""),
+          },
+          query: queryData,
+          method: "PUT",
+        })
+      );
+      this.reviewed = data!.value!;
+      this.reviewedStatus = status.value;
+      this.reviewedError = error.value;
+    },
   },
 });

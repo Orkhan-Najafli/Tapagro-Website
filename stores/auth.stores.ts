@@ -72,7 +72,10 @@ export const useAuthenticator = defineStore("Authenticator", {
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
       if (status.value === "success") {
-        useUsers().fetchUserData();
+        await useUsers().fetchUserData();
+        useRouter().push("/");
+      } else {
+        this.fetchLogin();
       }
     },
     //refresh

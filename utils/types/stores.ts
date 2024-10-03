@@ -11,5 +11,26 @@ export interface Store {
 export interface QueryParams {
   page: number;
   size: number;
-  storeNamePhrase?: string;
+  storeNamePhrase?: string | undefined;
+}
+
+export interface StoreDetail {
+  id: number;
+  name: string;
+  legalAddress: string;
+  physicalAddress: string;
+  phoneNumber: string;
+  email: string;
+  website: string;
+  deliveryCities: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+  logoPath: string;
+  status: {
+    label: string;
+    status: string;
+  };
 }

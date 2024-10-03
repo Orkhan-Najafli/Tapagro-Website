@@ -1,7 +1,8 @@
 <template>
   <nuxt-link
     tag="a"
-    :to="`/magazalar/${data.id}`"
+    @click="useStoreDetailStore().fetchStore(data.id)"
+    :to="`/magazalar/magaza-etraflisi/${data.id}`"
     class="flex flex-col justify-between w-full shadow-sm hover:shadow-md rounded-md bg-white border border-gray-200 p-8"
   >
     <div class="flex flex-row items-center">
@@ -13,6 +14,7 @@
           :src="`${useRuntimeConfig().public.baseURL}${props.data.logoPath}`"
           @error="setDefaultStoreImage"
         />
+        <!-- <img src="@/assets/img/no-image.svg" alt="" /> -->
       </div>
 
       <div>
@@ -28,14 +30,18 @@
 </template>
 
 <script setup lang="ts">
+import storeImage from "@/assets/img/store_logo.svg";
+
 const props = defineProps({
   data: {
     type: Object,
     default: {},
+    required: true,
   },
 });
-const setDefaultStoreImage = function (event: Event | any) {
-  event.target.src = require(`@/assets/img/all_logos/store.svg`);
+
+const setDefaultStoreImage = async function (event: Event | any) {
+  event.target.src = await require(`@/assets/img/store_logo.svg`);
   event.target.className = "p-2";
 };
 </script>
