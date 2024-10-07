@@ -15,7 +15,7 @@
       <hr class="mt-6 bg-gray-200" />
     </section>
     <a-form>
-      <div>
+      <!-- <div>
         <section class="my-6">
           <label
             :class="{
@@ -94,7 +94,8 @@
             :baseCategoryType="baseCategoryType"
           />
         </div>
-      </div>
+      </div> -->
+      <div>{{ selectedRegions }}</div>
       <section class="flex flex-col w-full h-auto">
         <hr class="my-6" />
 
@@ -103,13 +104,12 @@
           @click="regionBoxShow = !regionBoxShow"
         >
           <span class="">{{ $t("delivery_area") }}</span>
-          <a-icon
+          <DownOutlined
             :class="{
               'rotate-180': regionBoxShow,
               'rotate-0': !regionBoxShow,
             }"
             class="transform"
-            type="down"
           />
         </button>
         <div
@@ -129,13 +129,14 @@
                 class="px-4 outline-none h-11 pl-10 w-full border rounded-l-md border-gray-200"
                 type="text"
                 v-model="regionSearchValue"
+                @input="filteredRegions"
                 :placeholder="$t('search_the_area')"
               />
             </div>
             <ul class="mt-3">
               <li
                 class="mb-3 flex flex-row justify-start items-center cursor-pointer hover:bg-gray-50"
-                v-for="(region, index) in filteredRegions"
+                v-for="(region, index) in regions"
                 :key="index"
                 :class="{
                   'bg-gray-50': selectedRegions.includes(region.id),
@@ -151,14 +152,15 @@
                       appearance: none;
                       outline: unset !important;
                     "
+                    :checked="region.checked"
                     @change="changeUrlCity"
-                    class="form-checkbox inline-flex justify-center items-center h-4 w-4 bg-white border border-gray-200 rounded checked:border-green-600 checked:text-white appearance-none mr-2"
+                    class="form-checkbox outline-none inline-flex justify-center items-center h-4 w-4 bg-white border border-gray-200 rounded checked:border-green-600 checked:text-white appearance-none mr-2"
                     type="checkbox"
-                    v-model="selectedRegions"
                     :value="region.id"
                   />
+                  <!-- :checked="selectedRegions.includes(region.id)" -->
                   <span class="font-medium text-base text-gray-800">
-                    {{ region.name }}
+                    {{ region.name }} -- {{ region.checked }}
                   </span>
                 </label>
               </li>
@@ -224,7 +226,9 @@
 </template>
 
 <script setup lang="ts">
-let selectedRegions = reactive<any>([]);
+import type { DeliveryCity } from "~/utils/types/stores";
+
+let selectedRegions = reactive<Array<number>>([]);
 const minPrice = ref();
 const maxPrice = ref();
 const baseCategoryId = ref();
@@ -233,42 +237,14 @@ const regionSearchValue = ref("");
 const num = ref();
 const categoriesBoxShow = ref(true);
 const regionBoxShow = ref(true);
-const props = defineProps({
-  deliveryCities: {
-    type: Array,
-    defeault: [],
-    required: true,
-  },
-});
+
 // import CategoriesTree from "../../common/CategoriesTree.vue";
 // import { mapGetters } from "vuex";
 // import tick_in_filter_rating from "../../inc/svg/tick_in_filter_rating.vue";
 
-// export default {
-//   components: {
-//     CategoriesTree,
-//     tick_in_filter_rating,
-//   },
-//   props: {
-//     deliveryCities: Array,
-//   },
-//   data() {
-//     return {
-//       categoriesBoxShow: true,
-//       regionBoxShow: true,
-
-//       regions: [],
-//       selectedRegions: [],
-//       regionSearchValue: "",
-
-//       maxPrice: undefined,
-//       minPrice: undefined,
-//       baseCategoryId: undefined,
-//       isDiscount: false,
-//     };
-//   },
 //   created() {
 useCategoriesStore().fetchBaseCategories();
+
 if (useRoute().query) {
   let cityIdsQueryParam = useRoute().query.cityIds || [];
   // let baseCategoryId = Number(queryString.baseCategoryId) || undefined;
@@ -292,16 +268,36 @@ const baseCategoryType = function () {
   // let item = baseCategories.find((el) => el.id == baseCategoryId.value);
   // return item ? item.label : null;
 };
-console.log(props.deliveryCities);
-console.log(useStoreDetailStore().getStore.deliveryCities);
 
+// let filteredRegions: any = computed(() => {
+//   return useStoreDetailStore().getStore.deliveryCities?.filter(
+//     (region: any) => {
+//       return region.name
+//         .toLowerCase()
+//         .includes(regionSearchValue.value.toLowerCase());
+//     }
+//   );
+// });
+let regions = reactive<Array<DeliveryCity>>([]);
 const filteredRegions = function () {
-  return props.deliveryCities?.filter((region: any) => {
-    return region.name
-      .toLowerCase()
-      .includes(regionSearchValue.value.toLowerCase());
-  });
+  regions = useStoreDetailStore().getStore.deliveryCities?.filter(
+    (region: any) => {
+      return region.name
+        .toLowerCase()
+        .includes(regionSearchValue.value.toLowerCase());
+    }
+  );
 };
+filteredRegions();
+
+watch(
+  regionSearchValue,
+  (value: any, oldValue: any) => {
+    useStoreDetailStore().updateDeliveryCities(selectedRegions);
+    filteredRegions();
+  }
+  // { deep: true, immediate: true }
+);
 //   watch: {
 //     baseCategories: {
 //       handler() {
@@ -316,7 +312,7 @@ const filteredRegions = function () {
 
 //   watchQuery: true,
 //   methods
-const pasteNone = function (event: Event | ayn) {
+const pasteNone = function (event: Event | any) {
   event.preventDefault();
 };
 const check = function (event: Event | any) {
@@ -349,7 +345,16 @@ const changeBaseCategory = function (category: any) {
     },
   });
 };
-const changeUrlCity = function () {
+
+const changeUrlCity = function (event: Event | any) {
+  if (event.target.checked) {
+    selectedRegions.push(event.target.value);
+  } else {
+    const index = selectedRegions.indexOf(event.target.value);
+    if (index > -1) {
+      selectedRegions.splice(index, 1);
+    }
+  }
   useRouter().replace({
     query: {
       ...useRoute().query,
@@ -358,6 +363,8 @@ const changeUrlCity = function () {
       page: undefined,
     },
   });
+  filteredRegions();
+  useStoreDetailStore().updateDeliveryCities(selectedRegions);
 };
 const changeUrlMaxPrice = function () {
   useRouter().replace({

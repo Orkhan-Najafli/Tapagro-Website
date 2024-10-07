@@ -22,15 +22,15 @@ export interface StoreDetail {
   phoneNumber: string;
   email: string;
   website: string;
-  deliveryCities: [
-    {
-      id: number;
-      name: string;
-    }
-  ];
+  deliveryCities: Array<DeliveryCity>;
   logoPath: string;
   status: {
     label: string;
     status: string;
   };
+}
+export interface DeliveryCity {
+  id: number;
+  name: string;
+  checked?: boolean;
 }

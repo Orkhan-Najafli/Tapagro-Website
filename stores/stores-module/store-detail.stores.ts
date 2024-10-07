@@ -2,7 +2,7 @@ import { HeaderConfigs } from "@/utils/configs";
 import { defineStore, type Store } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
-import type { StoreDetail } from "~/utils/types/stores";
+import type { DeliveryCity, StoreDetail } from "~/utils/types/stores";
 
 export const useStoreDetailStore = defineStore("Store-detail", {
   state: () => ({
@@ -21,6 +21,32 @@ export const useStoreDetailStore = defineStore("Store-detail", {
       this.status = "";
       this.error = null;
     },
+    resetDeliveryCities() {
+      this.store.deliveryCities = this.store.deliveryCities.map(
+        (deliveryCity) => {
+          return {
+            ...deliveryCity,
+            checked: false,
+          };
+        }
+      );
+    },
+    updateDeliveryCities(selectedRegionIDs: Array<number>) {
+      this.store.deliveryCities = this.store.deliveryCities.map(
+        (deliveryCity: DeliveryCity) => {
+          if (selectedRegionIDs.includes(deliveryCity.id)) {
+            return {
+              ...deliveryCity,
+              checked: true,
+            };
+          } else {
+            return {
+              ...deliveryCity,
+            };
+          }
+        }
+      );
+    },
     async fetchStore(id: number) {
       const { data, status, error } = await useAsyncData<StoreDetail>(
         "store",
@@ -32,6 +58,14 @@ export const useStoreDetailStore = defineStore("Store-detail", {
             // query: queryData,
           })
       );
+      // this.store.deliveryCities = data.value!.deliveryCities.map(
+      //   (deliveryCity) => {
+      //     return {
+      //       ...deliveryCity,
+      //       checked: false,
+      //     };
+      //   }
+      // );
 
       this.store = data.value!;
       this.status = status.value;
