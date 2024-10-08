@@ -129,7 +129,7 @@
             <div class="flex flex-col md:flex-row justify-between">
               <div class="w-auto pb-8 pr-6 hidden md:flex">
                 <!-- <div class=""> -->
-                <div style="min-width: 292px; max-width: 292px">
+                <div class="min-w-[292px] max-w-[292px]">
                   <StoreDetailFilter
                     style="height: fit-content"
                     class="sticky top-28"
@@ -258,7 +258,6 @@ const queryParams = reactive({
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 12 : 12,
 });
 useStoreDetailStore().fetchStore(Number(useRoute().params.storedetail));
-
 useProductsStore().resetProducts();
 useProductsStore().fetchProducts({
   ...queryParams,
@@ -303,7 +302,6 @@ watch(
       queryParams.page = 0;
       queryParams.size = value.page ? (Number(value.page) + 1) * 12 : 12;
     }
-    console.log(value);
     useProductsStore().fetchProducts({
       ...useRoute().query,
       ...queryParams,
