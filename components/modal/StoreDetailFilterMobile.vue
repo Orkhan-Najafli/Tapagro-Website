@@ -1,19 +1,14 @@
 <template>
-  <a-modal
-    :open="true"
-    class="w-[500px] max-w-[500px] max-h-[760px] overflow-y-auto relative overflow-hidden"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
+  <a-modal v-model="true" @ok="handleOk" @cancel="handleCancel">
     <template #title>
       <div class="flex flex-row items-baseline">
         {{ $t("filter") }}
         <filter_logo class="ml-2 mt-2" />
       </div>
     </template>
-    <MainProductFilter :mobile="false" />
+    <StoreDetailFilter :mobile="false" />
     <template #footer>
-      <div class="flex flex-col justify-between items-center pt-5 mt-5">
+      <div class="flex flex-col justify-between items-center">
         <button
           @click="handleOk"
           class="w-full text-base font-semibold px-3 py-2 mb-3 rounded-md border bg-green-600 text-white hover:bg-green-700 transition-all duration-150 ease-in-out"
@@ -76,10 +71,9 @@ const handleCancel = function () {
       minPrice: undefined,
       maxPrice: undefined,
       cityIds: undefined,
-      storeIds: undefined,
+      productBaseCategoryLabel: undefined,
       productTypeLabels: undefined,
       endirimli: undefined,
-      minAverageRating: undefined,
     },
   });
 };

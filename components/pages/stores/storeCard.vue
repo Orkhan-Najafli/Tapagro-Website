@@ -14,7 +14,6 @@
           :src="`${useRuntimeConfig().public.baseURL}${props.data.logoPath}`"
           @error="setDefaultStoreImage"
         />
-        <!-- <img src="@/assets/img/no-image.svg" alt="" /> -->
       </div>
 
       <div>
@@ -38,8 +37,9 @@ const props = defineProps({
   },
 });
 
-const setDefaultStoreImage = async function (event: Event | any) {
-  event.target.src = await require(`@/assets/img/store_logo.svg`);
+const defaultImagePath = await import("@/assets/img/store_logo.svg");
+const setDefaultStoreImage = (event: Event | any) => {
+  event.target.src = defaultImagePath.default;
   event.target.className = "p-2";
 };
 </script>
