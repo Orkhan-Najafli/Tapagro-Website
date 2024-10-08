@@ -97,12 +97,25 @@ pipeline {
 post {
         always {
             script {
-                def emailBody = "Status of Job\n"
-                FAILED_STAGES.each { String stage_name, String status ->
-                    emailBody += "\nRepository/branch: ${env.JOB_NAME}\nStage: ${stage_name}\nStatus: ${status}\nLast commit by: ```${env.GIT_LAST_COMMIT}```\n author *${env.GIT_LAST_AUTHOR}*"
-                }
-                googlechatnotification url: 'id:tapagro-deployment',
-                    message: emailBody
+                // Define status icons and other notification-related variables
+                    def statusIcons = [SUCCESS: '\\u2705', FAILED: '\\u274c']
+                    
+                    // Initialize email body
+                    def emailBody = "Status of Job\n"
+                    
+                    // Loop through FAILED_STAGES to append stage results with appropriate icons
+                    FAILED_STAGES.each { stageName, stageStatus ->
+                        def stageIcon = statusIcons[stageStatus] ?: '\\u1F648'
+                        emailBody += "\nRepository/branch: ${env.JOB_NAME}\n" +
+                                     "Stage: ${stageName}\n" +
+                                     "Status: ${stageStatus} ${stageIcon}\n" +
+                                     "Last commit: ```${env.GIT_LAST_COMMIT}```\n" +
+                                     "Author: *${env.GIT_LAST_AUTHOR}*"
+                    }
+                    
+                    // Send the notification
+                    googlechatnotification url: 'id:tapagro-deployment',
+                        message: emailBody
             }
         }
     }
