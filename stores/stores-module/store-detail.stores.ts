@@ -22,19 +22,23 @@ export const useStoreDetailStore = defineStore("Store-detail", {
       this.error = null;
     },
     resetDeliveryCities() {
-      this.store.deliveryCities = this.store.deliveryCities.map(
-        (deliveryCity) => {
+      this.store.deliveryCities =
+        this.store.deliveryCities &&
+        this.store.deliveryCities.map((deliveryCity) => {
           return {
             ...deliveryCity,
             checked: false,
           };
-        }
-      );
+        });
     },
-    updateDeliveryCities(selectedRegionIDs: Array<number>) {
-      this.store.deliveryCities = this.store.deliveryCities.map(
-        (deliveryCity: DeliveryCity) => {
-          if (selectedRegionIDs.includes(deliveryCity.id)) {
+    updateDeliveryCities(selectedRegionIDs: Array<any>) {
+      console.log("selectedRegionIDs: ", selectedRegionIDs);
+      this.store.deliveryCities =
+        this.store.deliveryCities &&
+        this.store.deliveryCities.map((deliveryCity: DeliveryCity) => {
+          if (selectedRegionIDs.includes(String(deliveryCity.id))) {
+            console.log("true....: ", deliveryCity.id);
+
             return {
               ...deliveryCity,
               checked: true,
@@ -42,10 +46,10 @@ export const useStoreDetailStore = defineStore("Store-detail", {
           } else {
             return {
               ...deliveryCity,
+              checked: false,
             };
           }
-        }
-      );
+        });
     },
     async fetchStore(id: number) {
       const { data, status, error } = await useAsyncData<StoreDetail>(
@@ -58,15 +62,6 @@ export const useStoreDetailStore = defineStore("Store-detail", {
             // query: queryData,
           })
       );
-      // this.store.deliveryCities = data.value!.deliveryCities.map(
-      //   (deliveryCity) => {
-      //     return {
-      //       ...deliveryCity,
-      //       checked: false,
-      //     };
-      //   }
-      // );
-
       this.store = data.value!;
       this.status = status.value;
       this.error = error.value;

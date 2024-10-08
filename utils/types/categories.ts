@@ -8,6 +8,7 @@ export interface Categories {
   // static
   hide?: boolean;
   apiCalled?: boolean;
+  productCount?: any;
 }
 export interface CategoriesProductType {
   id: number;

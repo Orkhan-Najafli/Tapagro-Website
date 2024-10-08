@@ -53,7 +53,12 @@ export const useCategoriesStore = defineStore("categories", {
         };
       });
     },
-    async fetchBaseCategories() {
+    resetCategories() {
+      this.categories = [];
+      this.categoriesStatus = "";
+      this.categoriesError = null;
+    },
+    async fetchBaseCategories(queryParams?: any) {
       const { data, status, error } = await useAsyncData<Categories[]>(
         "base-categories",
         () =>
@@ -65,6 +70,7 @@ export const useCategoriesStore = defineStore("categories", {
                 ...HeaderConfigs(useCookie("token").value || ""),
               },
               method: "GET",
+              query: queryParams,
             }
           )
       );

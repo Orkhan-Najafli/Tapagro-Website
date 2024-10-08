@@ -31,6 +31,7 @@
             }"
           />
         </div>
+
         <ul
           v-if="category.productTypes.length > 0"
           class="w-auto overflow-hidden transition-all duration-500 pl-7"

@@ -1,6 +1,6 @@
 <template>
   <div class="w-auto relative">
-    <section class="flex flex-col w-full h-auto">
+    <section v-if="props.mobile" class="flex flex-col w-full h-auto">
       <div class="flex flex-row justify-between items-center">
         <span class="text-[#374151] text-base font-medium">{{
           $t("filter")
@@ -15,7 +15,7 @@
       <hr class="mt-6 bg-gray-200" />
     </section>
     <a-form>
-      <!-- <div>
+      <div>
         <section class="my-6">
           <label
             :class="{
@@ -83,19 +83,27 @@
             @click="categoriesBoxShow = !categoriesBoxShow"
           >
             <span class="">{{ $t("subcategories") }}</span>
-            <a-icon
+            <DownOutlined
+              :class="{
+                'rotate-180': categoriesBoxShow,
+                'rotate-0': !categoriesBoxShow,
+              }"
               class="transform"
-              :type="categoriesBoxShow ? 'up' : 'down'"
             />
           </button>
-          <Tree
-            v-show="categoriesBoxShow"
-            :baseCategoryId="baseCategoryId"
-            :baseCategoryType="baseCategoryType"
-          />
+          <a-spin
+            size="large"
+            class="mt-1 flex justify-center"
+            :spinning="useCategoriesStore().getCategoriesStatus !== 'success'"
+          >
+            <Tree
+              v-show="categoriesBoxShow"
+              :baseCategoryId="baseCategoryId"
+              :baseCategoryType="baseCategoryType()"
+            />
+          </a-spin>
         </div>
-      </div> -->
-      <div>{{ selectedRegions }}</div>
+      </div>
       <section class="flex flex-col w-full h-auto">
         <hr class="my-6" />
 
@@ -129,14 +137,13 @@
                 class="px-4 outline-none h-11 pl-10 w-full border rounded-l-md border-gray-200"
                 type="text"
                 v-model="regionSearchValue"
-                @input="filteredRegions"
                 :placeholder="$t('search_the_area')"
               />
             </div>
             <ul class="mt-3">
               <li
                 class="mb-3 flex flex-row justify-start items-center cursor-pointer hover:bg-gray-50"
-                v-for="(region, index) in regions"
+                v-for="(region, index) in filteredRegions"
                 :key="index"
                 :class="{
                   'bg-gray-50': selectedRegions.includes(region.id),
@@ -160,7 +167,7 @@
                   />
                   <!-- :checked="selectedRegions.includes(region.id)" -->
                   <span class="font-medium text-base text-gray-800">
-                    {{ region.name }} -- {{ region.checked }}
+                    {{ region.name }}
                   </span>
                 </label>
               </li>
@@ -177,7 +184,7 @@
           <div class="w-1/2 mr-3">
             <label class="w-full min-w-full inline-flex flex-col text-sm">
               <a-input
-                v-model="minPrice"
+                v-model:value="minPrice"
                 class="mt-2 w-full min-w-full"
                 :placeholder="$t('minimum')"
                 allow-clear
@@ -193,7 +200,7 @@
           <div class="w-1/2">
             <label class="w-full min-w-full inline-flex flex-col text-sm">
               <a-input
-                v-model="maxPrice"
+                v-model:value="maxPrice"
                 class="mt-2 w-full min-w-full"
                 :placeholder="$t('maximum')"
                 :maxLength="30"
@@ -226,9 +233,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DeliveryCity } from "~/utils/types/stores";
-
-let selectedRegions = reactive<Array<number>>([]);
+let selectedRegions = reactive<Array<string>>([]);
 const minPrice = ref();
 const maxPrice = ref();
 const baseCategoryId = ref();
@@ -237,81 +242,65 @@ const regionSearchValue = ref("");
 const num = ref();
 const categoriesBoxShow = ref(true);
 const regionBoxShow = ref(true);
-
-// import CategoriesTree from "../../common/CategoriesTree.vue";
-// import { mapGetters } from "vuex";
-// import tick_in_filter_rating from "../../inc/svg/tick_in_filter_rating.vue";
-
-//   created() {
-useCategoriesStore().fetchBaseCategories();
+const props = defineProps({
+  mobile: {
+    type: Boolean,
+    default: true,
+  },
+});
+useCategoriesStore().fetchBaseCategories({
+  storeId: Number(useRoute().params.storedetail),
+});
 
 if (useRoute().query) {
   let cityIdsQueryParam = useRoute().query.cityIds || [];
-  // let baseCategoryId = Number(queryString.baseCategoryId) || undefined;
-
+  baseCategoryId.value = Number(useRoute().query.baseCategoryId) || undefined;
   if (!Array.isArray(cityIdsQueryParam)) {
     cityIdsQueryParam = cityIdsQueryParam.split(",");
   }
-
-  // this.baseCategoryId = baseCategoryId;
-  selectedRegions = cityIdsQueryParam.map((regionId: any) => Number(regionId));
+  selectedRegions =
+    cityIdsQueryParam &&
+    cityIdsQueryParam.map((regionId: any) => String(regionId));
   minPrice.value = Number(useRoute().query.minPrice) || undefined;
   maxPrice.value = Number(useRoute().query.maxPrice) || undefined;
   isDiscount.value = useRoute().query.endirimli === "beli";
+  useStoreDetailStore().updateDeliveryCities(selectedRegions);
 }
-
-//   computed: {
-//     ...mapGetters({
-//       baseCategories: "productCategories/storeBaseCategories",
-//     }),
 const baseCategoryType = function () {
-  // let item = baseCategories.find((el) => el.id == baseCategoryId.value);
-  // return item ? item.label : null;
+  let item = useCategoriesStore().getBaseCategories.find(
+    (el) => el.id == baseCategoryId.value
+  );
+  return item ? item.label : null;
 };
 
-// let filteredRegions: any = computed(() => {
-//   return useStoreDetailStore().getStore.deliveryCities?.filter(
-//     (region: any) => {
-//       return region.name
-//         .toLowerCase()
-//         .includes(regionSearchValue.value.toLowerCase());
-//     }
-//   );
-// });
-let regions = reactive<Array<DeliveryCity>>([]);
-const filteredRegions = function () {
-  regions = useStoreDetailStore().getStore.deliveryCities?.filter(
+let filteredRegions: any = computed(() => {
+  return useStoreDetailStore().getStore.deliveryCities?.filter(
     (region: any) => {
       return region.name
         .toLowerCase()
         .includes(regionSearchValue.value.toLowerCase());
     }
   );
-};
-filteredRegions();
+});
 
 watch(
   regionSearchValue,
   (value: any, oldValue: any) => {
     useStoreDetailStore().updateDeliveryCities(selectedRegions);
-    filteredRegions();
-  }
-  // { deep: true, immediate: true }
+  },
+  { deep: true, immediate: true }
 );
-//   watch: {
-//     baseCategories: {
-//       handler() {
-//         let item = this.baseCategories.find(
-//           (el) => el.label == this.$route.query.productBaseCategoryLabel
-//         );
-//         this.baseCategoryId = item ? item.id : undefined;
-//       },
-//       immediate: true,
-//     },
-//   },
+watch(
+  useCategoriesStore().getBaseCategories,
+  (value: any, oldValue: any) => {
+    let item = useCategoriesStore().getBaseCategories.find(
+      (el) => el.label == useRoute().query.productBaseCategoryLabel
+    );
+    baseCategoryId.value = item ? item.id : undefined;
+  },
+  { deep: true, immediate: true }
+);
 
-//   watchQuery: true,
-//   methods
 const pasteNone = function (event: Event | any) {
   event.preventDefault();
 };
@@ -330,6 +319,9 @@ const check = function (event: Event | any) {
   } else event.preventDefault();
 };
 const changeBaseCategory = function (category: any) {
+  console.log(category);
+  useCategoriesStore().resetCategories();
+  useCategoriesStore().fetchCategories(category.id);
   if (baseCategoryId.value == category.id) {
     baseCategoryId.value = undefined;
   } else {
@@ -339,9 +331,9 @@ const changeBaseCategory = function (category: any) {
   useRouter().replace({
     query: {
       ...useRoute().query,
-      productBaseCategoryLabel: baseCategoryType || undefined,
+      productBaseCategoryLabel: baseCategoryType() || undefined,
       productTypeLabels: undefined,
-      page: undefined,
+      // page: undefined,
     },
   });
 };
@@ -360,10 +352,9 @@ const changeUrlCity = function (event: Event | any) {
       ...useRoute().query,
       cityIds:
         selectedRegions.length > 0 ? selectedRegions.join(",") : undefined,
-      page: undefined,
+      // page: undefined,
     },
   });
-  filteredRegions();
   useStoreDetailStore().updateDeliveryCities(selectedRegions);
 };
 const changeUrlMaxPrice = function () {
@@ -380,7 +371,7 @@ const changeUrlMinPrice = function () {
     query: {
       ...useRoute().query,
       minPrice: minPrice.value || undefined,
-      page: undefined,
+      // page: undefined,
     },
   });
 };
@@ -389,10 +380,9 @@ const changeDiscountFilter = function () {
     query: {
       ...useRoute().query,
       endirimli: isDiscount.value ? "beli" : undefined,
-      page: undefined,
+      // page: undefined,
     },
   });
-  // this.loadProducts();
 };
 const resetFilterFields = function () {
   baseCategoryId.value = undefined;
@@ -411,6 +401,7 @@ const resetFilterFields = function () {
       endirimli: undefined,
     },
   });
+  useStoreDetailStore().updateDeliveryCities(selectedRegions);
 };
 //   },
 // };
