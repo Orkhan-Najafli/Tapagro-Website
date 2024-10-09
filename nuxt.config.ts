@@ -37,4 +37,8 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  devServer: {
+    host: "127.0.0.1", // or '0.0.0.0' for external access
+    port: 4572, // specify the port you want to use
+  },
 });
