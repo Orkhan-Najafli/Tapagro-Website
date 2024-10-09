@@ -28,7 +28,7 @@
               class="flex flex-col justify-center items-center w-full min-w-full h-auto py-3 z-30"
             >
               <img
-                :src="`${useRuntimeConfig().public.baseURL + item.iconPath}`"
+                :src="`${useRuntimeConfig().public.baseURL}/${item.iconPath}`"
                 width="56px"
                 height="56px"
                 class="mb-3 w-14 h-14"

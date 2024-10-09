@@ -139,7 +139,7 @@
                     >
                       <img
                         v-if="isValidImage(image)"
-                        :src="`${baseURL}${image.path}`"
+                        :src="`${baseURL}$/{image.path}`"
                         :alt="useProductDetailStore().getProduct.name"
                         :title="useProductDetailStore().getProduct.name"
                         class="rounded-md object-contain mx-auto responsive-class"
@@ -455,7 +455,7 @@
                               class="w-14 h-14 p-2 rounded-full bg-green-50 flex justify-center items-center"
                             >
                               <img
-                                :src="`${baseURL}${
+                                :src="`${baseURL}/${
                                   useProductDetailStore().getProduct?.store
                                     ?.logoPath
                                 }`"

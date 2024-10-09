@@ -10,7 +10,7 @@
           >
             <img
               class="w-[18px] h-[18px]"
-              :src="`${baseURL}${props.review.store.logoPath}`"
+              :src="`${baseURL}/${props.review.store.logoPath}`"
               @error="setDefaultStoreImage"
             />
           </div>
@@ -48,7 +48,7 @@
               :key="index"
             >
               <img
-                :src="`${baseURL}${photo}`"
+                :src="`${baseURL}/${photo}`"
                 alt="image.png"
                 class="w-[86px] max-w-[86px] h-[86px] max-h-[86px] m-2"
               />
@@ -93,7 +93,7 @@
                   >
                     <img
                       class="w-[18px] h-[18px]"
-                      :src="`${baseURL}${props.review.store.logoPath}`"
+                      :src="`${baseURL}/${props.review.store.logoPath}`"
                       @error="setDefaultStoreImage"
                     />
                   </div>

@@ -46,7 +46,7 @@
                   class="w-14 h-14 p-2 bg-[#F0FDF4] rounded-full flex justify-center items-center"
                 >
                   <img
-                    :src="`${baseURL}${
+                    :src="`${baseURL}/${
                       useStoreDetailStore().getStore.logoPath
                     }`"
                     @error="setDefaultStoreImage"
