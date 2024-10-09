@@ -35,6 +35,12 @@
 <script setup lang="ts">
 import type { Store } from "~/utils/types/stores";
 
+let props = defineProps({
+  store: {
+    type: Object as PropType<Store>,
+    default: new Set(),
+  },
+});
 // variables
 const baseURL = useRuntimeConfig().public.baseURL;
 
@@ -44,13 +50,6 @@ const setDefaultStoreImage = (event: Event | any) => {
   event.target.src = defaultImagePath.default;
   event.target.className = "p-2";
 };
-
-let props = defineProps({
-  store: {
-    type: Object as PropType<Store>,
-    default: new Set(),
-  },
-});
 </script>
 
 <style scoped>
