@@ -21,7 +21,7 @@
                 >
                   <img
                     v-if="hasValidThumbnail(props.product)"
-                    :src="`${baseURL}${props.product.thumbnailPath}`"
+                    :src="`${baseURL}/${props.product.thumbnailPath}`"
                     :alt="props.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover"
                     @error="setDefaultImage"
@@ -72,7 +72,7 @@
                 >
                   <img
                     v-if="hasValidThumbnail(props.product)"
-                    :src="`${baseURL}${props.product.thumbnailPath}`"
+                    :src="`${baseURL}/${props.product.thumbnailPath}`"
                     :alt="props.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover"
                     @error="setDefaultImage"

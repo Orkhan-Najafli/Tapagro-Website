@@ -12,7 +12,7 @@
       >
         <img
           class="w-full h-full"
-          :src="`${baseURL}${props.store.logoPath}`"
+          :src="`${baseURL}/${props.store.logoPath}`"
           @error="setDefaultStoreImage"
           :alt="store.name"
         />
@@ -39,10 +39,12 @@ import type { Store } from "~/utils/types/stores";
 const baseURL = useRuntimeConfig().public.baseURL;
 
 // methods
-const setDefaultStoreImage = async function (event: Event | any) {
-  event.target.src = await import(`@/assets/img/store_logo.svg`);
-  event.target.className = "p-1";
+const defaultImagePath = await import("@/assets/img/store_logo.svg");
+const setDefaultStoreImage = (event: Event | any) => {
+  event.target.src = defaultImagePath.default;
+  event.target.className = "p-2";
 };
+
 let props = defineProps({
   store: {
     type: Object as PropType<Store>,

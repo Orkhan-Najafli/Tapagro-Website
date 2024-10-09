@@ -11,7 +11,7 @@
       >
         <img
           class="w-full h-full"
-          :src="`${useRuntimeConfig().public.baseURL}${props.data.logoPath}`"
+          :src="`${useRuntimeConfig().public.baseURL}/${props.data.logoPath}`"
           @error="setDefaultStoreImage"
         />
       </div>

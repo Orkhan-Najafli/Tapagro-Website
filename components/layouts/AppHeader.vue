@@ -185,7 +185,7 @@
                         <div class="flex flex-row justify-start items-center">
                           <img
                             class="min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-                            :src="`${baseURL}${language.flagPath}`"
+                            :src="`${baseURL}/${language.flagPath}`"
                             @error="setDefaultImage"
                           />
                           <span class="ml-2">{{ language.countryCode }}</span>
@@ -590,7 +590,7 @@
                       <div class="flex flex-row justify-start items-center">
                         <img
                           class="min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-                          :src="`${baseURL}${language.flagPath}`"
+                          :src="`${baseURL}/${language.flagPath}`"
                           @error="setDefaultImage"
                         />
                         <span class="ml-2">{{ language.countryCode }}</span>

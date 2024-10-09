@@ -19,7 +19,7 @@
         >
           <img
             v-if="hasValidThumbnail(props.product)"
-            :src="`${baseURL}${props.product.thumbnailPath}`"
+            :src="`${baseURL}/${props.product.thumbnailPath}`"
             :alt="props.product.name"
             :title="props.product.name"
             @load="setheight"
