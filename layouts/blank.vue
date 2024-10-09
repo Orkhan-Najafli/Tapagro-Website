@@ -9,11 +9,6 @@ definePageMeta({
   middleware: ["guest"],
   // or middleware: 'auth'
 });
-defineComponent({
-  errorCaptured(err) {
-    return false; // Xətanı gizlətmək üçün false qaytarın
-  },
-});
 </script>
 
 <style>

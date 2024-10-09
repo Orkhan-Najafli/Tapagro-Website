@@ -138,8 +138,8 @@
                       :key="index"
                     >
                       <img
-                        v-if="isValidImage(image)"
-                        :src="`${baseURL}$/{image.path}`"
+                        v-if="image.path"
+                        :src="`${baseURL}/${image.path}`"
                         :alt="useProductDetailStore().getProduct.name"
                         :title="useProductDetailStore().getProduct.name"
                         class="rounded-md object-contain mx-auto responsive-class"
