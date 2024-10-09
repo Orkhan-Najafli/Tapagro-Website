@@ -44,14 +44,16 @@ export const useCategoriesStore = defineStore("categories", {
     },
     setCheckedTypes(typeList: Array<string>) {},
     setAllProductTypes(index: number, allProductTypeChecked?: boolean) {
-      this.categories[index].productTypes = this.categories[
-        index
-      ].productTypes.map((type: CategoriesProductType) => {
-        return {
-          ...type,
-          checked: allProductTypeChecked,
-        };
-      });
+      this.categories[index].productTypes =
+        this.categories[index].productTypes &&
+        this.categories[index].productTypes.map(
+          (type: CategoriesProductType) => {
+            return {
+              ...type,
+              checked: allProductTypeChecked,
+            };
+          }
+        );
     },
     resetCategories() {
       this.categories = [];
@@ -59,29 +61,35 @@ export const useCategoriesStore = defineStore("categories", {
       this.categoriesError = null;
     },
     async fetchBaseCategories(queryParams?: any) {
-      const { data, status, error } = await useAsyncData<Categories[]>(
-        "base-categories",
-        () =>
-          $fetch(
-            `${this.baseURL}${urls["base-categories"]}`,
+      try {
+        const { data, status, error } = await useAsyncData<Categories[]>(
+          "base-categories",
+          () =>
+            $fetch(
+              `${this.baseURL}${urls["base-categories"]}`,
 
-            {
-              headers: {
-                ...HeaderConfigs(useCookie("token").value || ""),
-              },
-              method: "GET",
-              query: queryParams,
-            }
-          )
-      );
-      this.baseCategories = data!.value!.map((baseCategory) => {
-        return {
-          ...baseCategory,
-          hide: true,
-        };
-      });
-      this.status = status.value;
-      this.error = error?.value;
+              {
+                headers: {
+                  ...HeaderConfigs(useCookie("token").value || ""),
+                },
+                method: "GET",
+                query: queryParams,
+              }
+            )
+        );
+        this.baseCategories =
+          data!.value! &&
+          data!.value!.map((baseCategory) => {
+            return {
+              ...baseCategory,
+              hide: true,
+            };
+          });
+        this.status = status.value;
+        this.error = error?.value;
+      } catch (error) {
+        console.error("When API call, error happened: ", error);
+      }
     },
 
     async fetchCategories(baseCategoryId: number) {
@@ -117,15 +125,15 @@ export const useCategoriesStore = defineStore("categories", {
               method: "GET",
             }
           ).then((result: CategoriesProductType[] | any) => {
-            category.productTypes = result.map(
-              (productType: CategoriesProductType) => {
+            category.productTypes =
+              result &&
+              result.map((productType: CategoriesProductType) => {
                 return {
                   ...productType,
                   hide: false,
                   checked: false,
                 };
-              }
-            );
+              });
           });
           category.hide = false;
           category.apiCalled = true;
