@@ -210,13 +210,13 @@
         </div>
       </div>
     </section>
-    <keep-alive>
-      <!-- <StoreDetailFilterMobile
-          :visible="visible"
-          @handleCancel="visible = false"
-          :deliveryCities="useStoreDetailStore().getStore.deliveryCities"
-        /> -->
-    </keep-alive>
+    <!-- <keep-alive> -->
+    <store-detail-filter-mobile
+      @handleOk="openMobileFilter = false"
+      @handleCancel="openMobileFilter = false"
+      v-if="openMobileFilter"
+    />
+    <!-- </keep-alive> -->
     <!-- <Page404
       v-else
       title="404"
@@ -230,8 +230,8 @@ import { formatPhoneNumber } from "@/utils/helpers";
 
 const baseURL = useRuntimeConfig().public.baseURL;
 const searchText = ref();
+const openMobileFilter = ref(false);
 const showOrderMenu = ref(false);
-const visible = ref(false);
 const searchParams = reactive({
   sortBy: "createdAt",
   sortDirection: "DESC",
@@ -286,34 +286,35 @@ const onSearch = function () {
     },
   });
 };
-
+const filter = function (value: any, oldValue: any) {
+  if (
+    value?.sortBy !== oldValue?.sortBy ||
+    value?.endirimli !== oldValue?.endirimli ||
+    value?.maxPrice !== oldValue?.maxPrice ||
+    value?.minPrice !== oldValue?.minPrice ||
+    value?.cityIds !== oldValue?.cityIds ||
+    value?.productTypeLabels !== oldValue.productTypeLabels
+  ) {
+    useProductsStore().resetProducts();
+    queryParams.page = 0;
+    queryParams.size = value.page ? (Number(value.page) + 1) * 12 : 12;
+  }
+  useProductsStore().fetchProducts({
+    ...useRoute().query,
+    ...queryParams,
+    sortBy: convertSortBy("sortBy"),
+    sortDirection: convertSortBy("sortDirection"),
+  });
+};
 watch(
   () => useRoute().query,
   (value: any, oldValue: any) => {
-    if (
-      value?.sortBy !== oldValue?.sortBy ||
-      value?.endirimli !== oldValue?.endirimli ||
-      value?.maxPrice !== oldValue?.maxPrice ||
-      value?.minPrice !== oldValue?.minPrice ||
-      value?.cityIds !== oldValue?.cityIds ||
-      value?.productTypeLabels !== oldValue.productTypeLabels
-    ) {
-      useProductsStore().resetProducts();
-      queryParams.page = 0;
-      queryParams.size = value.page ? (Number(value.page) + 1) * 12 : 12;
-    }
-    useProductsStore().fetchProducts({
-      ...useRoute().query,
-      ...queryParams,
-      sortBy: convertSortBy("sortBy"),
-      sortDirection: convertSortBy("sortDirection"),
-    });
+    !openMobileFilter.value && filter(value, oldValue);
     queryParams.page = value.page;
   },
   { deep: true }
 );
-//   import StoreDetailFilter from "@/components/filters/filterForLargeScreens/StoreDetailFilter.vue";
-//   import StoreDetailFilterMobile from "@/components/filters/filterForSmallScreens/StoreDetailFilterMobile.vue";
+
 //   import Page404 from "@/components/common/404.vue";
 
 //     created() {
@@ -342,7 +343,7 @@ watch(
 //     },
 //     methods: {
 const showFilterModal = function () {
-  visible.value = true;
+  openMobileFilter.value = true;
 };
 //   mobileMenu(event) {
 //     let box =

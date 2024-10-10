@@ -34,3 +34,12 @@ export interface Farmer {
   name: string;
   farmerProductCount: number;
 }
+
+export interface FarmerDTO {
+  name: string;
+  city: {
+    id: number;
+    name: string;
+  };
+  isActive: boolean;
+}
