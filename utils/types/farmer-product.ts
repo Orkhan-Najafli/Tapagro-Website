@@ -43,3 +43,7 @@ export interface FarmerDTO {
   };
   isActive: boolean;
 }
+export interface FarmerContact {
+  emailAddress: string;
+  phoneNumber: string;
+}

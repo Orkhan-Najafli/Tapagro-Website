@@ -65,17 +65,13 @@ export const useCategoriesStore = defineStore("categories", {
         const { data, status, error } = await useAsyncData<Categories[]>(
           "base-categories",
           () =>
-            $fetch(
-              `${this.baseURL}${urls["base-categories"]}`,
-
-              {
-                headers: {
-                  ...HeaderConfigs(useCookie("token").value || ""),
-                },
-                method: "GET",
-                query: queryParams,
-              }
-            )
+            $fetch(`${this.baseURL}${urls["base-categories"]}`, {
+              headers: {
+                ...HeaderConfigs(useCookie("token").value || ""),
+              },
+              method: "GET",
+              query: queryParams,
+            })
         );
         this.baseCategories =
           data!.value! &&

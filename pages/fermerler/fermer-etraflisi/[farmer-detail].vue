@@ -33,13 +33,13 @@
           >
             <a-skeleton
               :paragraph="false"
-              :loading="!farmerDetailsLoaded"
+              :loading="useFarmersStore().getFarmerStatus !== 'success'"
               active
               class="text-2xl md:text-4xl lg:text-5xl"
             />
 
             <div
-              v-if="farmerDetailsLoaded"
+              v-if="useFarmersStore().getFarmerStatus === 'success'"
               class="flex flex-row justify-start items-center mb-6"
             >
               <div
@@ -49,7 +49,7 @@
               </div>
 
               <h2 class="text-lg font-medium capitalize text-gray-700 m-0 p-0">
-                {{ farmer.name }}
+                {{ useFarmersStore().getFarmer.name }}
               </h2>
             </div>
             <div
@@ -57,78 +57,85 @@
               class="ml-3.5"
             >
               <div
-                v-if="farmerDetailsLoaded"
+                v-if="useFarmersStore().getFarmerStatus === 'success'"
                 class="flex flex-col md:flex-row md:items-center justify-start"
               >
                 <div
                   class="flex flex-row justify-start items-center text-gray-500 mb-6 md:mb-0 md:mr-11"
                 >
-                  <svg
-                    class="mr-3"
-                    width="10.5"
-                    height="13.5"
-                    viewBox="0 0 14 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10 4.75C10 6.40685 8.65685 7.75 7 7.75C5.34315 7.75 4 6.40685 4 4.75C4 3.09315 5.34315 1.75 7 1.75C8.65685 1.75 10 3.09315 10 4.75Z"
-                      stroke="#6B7280"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M7 10C4.10051 10 1.75 12.3505 1.75 15.25H12.25C12.25 12.3505 9.8995 10 7 10Z"
-                      stroke="#6B7280"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                  <farmer_profile_icon />
                   <span class="text-gray-500 font-medium text-base">{{
-                    farmer.name
+                    useFarmersStore().getFarmer.name
                   }}</span>
                 </div>
                 <div
-                  @click="loadContact"
+                  @click="
+                    useFarmersStore().fetchFarmerContact(
+                      useRoute().params.farmerdetail
+                    )
+                  "
                   class="inline-flex flex-row items-center cursor-pointer"
                 >
-                  <svg
-                    class="mr-2.5"
-                    width="13.5"
-                    height="13.5"
-                    viewBox="0 0 16 17"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.25 3.25C1.25 2.42157 1.92157 1.75 2.75 1.75H5.20943C5.53225 1.75 5.81886 1.95657 5.92094 2.26283L7.0443 5.63291C7.16233 5.98699 7.00203 6.37398 6.6682 6.5409L4.97525 7.38737C5.80194 9.22091 7.27909 10.6981 9.11263 11.5247L9.9591 9.8318C10.126 9.49796 10.513 9.33767 10.8671 9.4557L14.2372 10.5791C14.5434 10.6811 14.75 10.9677 14.75 11.2906V13.75C14.75 14.5784 14.0784 15.25 13.25 15.25H12.5C6.2868 15.25 1.25 10.2132 1.25 4V3.25Z"
-                      stroke="#6B7280"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                  <phone_farmer_icon />
                   <div
                     class="font-normal text-base text-[#16A34A] whitespace-normal cursor-pointer"
                   >
                     <a
+                      v-if="useFarmersStore().getFarmerContact.phoneNumber"
                       class="text-emerald-600 hover:text-emerald-600"
-                      :href="`tel:+${994 + contact.phoneNumber}`"
-                      v-show="contactShow"
+                      :href="`tel:+${
+                        994 + useFarmersStore().getFarmerContact.phoneNumber
+                      }`"
+                      v-show="
+                        useFarmersStore().getFarmerContactStatus === 'success'
+                      "
                     >
-                      {{ formatPhoneNumber(contact.phoneNumber) }}
+                      {{
+                        formatPhoneNumber(
+                          useFarmersStore().getFarmerContact.phoneNumber
+                        )
+                      }}
                     </a>
-                    <span v-show="!contactShow">{{
-                      $t("contact_the_farmer")
-                    }}</span>
+                    <span
+                      v-if="
+                        !useFarmersStore().getFarmerContact.phoneNumber &&
+                        useFarmersStore().getFarmerContactStatus === 'success'
+                      "
+                    >
+                      <no_phone_icon />
+                    </span>
+                    <span
+                      v-show="
+                        useFarmersStore().getFarmerContactStatus !== 'success'
+                      "
+                      >{{ $t("contact_the_farmer") }}</span
+                    >
                   </div>
                 </div>
               </div>
             </div>
           </section>
-          <section class="mb-5">
+          <a-config-provider
+            :theme="{
+              token: {
+                colorPrimary: '#16a34a',
+              },
+            }"
+          >
+            <a-input-search
+              size="large"
+              class="w-full min-w-full h-auto mb-6 md:mb-11"
+              :maxLength="255"
+              :placeholder="$t('ad_name')"
+              v-model:value="productNamePhrase"
+              :allowClear="true"
+              enter-button
+              @change="onSearch"
+              @keyup.enter="onSearch"
+            >
+            </a-input-search>
+          </a-config-provider>
+          <!-- <section class="mb-5">
             <a-input-search
               v-model="productNamePhrase"
               allow-clear
@@ -142,8 +149,8 @@
                 <a-icon class="text-emerald-600" type="search" />
               </a-button>
             </a-input-search>
-          </section>
-          <section class="mb-6 md:mb-10">
+          </section> -->
+          <!-- <section class="mb-6 md:mb-10">
             <div class="flex flex-col md:flex-row justify-between">
               <div
                 style="min-width: 292px; max-width: 292px"
@@ -216,7 +223,7 @@
                 ></div>
               </div>
             </div>
-          </section>
+          </section> -->
         </div>
       </div>
       <!-- </section> -->
@@ -236,6 +243,36 @@
 </template>
 
 <script setup lang="ts">
+import { formatPhoneNumber } from "@/utils/helpers";
+
+const productNamePhrase = ref();
+const queryParams = reactive({
+  page: useRoute().query.page ? Number(useRoute().query.page) : 0,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,
+  productNamePhrase: useRoute().query.productNamePhrase
+    ? String(useRoute().query.productNamePhrase)
+    : undefined,
+});
+
+useFarmersStore().resetFarmerContact();
+useFarmersStore().fetchFarmer(useRoute().params.farmerdetail);
+
+const onSearch = function () {
+  useFarmersStore().resetFarmers();
+  useRouter().push({
+    query: {
+      ...useRoute().query,
+      page: 0,
+      size: 12,
+      productNamePhrase: productNamePhrase.value || undefined,
+    },
+  });
+};
+const loadMoreFarmers = function () {
+  queryParams.page++;
+  queryParams.size = 15;
+  useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
+};
 // import _ from "lodash";
 // import ProductListing from "@/components/common/ProductListing";
 // import { FetchingProducts } from "@/app/product/waiting-types";
