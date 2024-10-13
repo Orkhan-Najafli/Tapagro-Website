@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Farmer } from "~/utils/types/farmer-product";
+import type { Farmer, FarmerDTO } from "~/utils/types/farmer-product";
 
 export const useFarmersStore = defineStore("farmers", {
   state: () => ({
@@ -12,10 +12,13 @@ export const useFarmersStore = defineStore("farmers", {
     totalPages: 0 as number,
     status: "" as string,
     error: null as null | Error,
+
+    farmer: {} as FarmerDTO,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
     getFarmers: (state) => state.farmers,
+    getFarmer: (state) => state.farmer,
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
     getStatus: (state) => state.status,
@@ -44,8 +47,21 @@ export const useFarmersStore = defineStore("farmers", {
       data.value?.content.forEach((item: Farmer) => {
         this.farmers.add(item);
       });
-      console.log("status: ", status.value);
-
+      this.status = status.value;
+      this.error = error.value;
+    },
+    async fetchFarmer(queryData: any) {
+      const { data, status, error } = await useAsyncData<FarmerDTO>(
+        "farmers",
+        () =>
+          $fetch(`${this.baseURL}${urls.farmer}`, {
+            headers: {
+              ...HeaderConfigs(useCookie("token").value || ""),
+            },
+            query: queryData,
+          })
+      );
+      this.farmer = data.value!;
       this.status = status.value;
       this.error = error.value;
     },

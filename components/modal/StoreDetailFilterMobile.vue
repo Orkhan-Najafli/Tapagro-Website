@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="true" @ok="handleOk" @cancel="handleCancel">
+  <a-modal :open="true" @ok="handleOk" @cancel="handleCancel">
     <template #title>
       <div class="flex flex-row items-baseline">
         {{ $t("filter") }}
