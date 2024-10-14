@@ -13,7 +13,7 @@
         <!-- v-if="categories" -->
 
         <li
-          v-for="(item, index) in useCategoriesStore().getBaseCategories || []"
+          v-for="(item, index) in useCategoriesStore()!.getBaseCategories || []"
           :key="index"
           @click="setBaseCategory(item)"
           class="flex flex-row w-auto mr-6"
@@ -140,12 +140,13 @@ const IsGoingRight = function () {
   });
 };
 
-useCategoriesStore().getBaseCategories.forEach((category: Categories) => {
-  if (useRoute().params.id === category.label) {
-    console.log("id: ", useRoute().params.id, "  label: ", category.label);
-    useCategoriesStore().setBaseCategory(category);
-  }
-});
+useCategoriesStore().getBaseCategoriesStatus === "success" &&
+  useCategoriesStore().getBaseCategories.forEach((category: Categories) => {
+    if (useRoute().params.id === category.label) {
+      console.log("id: ", useRoute().params.id, "  label: ", category.label);
+      useCategoriesStore().setBaseCategory(category);
+    }
+  });
 const setBaseCategory = function (category: Categories) {
   useCategoriesStore().setBaseCategory(category);
   useCategoriesStore().fetchCategories(category.id);

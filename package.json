@@ -8,6 +8,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "dev": "nuxt dev --host 127.0.0.1 --port 4572",
+    "dev:test": "set NODE_ENV=production && nuxt dev --host 127.0.0.1 --port 4572 --dotenv .env.production",
     "dev:staging": "cross-env NODE_ENV=staging nuxt dev --dotenv .env.staging",
     "dev:production": "cross-env NODE_ENV=production nuxt dev --dotenv .env.production",
     "build:staging": "cross-env NODE_ENV=staging nuxt build --dotenv .env.staging",
