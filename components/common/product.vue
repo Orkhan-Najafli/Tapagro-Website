@@ -67,6 +67,7 @@
           {{ props.product.name }}
         </p>
         <h4
+          v-if="!farmer"
           class="text-xs font-normal text-gray-400 line-clamp-1 m-0 p-0"
           :title="props.product.storeName"
         >
@@ -76,7 +77,7 @@
       <div class="flex flex-col justify-start items-start mt-3">
         <span
           class="text-base leading-6 font-semibold text-gray-600"
-          v-if="props.product.bargainMethod"
+          v-if="!farmer && props.product.bargainMethod"
         >
           {{ props.product.bargainMethod.status }}
         </span>
@@ -115,7 +116,8 @@
               >
                 <span v-if="fixed" class="mr-0.5 text-[#EF4444]"
                   >{{
-                    props.product.price && props.product.price.discountedPrice
+                    typeof props.product.price != "number" &&
+                    props.product.price.discountedPrice
                   }}
                 </span>
                 <span
@@ -125,16 +127,23 @@
                   class="mr-0.5 text-[#EF4444]"
                   >{{
                     tofixed
-                      ? `${Math.floor(props.product.price.discountedPrice)}.${
+                      ? `${
+                          typeof props.product.price != "number" &&
+                          Math.floor(props.product.price.discountedPrice)
+                        }.${
+                          typeof props.product.price != "number" &&
                           props.product.price.discountedPrice
                             .toString()
                             .split(".")[1][0]
                         }${
-                          props.product.price.discountedPrice
-                            .toString()
-                            .split(".")[1][1] || ""
+                          (typeof props.product.price != "number" &&
+                            props.product.price.discountedPrice
+                              .toString()
+                              .split(".")[1][1]) ||
+                          ""
                         }`
-                      : props.product.price.discountedPrice
+                      : typeof props.product.price != "number" &&
+                        props.product.price.discountedPrice
                   }}
                 </span>
                 <!-- <monetary_unit_logo
@@ -144,13 +153,18 @@
               <span
                 class="text-[#EF4444] bg-[#FEF2F2] text-xs font-medium p-0 py-0.5 px-1"
               >
-                -{{ props.product.price.discount }} %</span
+                -{{
+                  typeof props.product.price != "number" &&
+                  props.product.price.discount
+                }}
+                %</span
               >
             </div>
           </div>
           <div v-else class="flex flex-row justify-start items-center">
             <span class="mr-1 text-base font-medium text-[#374151]">{{
-              props.product.price && props.product.price.initialPrice
+              typeof props.product.price != "number" &&
+              props.product.price.initialPrice
             }}</span>
             <!-- <monetary_unit_logo
               :styleSVG="{ widht: 16, height: 13, color: '#374151' }"
@@ -158,6 +172,7 @@
           </div>
         </div>
         <nuxt-link
+          v-if="!farmer"
           @click="$event.stopPropagation()"
           tag="a"
           :to="`/mehsullar/mehsul-etraflisi/${props.product.id}#rating`"
@@ -317,10 +332,13 @@ const tofixed = ref(true);
 let props = defineProps({
   product: {
     type: Object as PropType<Product | FarmerProduct>,
-    default: "bu default deyerdir",
+    default: "",
   },
   link: {
     type: String,
+  },
+  farmer: {
+    type: Boolean,
   },
 });
 
@@ -332,7 +350,10 @@ const stopPropagationProduct = function (event: Event | any) {
 const priceFixed = function () {
   if (
     props.product &&
-    !Number.isInteger(Number(props.product?.price.discountedPrice))
+    !Number.isInteger(
+      typeof props.product.price != "number" &&
+        Number(props.product?.price.discountedPrice)
+    )
   ) {
     fixed.value = false;
   } else {
@@ -368,7 +389,7 @@ const setDefaultImage = async function (event: Event | any) {
   event.target.src = noImage.default;
   event.target.className = "p-16";
 };
-const hasValidThumbnail = function (product: Product) {
+const hasValidThumbnail = function (product: Product | FarmerProduct) {
   return product.thumbnailPath;
 };
 </script>

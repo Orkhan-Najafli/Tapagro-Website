@@ -3,7 +3,9 @@
     <ul class="w-auto h-auto m-0 p-0 max-w-[350px]">
       <li
         class="w-full h-auto m-0 p-0"
-        v-for="(category, index) in useRoute().params.id === 'fermer-mehsullari'
+        v-for="(category, index) in useRoute().params.id ===
+          'fermer-mehsullari' ||
+        useRoute().fullPath.includes('fermer-etraflisi')
           ? useFarmerCategoriesStore().getCategories
           : useCategoriesStore().getCategories"
         :key="index"
@@ -77,7 +79,8 @@ import type {
 
 // methods
 const getProductTypes = function (index: number) {
-  useRoute().params.id === "fermer-mehsullari"
+  useRoute().params.id === "fermer-mehsullari" ||
+  useRoute().fullPath.includes("fermer-etraflisi")
     ? useFarmerCategoriesStore().setProductTypes(index)
     : useCategoriesStore().setProductTypes(index);
 };

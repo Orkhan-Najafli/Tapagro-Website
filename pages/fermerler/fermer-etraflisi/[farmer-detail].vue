@@ -135,26 +135,10 @@
             >
             </a-input-search>
           </a-config-provider>
-          <!-- <section class="mb-5">
-            <a-input-search
-              v-model="productNamePhrase"
-              allow-clear
-              :placeholder="$t('ad_name')"
-              :maxLength="255"
-              class="w-auto h-11"
-              @keyup.enter="searchName"
-              @change="searchName"
-            >
-              <a-button class="text-emerald-500" slot="enterButton">
-                <a-icon class="text-emerald-600" type="search" />
-              </a-button>
-            </a-input-search>
-          </section> -->
-          <!-- <section class="mb-6 md:mb-10">
+          <section class="mb-6 md:mb-10">
             <div class="flex flex-col md:flex-row justify-between">
               <div
-                style="min-width: 292px; max-width: 292px"
-                class="pb-8 md:pr-6 hidden lg:block"
+                class="pb-8 min-w-[292px] max-w-[292pc] md:pr-6 hidden lg:block"
               >
                 <FarmerDetailFilter
                   style="height: fit-content"
@@ -164,11 +148,15 @@
               <div class="flex w-full flex-col">
                 <div class="flex flex-col mb-6">
                   <div class="flex flex-row justify-between w-full">
-                    <div class="flex font-bold text-base text-gray-600">
+                    <div
+                      v-if="useFarmersStore().getStatus === 'success'"
+                      class="flex font-bold text-base text-gray-600"
+                    >
                       {{ $t("products") }}
                       {{
-                        !$wait.is(FetchingProducts) && productData.totalElements
-                          ? `: ${productData.totalElements}`
+                        useFarmersStore().getStatus === "success" &&
+                        useFarmersStore().getTotalElements
+                          ? `: ${useFarmersStore().getTotalElements}`
                           : ""
                       }}
                     </div>
@@ -186,32 +174,37 @@
                       </a-tooltip>
 
                       <div class="flex flex-row justify-end">
-                        <sorting />
+                        <sorting :farmer="true" />
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <a-spin
-                  :spinning="$wait.is(FetchingProducts)"
+                  :spinning="
+                    useFarmerProductsStore().getProductsStatus !== 'success'
+                  "
                   size="large"
                   wrapper-class-name="text-green-800"
                 >
-                  <ProductListing
+                  <products
                     :farmer="true"
                     :classGridSize="false"
                     :link="'fermer-mehsullari'"
-                    :products="productData.list"
-                    v-if="productData.list.length > 0"
+                    :products="useFarmerProductsStore().getProducts"
+                    v-if="useFarmerProductsStore().getProducts.size > 0"
                   />
                 </a-spin>
 
                 <div
                   class="block w-full min-w-full rounded text-center my-14"
-                  v-if="productData.list.length != productData.totalElements"
+                  v-if="
+                    useFarmerProductsStore().getProducts.size !==
+                    useFarmerProductsStore().getTotalElements
+                  "
                 >
                   <button
-                    @click="loadMoreProducts"
+                    @click="loadMoreFarmers"
                     class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold"
                   >
                     {{ $t("show_more") }}
@@ -223,17 +216,18 @@
                 ></div>
               </div>
             </div>
-          </section> -->
+          </section>
         </div>
       </div>
       <!-- </section> -->
     </section>
-    <!-- <keep-alive>
-      <FarmerDetailFilterMobile
-        :visible="visible"
-        @handleCancel="visible = false"
-      />
-    </keep-alive> -->
+    <!-- <keep-alive> -->
+    <FarmerProductFilterModal
+      @handleOk="openMobileFilter = false"
+      @handleCancel="openMobileFilter = false"
+      v-if="openMobileFilter"
+    />
+    <!-- </keep-alive> -->
     <!-- <Page404
       v-else
       title="404"
@@ -245,20 +239,48 @@
 <script setup lang="ts">
 import { formatPhoneNumber } from "@/utils/helpers";
 
-const productNamePhrase = ref();
+const openMobileFilter = ref(false);
+const productNamePhrase = ref(useRoute().query.productNamePhrase);
+const visible = ref(false);
+const searchParams = reactive({
+  sortBy: "createdAt",
+  sortDirection: "DESC",
+});
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
-  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,
-  productNamePhrase: useRoute().query.productNamePhrase
-    ? String(useRoute().query.productNamePhrase)
-    : undefined,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 12 : 12,
 });
+const convertSortBy = function (direction: string) {
+  if (useRoute().query && useRoute().query.sortBy) {
+    let item = new String(useRoute().query.sortBy)?.split("-");
+    if (direction == "sortDirection") {
+      return item[1] || searchParams.sortDirection;
+    } else {
+      return item[0] || searchParams.sortBy;
+    }
+  } else {
+    if (direction == "sortDirection") {
+      return searchParams.sortDirection;
+    } else {
+      return searchParams.sortBy;
+    }
+  }
+};
 
 useFarmersStore().resetFarmerContact();
 useFarmersStore().fetchFarmer(useRoute().params.farmerdetail);
+useFarmerProductsStore().resetProducts();
+useFarmerProductsStore().fetchProducts({
+  ...queryParams,
+  ...useRoute().query,
+  page: 0,
+  // sortBy: convertSortBy("sortBy"),
+  // sortDirection: convertSortBy("sortDirection"),
+  createdBy: useRoute().params.farmerdetail,
+});
 
 const onSearch = function () {
-  useFarmersStore().resetFarmers();
+  useFarmerProductsStore().resetProducts();
   useRouter().push({
     query: {
       ...useRoute().query,
@@ -268,181 +290,44 @@ const onSearch = function () {
     },
   });
 };
+const showFilterModal = function () {
+  openMobileFilter.value = true;
+};
 const loadMoreFarmers = function () {
   queryParams.page++;
-  queryParams.size = 15;
+  queryParams.size = 12;
   useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
 };
-// import _ from "lodash";
-// import ProductListing from "@/components/common/ProductListing";
-// import { FetchingProducts } from "@/app/product/waiting-types";
-// import { FetchingFarmerDetails } from "@/app/farmer/waiting-types";
-// import { ContactWaiting } from "@/app/contacts/waiting-types";
-// import filter_logo from "@/components/inc/svg/filter_logo.vue";
-// import { formatPhoneNumber } from "@/utils/helpers";
-// import Sorting from "@/components/common/Sorting.vue";
-// import FarmerDetailFilter from "@/components/filters/filterForLargeScreens/FarmerDetailFilter.vue";
-// import FarmerDetailFilterMobile from "@/components/filters/filterForSmallScreens/FarmerDetailFilterMobile.vue";
+const filter = function (value: any, oldValue: any) {
+  if (
+    value?.sortBy !== oldValue?.sortBy ||
+    value?.endirimli !== oldValue?.endirimli ||
+    value?.maxPrice !== oldValue?.maxPrice ||
+    value?.minPrice !== oldValue?.minPrice ||
+    value?.cityIds !== oldValue?.cityIds ||
+    value?.productTypeLabels !== oldValue.productTypeLabels
+  ) {
+    useFarmerProductsStore().resetProducts();
+    queryParams.page = 0;
+    queryParams.size = value.page ? (Number(value.page) + 1) * 12 : 12;
+  }
+  useFarmerProductsStore().fetchProducts({
+    ...useRoute().query,
+    ...queryParams,
+    sortBy: convertSortBy("sortBy"),
+    sortDirection: convertSortBy("sortDirection"),
+  });
+};
+watch(
+  () => useRoute().query,
+  (value: any, oldValue: any) => {
+    !openMobileFilter.value && filter(value, oldValue);
+    queryParams.page = value.page;
+  },
+  { deep: true }
+);
+
 // import Page404 from "@/components/common/404.vue";
-
-// export default {
-//   components: {
-//     ProductListing,
-//     FarmerDetailFilter,
-//     FarmerDetailFilterMobile,
-//     Sorting,
-//     filter_logo,
-//     Page404,
-//   },
-//   data() {
-//     return {
-//       contactShow: false,
-//       ContactWaiting: ContactWaiting,
-//       contact: {},
-//       FetchingProducts: FetchingProducts,
-//       FetchingFarmerDetails: FetchingFarmerDetails,
-//       farmerId: undefined,
-//       farmer: undefined,
-//       productNamePhrase: undefined,
-//       productData: {
-//         list: [],
-//         page: 0,
-//         totalPages: null,
-//         totalElements: null,
-//       },
-//       searchParams: {
-//         sortBy: "createdAt",
-//         sortDirection: "DESC",
-//       },
-//       showOrderMenu: false,
-
-//       visible: false,
-//       more: false,
-//     };
-//   },
-//   created() {
-//     if (this.$route.query) {
-//       let queryString = this.$route.query;
-//       this.productNamePhrase = queryString.productNamePhrase || undefined;
-//     }
-//   },
-//   mounted() {
-//     this.farmerId = this.$route.params.farmerAboutDetail;
-//     this.$store.commit("setAppHeroShowAndHide", false);
-
-//     this.loadFarmerDetails();
-//   },
-//   computed: {
-//     farmerDetailsLoaded: function () {
-//       return this.farmer !== undefined;
-//     },
-//   },
-
-//   methods: {
-//     showFilterModal() {
-//       this.visible = true;
-//     },
-//     formatPhoneNumber,
-//     loadContact() {
-//       this.$wait.start(ContactWaiting);
-//       this.$contact
-//         .getContactFarmer(this.farmerId)
-//         .then((response) => {
-//           this.contact = response || {};
-//           this.contactShow = true;
-//         })
-//         .finally(() => {
-//           this.$wait.end(ContactWaiting);
-//         });
-//     },
-//     loadMoreProducts() {
-//       let page = 0;
-//       if (this.$route.query && this.$route.query.page) {
-//         page = parseInt(this.$route.query.page);
-//       }
-//       this.$router.replace({
-//         query: {
-//           ...this.$route.query,
-//           page: ++page,
-//         },
-//       });
-//       this.more = true;
-//     },
-//     searchName: _.debounce(function () {
-//       this.$router.replace({
-//         query: {
-//           ...this.$route.query,
-//           productNamePhrase: this.productNamePhrase || undefined,
-//           page: undefined,
-//         },
-//       });
-//     }, 600),
-//     loadFarmerDetails() {
-//       this.visible = false;
-//       this.$wait.start(FetchingFarmerDetails);
-//       this.$farmers
-//         .getFarmer(this.farmerId)
-//         .then((farmerDetails) => {
-//           this.farmer = farmerDetails;
-//         })
-//         .finally(() => {
-//           this.$wait.end(FetchingFarmerDetails);
-//         });
-//     },
-//     convertSortBy(direction) {
-//       if (this.$route.query && this.$route.query.sortBy) {
-//         let item = this.$route.query.sortBy.split("-");
-
-//         if (direction) {
-//           return item[1] || this.searchParams.sortDirection;
-//         } else {
-//           return item[0] || this.searchParams.sortBy;
-//         }
-//       } else {
-//         if (direction) {
-//           return this.searchParams.sortDirection;
-//         } else {
-//           return this.searchParams.sortBy;
-//         }
-//       }
-//     },
-//     loadProducts() {
-//       this.visible = false;
-//       this.$wait.start(FetchingProducts);
-
-//       this.$farmerProduct
-//         .getFarmerProducts({
-//           ...this.$route.query,
-//           sortBy: this.convertSortBy(false),
-//           sortDirection: this.convertSortBy(true),
-//           page: this.productData.list.length == 0 ? 0 : this.$route.query.page,
-//           size:
-//             this.productData.list.length == 0
-//               ? (parseInt(this.$route.query.page || 0) + 1) * 12
-//               : 12,
-//           createdBy: this.$route.params.farmerAboutDetail,
-//         })
-//         .then((response) => {
-//           // this.productData.list = response.fermer_products;
-//           this.productData.list.push(...response.fermer_products);
-//           this.productData.totalElements = response.metadata.totalElements;
-//           this.productData.totalPages = response.metadata.totalPages;
-//           this.more = false;
-//           this.$nuxt.$emit("checkNewProducts", {});
-//         })
-//         .finally(() => {
-//           this.$wait.end(FetchingProducts);
-//         });
-//     },
-//   },
-//   watch: {
-//     "$route.query": "$fetch",
-//   },
-//   async fetch() {
-//     !this.more && (this.productData.list = []);
-//     this.loadProducts();
-//   },
-// };
 </script>
 
 <style>

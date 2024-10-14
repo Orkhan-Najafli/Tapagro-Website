@@ -1,6 +1,8 @@
 <template>
-  <main class="overflow-hidden pt-3 min-h-screen">
-    <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
+  <main
+    class="overflow-hidden max-w-[1224px] mx-auto pt-3 px-6 xl:px-0 min-h-screen"
+  >
+    <section class="container">
       <div class="mt-6 mb-5 md:mb-9">
         <nuxt-link
           tag="div"
@@ -28,7 +30,7 @@
         </div>
       </div>
     </section>
-    <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
+    <section class="container">
       <div class="flex flex-row w-full mb-6 md:mb-10">
         <div class="w-full relative overflow-hidden">
           <section>

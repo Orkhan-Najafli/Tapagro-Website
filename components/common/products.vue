@@ -111,6 +111,9 @@ let props = defineProps({
   link: {
     type: String,
   },
+  farmer: {
+    type: Boolean,
+  },
 });
 </script>
 <style>
