@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     "@ant-design-vue/nuxt",
     "@ant-design-vue/nuxt",
     "@vee-validate/nuxt",
+    "@nuxtjs/sitemap",
   ],
 
   compatibilityDate: "2024-04-03",
