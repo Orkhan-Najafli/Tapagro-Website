@@ -52,7 +52,9 @@ export const useFarmersStore = defineStore("farmers", {
         () =>
           $fetch(`${this.baseURL}${urls.farmers}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token").value || ""),
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
             },
             query: queryData,
           })
@@ -71,7 +73,9 @@ export const useFarmersStore = defineStore("farmers", {
         () =>
           $fetch(`${this.baseURL}${urls.farmer}/${queryData}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token").value || ""),
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
             },
             // query: queryData,
           })
@@ -90,7 +94,9 @@ export const useFarmersStore = defineStore("farmers", {
             })}`,
             {
               headers: {
-                ...HeaderConfigs(useCookie("token").value || ""),
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
               },
             }
           )

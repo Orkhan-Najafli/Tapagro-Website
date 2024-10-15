@@ -21,7 +21,7 @@ export const useUsers = defineStore("Users", {
       const { data, status, error } = await useAsyncData<User>("Users", () =>
         $fetch(`${this.baseURL}${urls.users}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token").value || ""),
+            ...HeaderConfigs({ Authorization: useCookie("token").value || "" }),
           },
           method: "GET",
         })

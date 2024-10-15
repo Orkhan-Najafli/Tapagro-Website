@@ -22,7 +22,9 @@ export const useAboutStore = defineStore("about-us", {
         () =>
           $fetch(`${this.baseURL}${urls.about_us_sections}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token").value || ""),
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
             },
             query: queryData,
           })

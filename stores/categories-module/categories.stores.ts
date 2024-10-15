@@ -67,7 +67,9 @@ export const useCategoriesStore = defineStore("categories", {
           () =>
             $fetch(`${this.baseURL}${urls["base-categories"]}`, {
               headers: {
-                ...HeaderConfigs(useCookie("token").value || ""),
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
               },
               method: "GET",
               query: queryParams,
@@ -99,7 +101,9 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token").value || ""),
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
               },
               method: "GET",
             }
@@ -116,7 +120,9 @@ export const useCategoriesStore = defineStore("categories", {
 
             {
               headers: {
-                ...HeaderConfigs(useCookie("token").value || ""),
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
               },
               method: "GET",
             }

@@ -42,7 +42,9 @@ export const useReviewsStore = defineStore("reviews", {
         () =>
           $fetch(`${this.baseURL}${urls.reviews}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token").value || ""),
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
             },
             query: queryData,
           })
@@ -63,7 +65,7 @@ export const useReviewsStore = defineStore("reviews", {
       >("reviewed", () =>
         $fetch(`${this.baseURL}${urls.reviewed}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token").value || ""),
+            ...HeaderConfigs({ Authorization: useCookie("token").value || "" }),
           },
           query: queryData,
           method: "POST",
@@ -81,7 +83,7 @@ export const useReviewsStore = defineStore("reviews", {
       >("product-reviewed", () =>
         $fetch(`${this.baseURL}${urls.product_reviews}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token").value || ""),
+            ...HeaderConfigs({ Authorization: useCookie("token").value || "" }),
           },
           query: queryData,
           method: "PUT",

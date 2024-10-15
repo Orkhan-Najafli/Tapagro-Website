@@ -45,7 +45,9 @@ export const usePublicReviewsStore = defineStore("public-reviews", {
         () =>
           $fetch(`${this.baseURL}${urls.product_reviews_summary}`, {
             headers: {
-              ...HeaderConfigs(useCookie("token").value || ""),
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
             },
             query: queryData,
           })
@@ -60,7 +62,7 @@ export const usePublicReviewsStore = defineStore("public-reviews", {
       >("product-reviews", () =>
         $fetch(`${this.baseURL}${urls.public_product_reviews}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token").value || ""),
+            ...HeaderConfigs({ Authorization: useCookie("token").value || "" }),
           },
           query: queryData,
         })
