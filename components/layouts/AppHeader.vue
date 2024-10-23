@@ -706,6 +706,7 @@
       </div>
     </div>
     <!-- <FAQ @handleCancel="visibleFAQ = false" v-if="visibleFAQ" /> -->
+    <ShoppingModal />
   </nav>
 </template>
 <script setup lang="ts">

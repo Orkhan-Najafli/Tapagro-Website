@@ -241,7 +241,7 @@
           </a-tooltip>
           <button
             v-else
-            @click="showBasketModal(props.product.id)"
+            @click="showBasketModal($event, props.product.id)"
             class="flex flex-row justify-center items-center w-full h-auto font-semibold text-sm bg-green-600 hover:bg-green-700 rounded-md m-0 p-0 px-3 py-2 text-white"
           >
             <basket_logo />
@@ -374,7 +374,12 @@ const setheight = function (event: Event | any) {
   let image = event.target;
   imageHeight.value = image.clientWidth;
 };
-const showBasketModal = function (id: number | string) {
+const showBasketModal = function (event: Event, id: number | string) {
+  event.stopPropagation();
+  event.preventDefault();
+  useShoppingStore().setShoppingVisible(true);
+  console.log(useShoppingStore().getShoppingVisible);
+
   // this.loggedIn
   // ? this.$store
   //     .dispatch("basket/addBasketIncrease", { productId: id, count: 1 })

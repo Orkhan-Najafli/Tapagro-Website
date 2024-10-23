@@ -44,11 +44,7 @@ export const useAuthenticator = defineStore("Authenticator", {
       this.generateUrlError = error.value || null;
     },
     //login
-    async fetchLogin(bodyData?: {
-      code: string;
-      state: string;
-      cabinet?: string;
-    }) {
+    async fetchLogin() {
       const { code, state } = useRoute().query;
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
@@ -60,7 +56,6 @@ export const useAuthenticator = defineStore("Authenticator", {
             code: code,
             state: state,
             cabinet: "WEBSITE",
-            ...bodyData,
           },
         })
       );

@@ -25,5 +25,6 @@
   "reviewed": "/ecommerce/product-reviews/reviewed",
   "farmer": "/public/ecommerce/farmers",
   "farmer_contact": "/public/ecommerce/farmers/${id}/contact-details",
-  "about_us_sections": "/public/ecommerce/sections"
+  "about_us_sections": "/public/ecommerce/sections",
+  "shopping_carts": "/ecommerce/shopping-carts"
 }
