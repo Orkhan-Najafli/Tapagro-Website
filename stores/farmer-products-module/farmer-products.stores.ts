@@ -41,7 +41,7 @@ export const useFarmerProductsStore = defineStore("farmer-products", {
       >("farmer-products", () =>
         $fetch(`${this.baseURL}${urls["farmer-products"]}?${queryString}`, {
           headers: {
-            ...HeaderConfigs(useCookie("token").value || ""),
+            ...HeaderConfigs({ Authorization: useCookie("token").value || "" }),
           },
         })
       );

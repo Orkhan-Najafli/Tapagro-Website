@@ -160,20 +160,20 @@
                   placement="bottom"
                   :arrow="{ pointAtCenter: true }"
                 >
-                  <a
+                  <div
                     class="inline-flex justify-start items-center flex-row cursor-pointer"
                   >
                     <span>
                       <img
                         v-if="useCookie('flagPath').value"
                         class="border border-gray-400 min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-                        :src="`${baseURL}${useCookie('flagPath').value}`"
+                        :src="`${baseURL}/${useCookie('flagPath').value}`"
                         @error="setDefaultImage"
                       />
                       <AZE v-else />
                     </span>
                     <DownOutlined class="text-green-600 ml-1" />
-                  </a>
+                  </div>
                   <template #overlay>
                     <a-menu>
                       <a-menu-item
@@ -564,20 +564,20 @@
                 placement="bottom"
                 :arrow="{ pointAtCenter: true }"
               >
-                <a
+                <div
                   class="inline-flex justify-start items-center flex-row cursor-pointer"
                 >
                   <span>
                     <img
                       v-if="useCookie('flagPath').value"
                       class="border border-gray-400 min-w-[28px] min-h-[21px] w-7 h-[21px] rounded-sm"
-                      :src="`${baseURL}${useCookie('flagPath').value}`"
+                      :src="`${baseURL}/${useCookie('flagPath').value}`"
                       @error="setDefaultImage"
                     />
                     <AZE v-else />
                   </span>
                   <DownOutlined class="text-green-600 ml-1" />
-                </a>
+                </div>
                 <!-- <a-button></a-button> -->
                 <template #overlay>
                   <a-menu>
@@ -711,6 +711,7 @@
 <script setup lang="ts">
 import AZE from "@/components/svg/aze_icon.vue";
 import type { Language } from "~/utils/types/language";
+import { HeaderConfigs } from "@/utils/configs";
 // import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
 // variables
 const { locale } = useI18n({ useScope: "global" });
@@ -745,13 +746,13 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", scrollListener);
 });
 
-const changeLang = function (language: Language) {
-  useLanguagesStore().fetchLanguages();
-
+const changeLang = async function (language: Language) {
+  await useLanguagesStore().fetchLanguages();
   locale.value = language.countryCode;
   refreshCookie("lang");
   ref(useCookie("countryCode")).value = language.countryCode;
   ref(useCookie("flagPath")).value = language.flagPath;
+  await useCategoriesStore().fetchBaseCategories();
 };
 changeLang({
   countryCode: ref(useCookie("countryCode")).value

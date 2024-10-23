@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     "@ant-design-vue/nuxt",
     "@vee-validate/nuxt",
     "@nuxtjs/sitemap",
+    "@nuxtjs/seo",
   ],
 
   compatibilityDate: "2024-04-03",
@@ -41,5 +42,14 @@ export default defineNuxtConfig({
   devServer: {
     host: "127.0.0.1", // or '0.0.0.0' for external access
     port: 4572, // specify the port you want to use
+  },
+  site: {
+    url: "https://tapagro.az",
+    name: "Tapagro",
+    trailingSlash: false,
+    i18n: true,
+    // cacheMaxAgeSeconds: 14400, // 4 hour
+    // description: "Welcome to Tapagro site!",
+    // defaultLocale: "az",
   },
 });
