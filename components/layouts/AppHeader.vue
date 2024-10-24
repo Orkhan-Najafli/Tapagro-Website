@@ -60,10 +60,11 @@
                       alt=""
                     />
                   </div>
-                  <p v-if="false" class="text-gray-500 p-0 m-0">
-                    <!-- v-if="loggedUser && loggedUser.city" -->
-
-                    <!-- {{ loggedUser && loggedUser.city.name }} -->
+                  <p
+                    v-if="useUsersStore().getUserData.city"
+                    class="text-gray-500 p-0 m-0"
+                  >
+                    {{ useUsersStore().getUserData.city.name }}
                   </p>
                   <p v-else class="p-0 m-0 text-gray-500">{{ $t("region") }}</p>
                 </div>
@@ -104,21 +105,24 @@
                 class="relative text-emerald-800 hover:text-emerald-800 mr-9 text-base leading-4 font-normal cursor-pointer"
                 to="/sebet"
               >
-                <a-badge
-                  :count="useComparisonBasketsStore().getComparisonBasketsCount"
-                  :number-style="{
-                    backgroundColor: '#FCD34D',
-                    color: '#065F46',
-                    minWidth: '15px',
-                    height: '15px',
-                    lineHeight: '15px',
-                  }"
-                >
-                  <a-icon
-                    type="shopping-cart"
-                    class="text-2xl text-emerald-800 font-extrabold"
-                  />
-                </a-badge>
+                <ClientOnly>
+                  <a-badge
+                    v-if="
+                      useShoppingStore().getShoppingCartsCountStatus ===
+                      'success'
+                    "
+                    :count="useShoppingStore().getShoppingCartsCount"
+                    :number-style="{
+                      backgroundColor: '#FCD34D',
+                      color: '#065F46',
+                      minWidth: '15px',
+                      height: '15px',
+                      lineHeight: '15px',
+                    }"
+                  >
+                    <ShoppingCartOutlined class="text-2xl text-emerald-800" />
+                  </a-badge>
+                </ClientOnly>
               </nuxt-link>
               <div class="m-0 p-0 mr-9">
                 <a-tooltip placement="bottom">
@@ -133,7 +137,7 @@
                     :count="
                       useAuthenticator().getToken
                         ? useComparisonBasketsStore().getComparisonCount
-                        : useProductsStore().getProducts.length
+                        : useProductsStore().getProducts.size
                     "
                     :number-style="{
                       backgroundColor: '#FCD34D',
@@ -234,11 +238,12 @@
                           <p
                             class="p-0 m-0 font-medium text-base text-[#9CA3AF]"
                           >
-                            loggedUser
-                            <!-- {{
-                            loggedUser &&
-                            `${loggedUser.firstName} ${loggedUser.lastName}`
-                          }} -->
+                            {{
+                              useUsersStore().getUserData &&
+                              `${useUsersStore().getUserData.firstName} ${
+                                useUsersStore().getUserData.lastName
+                              }`
+                            }}
                           </p>
                         </a-menu-item>
                         <a-menu-item key="1">
@@ -373,7 +378,10 @@
                 to="/sebet"
               >
                 <a-badge
-                  :count="4"
+                  :count="
+                    useShoppingStore().getShoppingCartsCountStatus ===
+                      'success' && useShoppingStore().getShoppingCartsCount
+                  "
                   :number-style="{
                     backgroundColor: '#FCD34D',
                     color: '#065F46',
@@ -383,10 +391,7 @@
                   }"
                 >
                   <!-- basketCount -->
-                  <a-icon
-                    type="shopping-cart"
-                    class="text-2xl text-emerald-800"
-                  />
+                  <ShoppingCartOutlined class="text-2xl text-emerald-800" />
                 </a-badge>
               </nuxt-link>
             </a>
@@ -472,11 +477,12 @@
                     @click="mobileMenuShow = false"
                     class="p-0 m-0 font-medium text-base mr-3 text-[#9CA3AF] capitalize"
                   >
-                    loggedUser
-                    <!-- {{
-                      loggedUser &&
-                      `${loggedUser.firstName} ${loggedUser.lastName}`
-                    }} -->
+                    {{
+                      useUsersStore().getUserData &&
+                      `${useUsersStore().getUserData.firstName} ${
+                        useUsersStore().getUserData.lastName
+                      }`
+                    }}
                   </p>
                 </nuxt-link>
               </div>
@@ -535,8 +541,14 @@
                 {{ $t("join_us") }}
               </nuxt-link>
             </li>
-            <!-- <li v-if="loggedUser" class="w-full border-b border-gray-300"></li>
-            <li @click="mobileMenuShow = false" v-if="loggedIn">
+            <li
+              v-if="useAuthenticator().getToken"
+              class="w-full border-b border-gray-300"
+            ></li>
+            <li
+              @click="mobileMenuShow = false"
+              v-if="useAuthenticator().getToken"
+            >
               <nuxt-link
                 tag="a"
                 class="cursor-pointer pt-1 pb-1 px-5 w-28 h-6 text-sm leading-4 text-gray-700"
@@ -545,7 +557,7 @@
               >
                 {{ $t("my_account") }}
               </nuxt-link>
-            </li> -->
+            </li>
             <li
               @click="mobileMenuShow = false"
               v-if="useAuthenticator().getToken"
@@ -629,11 +641,11 @@
                 alt=""
               />
             </div>
-            <p v-if="false" class="text-emerald-800 p-0 m-0">
-              <!-- v-if="loggedUser && loggedUser.city" -->
-
-              loggedUser
-              <!-- {{ loggedUser && loggedUser.city.name }} -->
+            <p
+              v-if="useUsersStore().getUserData.city"
+              class="text-emerald-800 p-0 m-0"
+            >
+              {{ useUsersStore().getUserData.city.name }}
             </p>
             <p v-else class="p-0 m-0 text-emerald-800">
               {{ $t("region") }}
@@ -707,13 +719,12 @@
     </div>
     <!-- <FAQ @handleCancel="visibleFAQ = false" v-if="visibleFAQ" /> -->
     <ShoppingModal />
+    <LoginRequiredModal />
   </nav>
 </template>
 <script setup lang="ts">
 import AZE from "@/components/svg/aze_icon.vue";
 import type { Language } from "~/utils/types/language";
-import { HeaderConfigs } from "@/utils/configs";
-// import LoginRequiredModal from "@/components/common/LoginRequiredModal.vue";
 // variables
 const { locale } = useI18n({ useScope: "global" });
 const baseURL = useRuntimeConfig().public.baseURL;
@@ -725,6 +736,8 @@ const showFAQ = function () {
 const navbar = ref<HTMLElement>();
 
 //methods
+useShoppingStore().fetchShoppingCartsCount();
+useUsersStore().fetchUserData();
 useLanguagesStore().fetchLanguages();
 const scrollListener = function () {
   var scrollHeight = window.scrollY;

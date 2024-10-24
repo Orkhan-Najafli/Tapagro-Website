@@ -26,5 +26,7 @@
   "farmer": "/public/ecommerce/farmers",
   "farmer_contact": "/public/ecommerce/farmers/${id}/contact-details",
   "about_us_sections": "/public/ecommerce/sections",
-  "shopping_carts": "/ecommerce/shopping-carts"
+  "shopping_carts": "/ecommerce/shopping-carts",
+  "remove_shooping_cart": "/ecommerce/shopping-carts/${productId}/remove",
+  "shopping_carts_count": "/ecommerce/shopping-carts/count"
 }

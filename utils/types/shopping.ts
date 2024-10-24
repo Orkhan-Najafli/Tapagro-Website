@@ -1,8 +1,8 @@
 export interface Shopping {
   id: number;
   items: Array<Item>;
-  totalPrice: 0;
-  totalDiscountedPrice: 0;
+  totalPrice: number;
+  totalDiscountedPrice: number;
   commonWarehouses: Array<Warehouse>;
   stockSufficientList: any;
   isActive: boolean;
@@ -15,13 +15,13 @@ export interface Item {
   id: number;
   product: Product;
   store: Store;
-  count: 0;
-  totalPrice: 0;
-  addedToFavoriteBasket: true;
-  stockSufficient: true;
+  count: number;
+  totalPrice: number;
+  addedToFavoriteBasket: boolean;
+  stockSufficient: boolean;
   warehouses: Array<Warehouse>;
 }
-interface Product {
+export interface Product {
   id: number;
   name: string;
   thumbnailName: string;

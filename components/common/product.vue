@@ -374,21 +374,17 @@ const setheight = function (event: Event | any) {
   let image = event.target;
   imageHeight.value = image.clientWidth;
 };
-const showBasketModal = function (event: Event, id: number | string) {
+const showBasketModal = function (event: Event, id: number) {
   event.stopPropagation();
   event.preventDefault();
-  useShoppingStore().setShoppingVisible(true);
-  console.log(useShoppingStore().getShoppingVisible);
-
-  // this.loggedIn
-  // ? this.$store
-  //     .dispatch("basket/addBasketIncrease", { productId: id, count: 1 })
-  //     .then(() => {
-  //       this.$store.commit("setBasketModalShow", true);
-  //       this.$store.commit("setBasketModalHide", true);
-  //     })
-  // : this.$store.commit("setLoginRequiredModal", true);
+  if (useAuthenticator().getToken) {
+    useShoppingStore().fetchAddShoppingCart({ productId: id, count: 1 });
+    useShoppingStore().setShoppingVisible(true);
+  } else {
+    useAuthenticator().setRequiredLoginVisible(true);
+  }
 };
+
 const setDefaultImage = async function (event: Event | any) {
   const noImage = await import("@/assets/img/no-image.svg");
   event.target.src = noImage.default;
@@ -398,13 +394,3 @@ const hasValidThumbnail = function (product: Product | FarmerProduct) {
   return product.thumbnailPath;
 };
 </script>
-<!-- <script>
-export default {
-  computed: {
-    ...mapGetters({
-      loggedIn: "auth/loggedIn",
-    }),
-  },
-
-};
-</script> -->

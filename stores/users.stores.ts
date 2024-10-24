@@ -4,7 +4,7 @@ import { HeaderConfigs } from "@/utils/configs";
 import { useRuntimeConfig } from "#app";
 import type { User } from "~/utils/types/users";
 
-export const useUsers = defineStore("Users", {
+export const useUsersStore = defineStore("Users", {
   state: () => ({
     userData: {} as User,
     userError: null as any,
@@ -17,7 +17,7 @@ export const useUsers = defineStore("Users", {
   actions: {
     //userData
     async fetchUserData() {
-      navigateTo("/");
+      // navigateTo("/");
       const { data, status, error } = await useAsyncData<User>("Users", () =>
         $fetch(`${this.baseURL}${urls.users}`, {
           headers: {
@@ -26,6 +26,8 @@ export const useUsers = defineStore("Users", {
           method: "GET",
         })
       );
+      console.log(data.value);
+
       this.userStatus = status.value;
       this.userError = error.value || null;
       this.userData = data.value!;

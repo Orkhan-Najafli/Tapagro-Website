@@ -13,7 +13,7 @@
               <img
                 v-if="hasValidThumbnail(props.item.product)"
                 class="w-auto h-24 product-image"
-                :src="`${baseURL}${props.item.product.thumbnailPath}`"
+                :src="`${baseURL}/${props.item.product.thumbnailPath}`"
                 alt=""
               />
               <img
@@ -49,7 +49,7 @@
                     <img
                       width="12px"
                       height="12px"
-                      src="../../assets/img/xx.png"
+                      src="@/assets/img/xx.png"
                       alt=""
                     />
                   </div>
@@ -176,13 +176,11 @@
                     >
                       <img
                         class="w-6 h-6"
-                        src="../../assets/img/minus.png"
+                        src="@/assets/img/minus.png"
                         alt=""
                       />
                     </div>
-                    <!-- <span class="text-gray-500 font-normal text-sm mx-7 md:mx-10"
-                >0</span
-              > -->
+
                     <div>
                       <input
                         @keyup="
@@ -201,7 +199,7 @@
                     >
                       <img
                         class="w-auto h-4"
-                        src="../../assets/img/plus.png"
+                        src="@/assets/img/plus.png"
                         alt=""
                       />
                     </div>
@@ -272,21 +270,14 @@
           v-if="show"
           class="block bg-[#F9FAFB] w-full min-w-full h-auto p-1 mt-3 mb-2"
         >
-          <!-- class="inline-flex flex-row justify-start items-center bg-[#F9FAFB] w-full min-w-full h-auto p-1 mt-3 mb-2" -->
-
           <div
             class="inline-flex flex-row justify-start items-center w-full max-w-[304px] h-auto"
           >
-            <!-- class="inline-flex flex-row justify-start items-center w-full max-w-[304px] h-auto" -->
-
             <home_icon />
             <span class="font-normal text-sm mx-2 text-[#4B5563]"
               >{{ $t("points_of_sale_where_the_product_is_available") }}:
             </span>
           </div>
-          <!-- <div
-            class="inline-flex flex-row justify-between items-center w-full h-auto"
-          > -->
           <div class="inline-flex h-auto text-[#4B5563] font-bold text-sm">
             <span
               class="inline-block text-left h-auto text-[#4B5563] font-bold text-sm"
@@ -300,12 +291,11 @@
           </div>
           <button
             @click="showAllWarehouse()"
-            v-if="this.wareHouses().length > 35"
+            v-if="wareHouses().length > 35"
             class="inline-flex text-[#16A34A] text-[15px] font-semibold w-[115px]"
           >
             {{ showAllWarehouses ? "Daha az göstər" : "Hamısını göstər " }}
           </button>
-          <!-- </div> -->
         </div>
         <div
           v-if="!props.item.stockSufficient"
@@ -327,136 +317,119 @@
         </div>
       </div>
     </div>
-    <!-- <removeProductNotification
+    <removeProductNotificationModal
       @remove="remove"
       @addFavorite="addFavorite"
       @close="handleClose"
       v-if="visible"
-    /> -->
+    />
   </div>
   <!-- </div> -->
 </template>
 <script setup lang="ts">
 import type { PropType } from "vue";
-import type { Item } from "~/utils/types/shopping";
+import type { Item, Product } from "~/utils/types/shopping";
 
 const baseURL = useRuntimeConfig().public.baseURL;
+const showAllWarehouses = ref(false);
+const visible = ref(false);
+const show = reactive({
+  typeof: Boolean,
+  default: false,
+});
 const props = defineProps({
   item: {
     type: Object as PropType<Item>,
     default: {} as PropType<Item>,
   },
 });
-// import removeProductNotification from "../../components/common/favorite/removeProductNotification.vue";
-// import monetary_unit_logo from "@/components/inc/svg/monetary_unit_logo.vue";
-// import info_icon from "@/components/inc/svg/info_icon.vue";
-// import cancel_icon from "@/components/inc/svg/cancel_icon.vue";
-// import home_icon from "@/components/inc/svg/home_icon.vue";
+const emit = defineEmits(["sendErrorMessage"]);
+const writeValue = function (event: Event | KeyboardEvent) {
+  let target = event.target as HTMLInputElement;
+  props.item.count = Number(target.value) < 1 ? 1 : Number(target.value);
+};
+const showAllWarehouse = function () {
+  showAllWarehouses.value = !showAllWarehouses.value;
+};
+const wareHouses = function () {
+  let wareHouseList = "";
+  props.item.warehouses.map((wareHouse, i) => {
+    i == 0
+      ? (wareHouseList += wareHouse.name)
+      : (wareHouseList += " , " + wareHouse.name);
+  });
+  return wareHouseList;
+};
+const addFavorite = async function () {
+  await useShoppingStore()
+    .fetchRemoveShoppingCart(props.item.product.id)
+    .finally(() => {
+      if (useShoppingStore().getRemoveShoppingCartStatus === "success") {
+        useShoppingStore()
+          .fetchAddShoppingCart({
+            productId: props.item.product.id,
+            count: -1,
+          })
+          .finally(() => {
+            visible.value = false;
+          });
+      }
+    });
+};
 
-// export default {
+const handleClose = function () {
+  visible.value = false;
+};
+const remove = async function () {
+  await useShoppingStore()
+    .fetchRemoveShoppingCart(props.item.product.id)
+    .finally(() => {
+      if (useShoppingStore().getRemoveShoppingCartStatus === "success") {
+        visible.value = false;
+      }
+    });
+};
+const changeProductCount = function (id: number, event: Event | KeyboardEvent) {
+  const target = event.target as HTMLInputElement;
+  if (target.value) {
+    useShoppingStore().fetchAddShoppingCart({
+      count: props.item.count - 1,
+      productId: id,
+    });
+  }
+};
 
-//   data() {
-//     return {
-//       textEllipsis: true,
-//       productList: [],
-//       visible: false,
-//       showAllWarehouses: false,
-//     };
-//   },
-//   props: {
-//     basketList: {
-//       typeof: Object,
-//     },
-//     show: {
-//       typeof: Boolean,
-//       default: false,
-//     },
-//   },
-
-//   methods: {
-//     writeValue(event) {
-//       this.basketList.count = event.target.value < 1 ? 1 : event.target.value;
-//       // this.$emit("sendErrorMessage", { ...err.response });
-//     },
-//     showAllWarehouse() {
-//       this.showAllWarehouses = !this.showAllWarehouses;
-//     },
-//     wareHouses() {
-//       let wareHouseList = "";
-//       this.basketList.warehouses.map((wareHouse, i) => {
-//         i == 0
-//           ? (wareHouseList += wareHouse.name)
-//           : (wareHouseList += " , " + wareHouse.name);
-//       });
-//       return wareHouseList;
-//     },
-//     addFavorite() {
-//       this.$store
-//         .dispatch("basket/removeBasket", this.basketList.product.id)
-//         .finally(() => {
-//           this.$store
-//             .dispatch("favorite/addProductToFavorite", {
-//               productId: this.basketList.product.id,
-//             })
-//             .finally(() => {
-//               this.visible = false;
-//             });
-//         });
-//     },
-//     handleClose() {
-//       this.visible = false;
-//     },
-//     remove() {
-//       this.$store
-//         .dispatch("basket/removeBasket", this.basketList.product.id)
-//         .finally(() => {
-//           this.visible = false;
-//         });
-//     },
-//     changeProductCount(id, event) {
-//       // if(event.target.value != old){
-//       //   alert();
-//       this.$store.dispatch("basket/addBasket", {
-//         count: event.target.value,
-//         productId: id,
-//       });
-//       // }
-//     },
-//     removeGeneralProductInBasket(id) {
-//       if (this.basketList.addedToFavoriteBasket) {
-//         this.$store.dispatch("basket/removeBasket", id);
-//       } else {
-//         this.visible = true;
-//       }
-//     },
-//     removeProductInBasket(id) {
-//       if (this.basketList.count > 1) {
-//         this.$emit("sendErrorMessage", { status: 200 });
-
-//         this.$store
-//           .dispatch("basket/addBasket", {
-//             count: this.basketList.count - 1,
-//             productId: id,
-//           })
-//           .catch((err) => {
-//             this.basketList.count -= 1;
-//             // this.$emit("sendErrorMessage", { ...err.response });
-//           });
-//       }
-//     },
-//     addProductInBasket(id) {
-//       this.$store
-//         .dispatch("basket/addBasket", {
-//           count: this.basketList.count + 1,
-//           productId: id,
-//         })
-//         .catch((err) => {
-//           // this.$emit("sendErrorMessage", { ...err.response });
-//         });
-//     },
-//     hasValidThumbnail(product) {
-//       return product.thumbnailPath;
-//     },
+const removeGeneralProductInBasket = function (id: number) {
+  if (props.item.addedToFavoriteBasket) {
+    useShoppingStore().fetchRemoveShoppingCart(id);
+  } else {
+    visible.value = true;
+  }
+};
+const removeProductInBasket = async function (id: number) {
+  if (props.item.count > 1) {
+    try {
+      emit("sendErrorMessage", { status: 200 });
+      await useShoppingStore().fetchAddShoppingCart({
+        count: props.item.count - 1,
+        productId: id,
+      });
+    } catch (error) {
+      if (useShoppingStore().getAddShoppingCartStatus !== "success") {
+        props.item.count -= 1;
+      }
+    }
+  }
+};
+const addProductInBasket = async function (id: number) {
+  await useShoppingStore().fetchAddShoppingCart({
+    count: props.item.count + 1,
+    productId: id,
+  });
+};
+const hasValidThumbnail = function (product: Product) {
+  return product.thumbnailPath;
+};
 //   },
 // };
 </script>

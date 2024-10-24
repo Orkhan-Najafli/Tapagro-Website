@@ -119,15 +119,15 @@
 <script setup lang="ts">
 useShoppingStore().fetchShoppingCarts();
 //watch
-watch(
-  () => useShoppingStore().getShoppingCarts,
-  (to: any) => {
-    if (useShoppingStore().getShoppingCarts.items.length) {
-      hideBasketModal();
-    }
-  },
-  { deep: true }
-);
+// watch(
+//   () => useShoppingStore().getShoppingCarts,
+//   (to: any) => {
+//     if (to && to.items && to.items.length) {
+//       hideBasketModal();
+//     }
+//   },
+//   { deep: true }
+// );
 //   methods
 const orderDid = function (stockSufficient: boolean, isActive: boolean) {
   if (stockSufficient && isActive) {
