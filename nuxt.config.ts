@@ -14,6 +14,25 @@ export default defineNuxtConfig({
       RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,
     },
   },
+  app: {
+    buildAssetsDir: "/",
+    head: {
+      link: [
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/assets/img/fav-light-mod.svg",
+          media: "(prefers-color-scheme: light)",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/assets/img/fav-dark-mod.svg",
+          media: "(prefers-color-scheme: dark)",
+        },
+      ],
+    },
+  },
   modules: [
     "@pinia/nuxt",
     "@nuxtjs/i18n",
@@ -25,7 +44,13 @@ export default defineNuxtConfig({
   ],
 
   compatibilityDate: "2024-04-03",
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+
+    timeline: {
+      enabled: true,
+    },
+  },
   css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {

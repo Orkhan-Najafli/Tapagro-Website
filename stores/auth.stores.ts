@@ -16,13 +16,18 @@ export const useAuthenticator = defineStore("Authenticator", {
     generateUrlStatus: "",
     token: useCookie("token"),
     refresh_token: useCookie("refresh_token"),
+    requiredLoginVisible: false,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
     getToken: (state) => state.token,
     getRefreshToken: (state) => state.refresh_token,
+    getRequiredLoginVisible: (state) => state.requiredLoginVisible,
   },
   actions: {
+    setRequiredLoginVisible(visible: boolean) {
+      this.requiredLoginVisible = visible;
+    },
     //Generate-url
     async fetchGenerateUrl() {
       const { data, status, error } = await useAsyncData<{ url: string }>(
@@ -44,11 +49,7 @@ export const useAuthenticator = defineStore("Authenticator", {
       this.generateUrlError = error.value || null;
     },
     //login
-    async fetchLogin(bodyData?: {
-      code: string;
-      state: string;
-      cabinet?: string;
-    }) {
+    async fetchLogin() {
       const { code, state } = useRoute().query;
       const { data, status, error } = await useAsyncData<Login>("Login", () =>
         $fetch(`${this.baseURL}${urls.login}`, {
@@ -60,7 +61,6 @@ export const useAuthenticator = defineStore("Authenticator", {
             code: code,
             state: state,
             cabinet: "WEBSITE",
-            ...bodyData,
           },
         })
       );
@@ -72,7 +72,7 @@ export const useAuthenticator = defineStore("Authenticator", {
       useCookie("token").value = data.value?.access;
       useCookie("refresh-token").value = data.value?.refresh;
       if (status.value === "success") {
-        await useUsers().fetchUserData();
+        await useUsersStore().fetchUserData();
         useRouter().push("/");
       } else {
         this.fetchLogin();

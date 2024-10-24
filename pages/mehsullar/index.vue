@@ -232,7 +232,7 @@ useProductsStore().fetchProducts({
 });
 const loadMoreProducts = function () {
   queryParams.page++;
-  queryParams.size = 2;
+  queryParams.size = 12;
   useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
 };
 const filter = function (value: any, oldValue: any) {
