@@ -17,20 +17,20 @@ export default defineNuxtConfig({
   app: {
     buildAssetsDir: "/",
     head: {
-      // link: [
-      //   {
-      //     rel: "icon",
-      //     type: "image/png",
-      //     href: "/assets/img/fav-light-mod.svg",
-      //     media: "(prefers-color-scheme: light)",
-      //   },
-      //   {
-      //     rel: "icon",
-      //     type: "image/png",
-      //     href: "/assets/img/fav-dark-mod.svg",
-      //     media: "(prefers-color-scheme: dark)",
-      //   },
-      // ],
+      link: [
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/assets/img/fav-light-mod.svg",
+          media: "(prefers-color-scheme: light)",
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/assets/img/fav-dark-mod.svg",
+          media: "(prefers-color-scheme: dark)",
+        },
+      ],
     },
   },
   modules: [
@@ -76,5 +76,14 @@ export default defineNuxtConfig({
     // cacheMaxAgeSeconds: 14400, // 4 hour
     // description: "Welcome to Tapagro site!",
     // defaultLocale: "az",
+  },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          chunkFileNames: "[name]-[hash].js", // Dosya adında "/" karakteri kullanmayın
+        },
+      },
+    },
   },
 });
