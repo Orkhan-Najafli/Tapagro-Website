@@ -17,20 +17,20 @@ export default defineNuxtConfig({
   app: {
     buildAssetsDir: "/",
     head: {
-      link: [
-        {
-          rel: "icon",
-          type: "image/png",
-          href: "/assets/img/fav-light-mod.svg",
-          media: "(prefers-color-scheme: light)",
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          href: "/assets/img/fav-dark-mod.svg",
-          media: "(prefers-color-scheme: dark)",
-        },
-      ],
+      // link: [
+      //   {
+      //     rel: "icon",
+      //     type: "image/png",
+      //     href: "/assets/img/fav-light-mod.svg",
+      //     media: "(prefers-color-scheme: light)",
+      //   },
+      //   {
+      //     rel: "icon",
+      //     type: "image/png",
+      //     href: "/assets/img/fav-dark-mod.svg",
+      //     media: "(prefers-color-scheme: dark)",
+      //   },
+      // ],
     },
   },
   modules: [
