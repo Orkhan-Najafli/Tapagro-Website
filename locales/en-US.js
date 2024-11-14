@@ -378,4 +378,5 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Copy ​​of bank details on your business account",
   directors_ID_card_copy: "Director's ID card copy",
+  message_validate_name: "This field is mandatory.",
 };

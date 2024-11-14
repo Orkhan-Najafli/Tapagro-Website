@@ -378,4 +378,5 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Копия банковских реквизитов вашего бизнес-счета",
   directors_ID_card_copy: "Копия удостоверения личности директора",
+  message_validate_name: "Это поле является обязательным.",
 };

@@ -380,4 +380,5 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Sahibkarlıq hesabınıza dair bank rekvizitlərinin surəti",
   directors_ID_card_copy: "Direktorun şəxsiyyət vəsiqəsinin surəti.",
+  message_validate_name: "Bu sahəni doldurmaq zəruridir.",
 };
