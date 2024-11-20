@@ -330,7 +330,13 @@
     >
       <FAQ />
     </section>
-    <a-modal :open="visibleSavedInfo" width="600px" :footer="null" centered>
+    <a-modal
+      @cancel="handleCancel"
+      :open="visibleSavedInfo"
+      width="600px"
+      :footer="null"
+      centered
+    >
       <div class="flex flex-col pt-12 pb-10">
         <div class="flex justify-center items-center mb-5">
           <span
@@ -552,7 +558,9 @@ const onSubmit = () => {
   //   });
   // },
 };
-
+const handleCancel = function () {
+  visibleSavedInfo.value = false;
+};
 watch(locale, (newLocale) => {
   fetchAndMapSections();
 });
