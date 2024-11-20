@@ -1,7 +1,7 @@
 <template>
   <a-modal
-    v-model="visible"
-    width="1132px"
+    :open="visible"
+    width="1100px"
     :footer="null"
     centered
     @cancel="handleCancel"
@@ -12,23 +12,17 @@
     </div>
   </a-modal>
 </template>
-<script>
-import FAQ from "@/components/common/FAQ.vue";
-export default {
-  components: {
-    FAQ,
-  },
-  data() {
-    return {
-      visible: true,
-    };
-  },
-  methods: {
-    handleCancel() {
-      this.$emit("handleCancel", false);
-    },
-  },
+<script setup lang="ts">
+const emit = defineEmits(["handleCancel"]);
+// import FAQ from "@/components/common/FAQ.vue";
+const visible = ref(true);
+// export default {
+//   methods: {
+const handleCancel = function () {
+  emit("handleCancel", false);
 };
+//   },
+// };
 </script>
 <style scoped>
 div.scroll-design::-webkit-scrollbar {

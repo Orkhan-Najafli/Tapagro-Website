@@ -717,7 +717,7 @@
         </ul>
       </div>
     </div>
-    <!-- <FAQ @handleCancel="visibleFAQ = false" v-if="visibleFAQ" /> -->
+    <FAQModal @handleCancel="visibleFAQ = false" v-if="visibleFAQ" />
     <ShoppingModal />
     <LoginRequiredModal />
   </nav>
