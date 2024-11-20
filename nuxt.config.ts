@@ -91,12 +91,12 @@ export default defineNuxtConfig({
         },
       },
     },
-    resolve: {
-      dedupe: ["vue"], // Prevent conflicting Vue versions
-    },
-    optimizeDeps: {
-      include: ["vue3-recaptcha-v2"],
-    },
+    // resolve: {
+    //   dedupe: ["vue"], // Prevent conflicting Vue versions
+    // },
+    // optimizeDeps: {
+    //   include: ["vue3-recaptcha-v2"],
+    // },
   },
   // build: {
   //   transpile: ["vue-recaptcha"], // Ensure the package gets transpiled
