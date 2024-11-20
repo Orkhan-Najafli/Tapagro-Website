@@ -1,60 +1,46 @@
 <template>
-  <div>
-    <ValidationObserver ref="form">
-      <h2>Integrating i18n with VeeValidate: vue-i18n</h2>
-      <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
-        <input type="text" v-model="email" placeholder="type some email">
-        <span>{{ errors[0] }}</span>
-      </ValidationProvider>
-
-      <ValidationProvider name="password" rules="required|min:6" v-slot="{ errors }">
-        <input type="password" v-model="password" placeholder="type something">
-        <span>{{ errors[0] }}</span>
-      </ValidationProvider>
-    </ValidationObserver>
-
-    <button @click="switchLoc">Switch Locale</button>
+  <div class="form-center">
+    <ClientOnly>
+      <form @submit.prevent="handleSubmit">
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Email" />
+        <input type="submit" />
+      </form>
+      <button
+        @click="handleSubmit"
+        class="g-recaptcha"
+        :data-sitekey="useRuntimeConfig().public.RECAPTCHA_SITE_KEY"
+        data-callback="onSubmit"
+      >
+        Submit
+      </button>
+    </ClientOnly>
   </div>
 </template>
-
-<script>
-import { ValidationProvider, ValidationObserver } from "vee-validate";
-
-export default {
-  name: "Example",
-  components: {
-    ValidationProvider,
-    ValidationObserver
-  },
-  data: () => ({
-    email: "",
-    password: ""
-  }),
-  methods: {
-    async submit() {
-      console.log("email submitted!");
-    },
-    switchLoc() {
-      // switch the locale.
-      this.locale = this.locale === "en" ? "ar" : "en";
-      // you could also import 'localize' and call it.
-      // localize('ar');
-
-      // re-validate to re-generate the messages.
-      this.$refs.form.validate();
-    }
-  }
+<script setup lang="ts">
+import useGoogleRecaptcha, {
+  RecaptchaAction,
+} from "~/composables/useGoogleRecaptcha";
+const { executeRecaptcha } = useGoogleRecaptcha();
+const handleSubmit = async () => {
+  const { token } = await executeRecaptcha(RecaptchaAction.login);
+  // const fetchData = await $fetch<string>("/api/login", {
+  //   baseURL: "http://localhost:8080",
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "google-recaptcha-token": token ?? "",
+  //   },
+  // });
+  console.log("Recaptcha => ", token);
 };
 </script>
-
-
-<style>
-span {
-  display: block;
-  margin-top: 20px;
+<style scoped>
+.form-center {
+  width: 400px;
+  margin: 0 auto;
 }
-
-input + span {
-  margin-top: 3px;
-}
+/* .grecaptcha-badge {
+  visibility: hidden;
+} */
 </style>

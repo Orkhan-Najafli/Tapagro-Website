@@ -8,7 +8,9 @@ export const useJoinUsStore = defineStore("Join-us", {
   state: () => ({
     sections: [] as Array<JoinUs>,
     status: "" as string,
+    statusApplications: "" as string,
     error: null as null | Error,
+    errorApplications: null as null | Error,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
@@ -29,11 +31,32 @@ export const useJoinUsStore = defineStore("Join-us", {
             query: queryData,
           })
       );
-      console.log("JOIN_US: ", data.value);
-
       this.sections = data.value as Array<JoinUs>;
       this.status = status.value;
       this.error = error.value;
+    },
+    async fetchApplications(queryData?: any) {
+      console.log("queryData: ", queryData);
+
+      const { data, status, error } = await useAsyncData<any>(
+        "applications-post",
+        () =>
+          $fetch(`${this.baseURL}${urls.join_us_applications}`, {
+            headers: {
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
+              // "Content-Type": "multipart/form-data",
+              "Content-Disposition": queryData,
+            },
+            body: queryData,
+            method: "POST",
+          })
+      );
+      console.log("status join as ", status.value);
+
+      this.statusApplications = status.value;
+      this.errorApplications = error.value;
     },
   },
 });

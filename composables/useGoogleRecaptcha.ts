@@ -1,4 +1,8 @@
 import { useReCaptcha } from "vue-recaptcha-v3";
+export class RecaptchaAction {
+  public static readonly login = new RecaptchaAction("login");
+  private constructor(public readonly name: string) {}
+}
 /**
  * The exported executeRecaptcha function allows
  * you to execute reCAPTCHA actions
@@ -6,8 +10,8 @@ import { useReCaptcha } from "vue-recaptcha-v3";
  * to be used in subsequent requests.
  */
 export default () => {
-  const recaptchaInstance = useReCaptcha();
-  const executeRecaptcha = async (action: any) => {
+  let recaptchaInstance = useReCaptcha();
+  const executeRecaptcha = async (action: RecaptchaAction) => {
     /**
      * Wait for the recaptchaInstance to be loaded
      * by calling the recaptchaLoaded method.
@@ -15,7 +19,7 @@ export default () => {
      * and ready to execute reCAPTCHA actions.
      */
     await recaptchaInstance?.recaptchaLoaded();
-    const token = await recaptchaInstance?.executeRecaptcha(action);
+    const token = await recaptchaInstance?.executeRecaptcha(action.name);
     const headerOptions = {
       headers: {
         "google-recaptcha-token": token,

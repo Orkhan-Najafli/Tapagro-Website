@@ -1,18 +1,15 @@
-// plugins/recaptcha.js
 import { VueReCaptcha } from "vue-recaptcha-v3";
+import { IReCaptchaOptions } from "vue-recaptcha-v3/dist/IReCaptchaOptions";
 // The plugin enables the usage of Google reCAPTCHA in a Nuxt.js application
 // by registering the VueReCaptcha plugin with the necessary configuration options.
 export default defineNuxtPlugin((nuxtApp) => {
+  // The useRuntimeConfig function is called to retrieve the runtime
+  // configuration of the Nuxt.js application.
   const config = useRuntimeConfig();
-
-  const options = {
+  const options: IReCaptchaOptions = {
     siteKey: config.public.RECAPTCHA_SITE_KEY,
     loaderOptions: {
-      autoHideBadge: true,
       useRecaptchaNet: true,
-      renderParameters: {
-        hl: "id",
-      },
     },
   };
   nuxtApp.vueApp.use(VueReCaptcha, options);

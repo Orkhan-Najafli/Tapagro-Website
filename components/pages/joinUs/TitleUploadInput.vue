@@ -1,10 +1,13 @@
 <template>
-  <p class="p-0 flex flex-row justify-start items-center -mb-1">
-    <i class="text-[#F5222D] text-base font-normal leading-snug mr-0.5 pt-2"
+  <div class="p-0 flex flex-row justify-start items-center mb-2">
+    <i class="text-[#F5222D] text-base font-normal leading-snug mr-1 pt-1.5"
       >*</i
     >
-    <span> {{ props.labelText }} </span>
-    <a-tooltip placement="top">
+    <p class="p-0 m-0" v-if="props.explanation != 'not'">
+      {{ props.labelText }}
+    </p>
+    <p class="p-0 m-0" v-else v-html="props.labelText"></p>
+    <a-tooltip v-if="props.explanation != 'not'" placement="top">
       <template slot="title">
         <span>
           {{ props.explanation }}
@@ -14,7 +17,7 @@
         <Question_in_circle_icon />
       </div>
     </a-tooltip>
-  </p>
+  </div>
 </template>
 <script setup lang="ts">
 const props = defineProps({

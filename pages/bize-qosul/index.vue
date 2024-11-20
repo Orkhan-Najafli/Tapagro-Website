@@ -60,15 +60,14 @@
             class="w-full border border-t-white border-gray-100 shadow-lg px-3 md:px-11 py-6 mb-6"
           >
             <ClientOnly>
-              <a-form>
+              <a-form class="flex flex-col w-full">
                 <div class="flex flex-col md:flex-row w-full min-w-full">
                   <div class="w-full mr-6">
                     <a-form-item v-bind="validateInfos.name" class="w-full">
-                      <label
-                        v-html="fullName"
-                        class="text-[#111827] font-medium text-sm ant-form-item-required"
-                      >
-                      </label>
+                      <TitleUploadInput
+                        :explanation="'not'"
+                        :labelText="fullName"
+                      />
                       <a-input
                         allow-clear
                         class="w-full text-left"
@@ -77,7 +76,6 @@
                         :placeholder="placeholder"
                         name="name"
                         v-model:value="formData.name"
-                        v-validate="'required'"
                       />
                     </a-form-item>
                   </div>
@@ -86,11 +84,10 @@
                       v-bind="validateInfos.companyName"
                       class="w-full"
                     >
-                      <label
-                        v-html="LegalName"
-                        class="text-[#111827] font-medium text-sm ant-form-item-required"
-                        for="_name"
-                      ></label>
+                      <TitleUploadInput
+                        :explanation="'not'"
+                        :labelText="LegalName"
+                      />
                       <a-input
                         allow-clear
                         class="w-full text-left"
@@ -98,8 +95,7 @@
                         size="large"
                         :placeholder="placeholder"
                         name="companyName"
-                        v-model="formData.companyName"
-                        v-validate="'required'"
+                        v-model:value="formData.companyName"
                       />
                     </a-form-item>
                   </div>
@@ -110,20 +106,17 @@
                       v-bind="validateInfos.phoneNumber"
                       class="w-full"
                     >
-                      <label
-                        v-html="phone"
-                        class="font-medium text-sm ant-form-item-required"
-                        for="_phone"
-                      ></label>
+                      <TitleUploadInput
+                        :explanation="'not'"
+                        :labelText="phone"
+                      />
                       <a-input
                         class="w-full text-left"
                         addon-before="+994"
                         id="_phone"
                         size="large"
                         placeholder="55 000 00 00"
-                        name="phoneNumber"
                         v-model:value="formData.phoneNumber"
-                        v-validate="'required|max:9|min:9|digits:9'"
                       />
                     </a-form-item>
                   </div>
@@ -132,13 +125,10 @@
                       v-bind="validateInfos.emailAddress"
                       class="text-left w-full"
                     >
-                      <label
-                        v-html="email"
-                        class="font-medium text-sm ant-form-item-required"
-                        for="_email"
-                      >
-                      </label>
-
+                      <TitleUploadInput
+                        :explanation="'not'"
+                        :labelText="email"
+                      />
                       <a-input
                         id="_email"
                         size="large"
@@ -147,191 +137,189 @@
                         data-vv-as="Email"
                         :placeholder="placeholder"
                         v-model:value="formData.emailAddress"
-                        v-validate="'required|email'"
                       />
                     </a-form-item>
                   </div>
                 </div>
-
-                <a-form-item>
-                  <a-config-provider
-                    :theme="{
-                      token: {
-                        colorPrimary: '#16a34a',
-                      },
-                    }"
+                <div
+                  class="flex flex-col justify-start items-start min-w-full w-full h-auto my-6"
+                >
+                  <div
+                    class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto mb-6"
                   >
-                    <a-button
-                      :disabled="submitLoading"
-                      html-type="submit"
-                      size="large"
-                      @click.prevent="onSubmit"
-                      class="flex justify-center items-center w-full text-base font-semibold text-white bg-green-600 hover:bg-green-700 px-20 py-2 rounded"
-                      v-html="btnText"
-                    ></a-button>
-                  </a-config-provider>
-                </a-form-item>
+                    <div
+                      class="flex flex-col justify-start items-start w-full md:mr-6"
+                    >
+                      <TitleUploadInput
+                        :explanation="
+                          $t(
+                            'the_copy_of_the_certificate_that_you_are_taxpayer'
+                          )
+                        "
+                        :labelText="$t('copy_of_certificate')"
+                      />
+                      <UploadFile
+                        v-if="certificates.length < 3"
+                        :key="11"
+                        :ID="0"
+                        @handleUpload="uploadCertificateFile"
+                        class=""
+                      />
+                      <CatalogFileList
+                        @removeFile="(event:Event) => removeFile(event, 'certificates')"
+                        :key="0"
+                        :catalogFileList="certificates"
+                      />
+                      <span
+                        class="text-[#f5222d]"
+                        v-if="certificates.length == 0 && checkCatalog"
+                        >{{ $t("this_field_is_mandatory") }}</span
+                      >
+                    </div>
+                    <div class="flex flex-col justify-start items-start w-full">
+                      <TitleUploadInput
+                        :explanation="
+                          $t(
+                            'copy_of_extract_from_the_register_related_to_state_registration_of_legal_entities'
+                          )
+                        "
+                        :labelText="$t('copy_of_the_receipt')"
+                      />
+                      <UploadFile
+                        v-if="certificateOfExtracts.length < 3"
+                        :key="12"
+                        :ID="1"
+                        @handleUpload="uploadCertificateOfExtract"
+                      />
+                      <CatalogFileList
+                        @removeFile="
+                          (event:Event) => removeFile(event, 'certificateOfExtracts')
+                        "
+                        :key="1"
+                        :catalogFileList="certificateOfExtracts"
+                      />
+                      <span
+                        class="text-[#f5222d]"
+                        v-if="certificateOfExtracts.length == 0 && checkCatalog"
+                        >{{ $t("this_field_is_mandatory") }}</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto"
+                  >
+                    <div
+                      class="flex flex-col justify-start items-start w-full md:mr-6"
+                    >
+                      <TitleUploadInput
+                        :explanation="
+                          $t('copy_of_bank_details_on_your_business_account')
+                        "
+                        :labelText="$t('copy_of_bank_details')"
+                      />
+                      <UploadFile
+                        v-if="bankDetails.length < 3"
+                        :key="13"
+                        :ID="2"
+                        @handleUpload="uploadBankDetail"
+                        class="m-0 p-0"
+                      />
+                      <CatalogFileList
+                        @removeFile="(event:Event) => removeFile(event, 'bankDetails')"
+                        :key="2"
+                        :catalogFileList="bankDetails"
+                      />
+                      <span
+                        class="text-[#f5222d]"
+                        v-if="bankDetails.length == 0 && checkCatalog"
+                        >{{ $t("this_field_is_mandatory") }}</span
+                      >
+                    </div>
+
+                    <div class="flex flex-col justify-start items-start w-full">
+                      <TitleUploadInput
+                        :explanation="$t('directors_ID_card_copy')"
+                        :labelText="$t('the_copy_of_the_directors_license')"
+                      />
+                      <UploadFile
+                        v-if="directorIDs.length < 3"
+                        :key="14"
+                        :ID="3"
+                        @handleUpload="uploadDirectorID"
+                      />
+                      <CatalogFileList
+                        @removeFile="(event:Event) => removeFile(event, 'directorIDs')"
+                        :key="3"
+                        :catalogFileList="directorIDs"
+                      />
+                      <span
+                        class="text-[#f5222d]"
+                        v-if="directorIDs.length == 0 && checkCatalog"
+                        >{{ $t("this_field_is_mandatory") }}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="w-full h-auto">
+                  <a-form-item class="text-left">
+                    <label
+                      v-html="note"
+                      class="font-medium text-sm"
+                      for="_email"
+                    ></label>
+                    <a-textarea
+                      :placeholder="placeholder"
+                      :maxlength="1024"
+                      name="note"
+                      allow-clear
+                      v-model="formData.note"
+                      :rows="3"
+                    />
+                  </a-form-item>
+                </div>
               </a-form>
             </ClientOnly>
 
-            <!-- <a-form class="flex flex-col w-full">
-              
-              
-              <div
-                class="flex flex-col justify-start items-start min-w-full w-full h-auto my-6"
-              >
-                <div
-                  class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto mb-6"
-                >
-                  <div
-                    class="flex flex-col justify-start items-start w-full md:mr-6"
-                  >
-                    <Title
-                      :explanation="
-                        $t('the_copy_of_the_certificate_that_you_are_taxpayer')
-                      "
-                      :labelText="$t('copy_of_certificate')"
-                    />
-                    <UploadFile
-                      v-if="certificates.length < 3"
-                      :key="11"
-                      :ID="0"
-                      @handleUpload="uploadCertificateFile"
-                      class=""
-                    />
-                    <CatalogFileList
-                      @removeFile="(event:Event) => removeFile(event, 'certificates')"
-                      :key="0"
-                      :catalogFileList="certificates"
-                    />
-                    <span
-                      class="text-[#f5222d]"
-                      v-if="certificates.length == 0 && checkCatalog"
-                      >{{ $t("this_field_is_mandatory") }}</span
-                    >
-                  </div>
-                  <div class="flex flex-col justify-start items-start w-full">
-                    <Title
-                      :explanation="
-                        $t(
-                          'copy_of_extract_from_the_register_related_to_state_registration_of_legal_entities'
-                        )
-                      "
-                      :labelText="$t('copy_of_the_receipt')"
-                    />
-                    <UploadFile
-                      v-if="certificateOfExtracts.length < 3"
-                      :key="12"
-                      :ID="1"
-                      @handleUpload="uploadCertificateOfExtract"
-                    />
-                    <CatalogFileList
-                      @removeFile="
-                          (event:Event) => removeFile(event, 'certificateOfExtracts')
-                        "
-                      :key="1"
-                      :catalogFileList="certificateOfExtracts"
-                    />
-                    <span
-                      class="text-[#f5222d]"
-                      v-if="certificateOfExtracts.length == 0 && checkCatalog"
-                      >{{ $t("this_field_is_mandatory") }}</span
-                    >
-                  </div>
-                </div>
-                <div
-                  class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto"
-                >
-                  <div
-                    class="flex flex-col justify-start items-start w-full md:mr-6"
-                  >
-                    <Title
-                      :explanation="
-                        $t('copy_of_bank_details_on_your_business_account')
-                      "
-                      :labelText="$t('copy_of_bank_details')"
-                    />
-                    <UploadFile
-                      v-if="bankDetails.length < 3"
-                      :key="13"
-                      :ID="2"
-                      @handleUpload="uploadBankDetail"
-                      class="m-0 p-0"
-                    />
-                    <CatalogFileList
-                      @removeFile="(event:Event) => removeFile(event, 'bankDetails')"
-                      :key="2"
-                      :catalogFileList="bankDetails"
-                    />
-                    <span
-                      class="text-[#f5222d]"
-                      v-if="bankDetails.length == 0 && checkCatalog"
-                      >{{ $t("this_field_is_mandatory") }}</span
-                    >
-                  </div>
-
-                  <div class="flex flex-col justify-start items-start w-full">
-                    <Title
-                      :explanation="$t('directors_ID_card_copy')"
-                      :labelText="$t('the_copy_of_the_directors_license')"
-                    />
-                    <UploadFile
-                      v-if="directorIDs.length < 3"
-                      :key="14"
-                      :ID="3"
-                      @handleUpload="uploadDirectorID"
-                    />
-                    <CatalogFileList
-                      @removeFile="(event:Event) => removeFile(event, 'directorIDs')"
-                      :key="3"
-                      :catalogFileList="directorIDs"
-                    />
-                    <span
-                      class="text-[#f5222d]"
-                      v-if="directorIDs.length == 0 && checkCatalog"
-                      >{{ $t("this_field_is_mandatory") }}</span
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <div class="w-full h-auto">
-                <a-form-item
-                  class="text-left"
-                  :help="errors.first('note')"
-                  :validate-status="errors.first('note') ? 'error' : ''"
-                >
-                  <label
-                    v-html="note"
-                    class="font-medium text-sm"
-                    for="_email"
-                  ></label>
-                  <a-textarea
-                    :placeholder="placeholder"
-                    :maxlength="1024"
-                    name="note"
-                    allow-clear
-                    v-model="formData.note"
-                    :rows="3"
-                  />
-                </a-form-item>
-              </div>
-            </a-form> -->
-            <div
+            <!-- <div
               class="inline-flex flex-col justify-start items-start mb-6"
               :class="{
                 'border-2 border-[#f5222d]': checkRecaptcha == 'error',
                 'border-0 border-transparent': checkRecaptcha == 'success',
               }"
             >
-              <!-- <recaptcha @error="onError" @success="onSuccess" /> -->
-            </div>
-            <button
-              :disabled="submitLoading"
-              @click="onSubmit"
-              class="flex justify-center items-center w-full text-base font-semibold text-white bg-green-600 hover:bg-green-700 px-20 py-2 rounded"
-              v-html="btnText"
-            ></button>
+              <div id="recaptcha-widget"></div>
+
+              <recaptcha @error="onError" @success="onSuccess" />
+            </div> -->
+            <a-config-provider
+              :theme="{
+                token: {
+                  colorPrimary: '#16a34a',
+                },
+              }"
+            >
+              <!-- <div>
+                <input
+                  @click="onSuccess"
+                  class="g-recaptcha"
+                  :data-sitekey="useRuntimeConfig().public.RECAPTCHA_SITE_KEY"
+                  data-callback="onSubmit"
+                  type="checkbox"
+                  id="scales"
+                  name="scales"
+                />
+                <label for="scales">Scales</label>
+              </div> -->
+              <a-button
+                :disabled="submitLoading"
+                html-type="submit"
+                size="large"
+                @click.prevent="onSuccess"
+                class="flex justify-center items-center w-full text-base font-semibold text-white bg-green-600 hover:bg-green-700 px-20 py-2 rounded"
+                v-html="btnText"
+              ></a-button>
+            </a-config-provider>
           </div>
         </div>
       </div>
@@ -389,9 +377,15 @@
 </template>
 
 <script setup lang="ts">
-import { localize } from "@vee-validate/i18n";
-const { t } = useI18n();
+import { localize, setLocale } from "@vee-validate/i18n";
+// const { t } = useI18n();
+import useGoogleRecaptcha, {
+  RecaptchaAction,
+} from "~/composables/useGoogleRecaptcha";
+const { executeRecaptcha } = useGoogleRecaptcha();
+const { locale, t } = useI18n({ useScope: "global" });
 import { Form } from "ant-design-vue";
+const { $recaptcha } = useNuxtApp();
 const useForm = Form.useForm;
 interface Filter {
   emailAddress: string;
@@ -401,7 +395,7 @@ interface Filter {
   phoneNumber: string;
 }
 const verified = ref(false);
-const checkRecaptcha = ref(undefined);
+const checkRecaptcha = ref<string | undefined>(undefined);
 const submitLoading = ref(false);
 const title = ref("");
 const description = ref();
@@ -413,7 +407,7 @@ const note = ref();
 const placeholder = ref();
 const btnText = ref();
 const visibleSavedInfo = ref(false);
-const formData = reactive<Filter>({
+let formData = reactive<Filter>({
   emailAddress: "",
   companyName: "",
   name: "",
@@ -432,34 +426,42 @@ const rulesRef = reactive({
   phoneNumber: [
     {
       required: true,
-      message: "zeruri xanadir",
+      message: t("required"),
     },
     {
-      min: 3,
-      max: 5,
-      message: "Length should be 3 to 5",
+      min: 9,
+      message: t("min", { min: 9 }),
+      trigger: "change",
+    },
+    {
+      digit: 9,
+      message: "digit 9 olmalidir",
+    },
+    {
+      max: 9,
+      message: t("max", { max: 9 }),
       trigger: "change",
     },
   ],
   name: [
     {
       required: true,
-      message: t("message_validate_name"),
+      message: t("required"),
     },
   ],
   companyName: [
     {
       required: true,
-      message: t("message_validate_name"),
+      message: t("required"),
     },
   ],
   emailAddress: [
     {
       required: true,
-      message: t("message_validate_name"),
+      message: t("required"),
     },
     {
-      email: email,
+      email: true,
       message: "Email olmalidir",
     },
   ],
@@ -467,61 +469,93 @@ const rulesRef = reactive({
 const { resetFields, validate, validateInfos } = useForm(formData, rulesRef);
 const onSubmit = () => {
   validate()
-    .then(() => {
-      console.log(toRaw(formData));
+    .then((result) => {
+      console.log(verified.value);
+
+      if (verified.value == false) checkRecaptcha.value = "error";
+      // if (!result || !verified.value || !checkCatalogList) {
+      if (checkCatalogList.value || !verified.value) {
+        checkCatalog.value = false;
+      } else {
+        checkCatalog.value = true;
+        return;
+      }
+      submitLoading.value = true;
+      let FormDataMethod = new FormData();
+      FormDataMethod.append("emailAddress", formData.emailAddress);
+      FormDataMethod.append("companyName", formData.companyName);
+      FormDataMethod.append("name", formData.name);
+      FormDataMethod.append("note", formData.note);
+      FormDataMethod.append("phoneNumber", formData.phoneNumber);
+      documents.forEach((document: any, index: number) => {
+        FormDataMethod.append(`documents[${index}].type`, document.type);
+        FormDataMethod.append(`documents[${index}].file`, document.file);
+      });
+      useJoinUsStore()
+        .fetchApplications(FormDataMethod)
+        .then(() => {
+          visibleSavedInfo.value = true;
+          formData = {} as Filter;
+          // this.$validator.reset();
+          resetFields();
+          certificates = [];
+          certificateOfExtracts = [];
+          bankDetails = [];
+          directorIDs = [];
+          documents = [];
+        })
+        .finally(() => {
+          submitLoading.value = false;
+        });
     })
     .catch((err) => {
       console.log("error", err);
     });
-
-  //         this.$validator.validateAll().then((result) => {
-  //           if (this.verified == false) this.checkRecaptcha = "error";
-  //           if (!result || !this.verified || !this.checkCatalogList) {
-  //             this.checkCatalog = true;
-  //             return;
-  //           } else {
-  //             this.checkCatalog = false;
-  //           }
-  //           this.submitLoading = true;
-  //           let formData = new FormData();
-  //           formData.append("emailAddress", this.formData.emailAddress);
-  //           formData.append("companyName", this.formData.companyName);
-  //           formData.append("name", this.formData.name);
-  //           formData.append("note", this.formData.note);
-  //           formData.append("phoneNumber", this.formData.phoneNumber);
-  //           this.documents.forEach((document, index) => {
-  //             formData.append(`documents[${index}].type`, document.type);
-  //             formData.append(`documents[${index}].file`, document.file);
-  //           });
-  //           this.$axios
-  //             .$post(`/public/ecommerce/applications`, formData, {
-  //               headers: {
-  //                 "Content-Type": "multipart/form-data",
-  //               },
-  //             })
-  //             .then((response) => {
-  //               this.visibleSavedInfo = true;
-  //               this.formData = {};
-  //               this.$validator.reset();
-  //               this.certificates = [];
-  //               this.certificateOfExtracts = [];
-  //               this.bankDetails = [];
-  //               this.directorIDs = [];
-  //               this.documents = [];
-  //             })
-  //             .finally(() => {
-  //               this.submitLoading = false;
-  //             });
-  //         });
-  //       },
+  // this.$validator.validateAll().then((result) => {
+  // if (this.verified == false) this.checkRecaptcha = "error";
+  // if (!result || !this.verified || !this.checkCatalogList) {
+  //   this.checkCatalog = true;
+  //   return;
+  // } else {
+  //   this.checkCatalog = false;
+  // }
+  // this.submitLoading = true;
+  // let formData = new FormData();
+  // formData.append("emailAddress", this.formData.emailAddress);
+  // formData.append("companyName", this.formData.companyName);
+  // formData.append("name", this.formData.name);
+  // formData.append("note", this.formData.note);
+  // formData.append("phoneNumber", this.formData.phoneNumber);
+  // this.documents.forEach((document, index) => {
+  //   formData.append(`documents[${index}].type`, document.type);
+  //   formData.append(`documents[${index}].file`, document.file);
+  // });
+  //     this.$axios
+  //       .$post(`/public/ecommerce/applications`, formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       })
+  //       .then((response) => {
+  // this.visibleSavedInfo = true;
+  // this.formData = {};
+  // this.$validator.reset();
+  // this.certificates = [];
+  // this.certificateOfExtracts = [];
+  // this.bankDetails = [];
+  // this.directorIDs = [];
+  // this.documents = [];
+  //       })
+  // .finally(() => {
+  //   this.submitLoading = false;
+  // });
+  //   });
+  // },
 };
-// const onFinish = (values: any) => {
-//   console.log("Success:", values);
-// };
 
-// const onFinishFailed = (errorInfo: any) => {
-//   console.log("Failed:", errorInfo);
-// };
+watch(locale, (newLocale) => {
+  fetchAndMapSections();
+});
 
 // const { executeRecaptcha } = useGoogleRecaptcha();
 const removeFile = function (data: any, document: string) {
@@ -578,23 +612,26 @@ const uploadDirectorID = function (file: File | any) {
 const onError = function (error: Error) {
   // this.$recaptcha.reset();
 };
-const onSuccess = async function (token) {
-  //   const { tokenn } = await executeRecaptcha("submit");
-  useRecaptchaStore().fetchRecaptcha({ response: token });
-  // this.$store
-  //   .dispatch("auth/checkChaptchaToken", {
-  //     response: token,
-  //   })
-  //   .then((response) => {
-  //     verified.value = true;
-  //     checkRecaptcha.value = "success";
-  //   })
-  //   .catch((err) => {
-  //     // this.$recaptcha.reset();
-  //     verified.value = false;
-  //     checkRecaptcha.value = "error";
-  //   });
+const onSuccess = async function () {
+  try {
+    const { token } = await executeRecaptcha(RecaptchaAction.login);
+    await useRecaptchaStore().fetchRecaptcha({ response: token });
+    if (useRecaptchaStore().getStatus === "success") {
+      verified.value = true;
+      checkRecaptcha.value = "success";
+      onSubmit();
+    } else {
+      verified.value = false;
+      checkRecaptcha.value = "error";
+    }
+  } catch (err) {
+    console.error("reCAPTCHA xətası:", err);
+    verified.value = false;
+    checkRecaptcha.value = "error";
+  }
 };
+
+onMounted(() => {});
 const fetchAndMapSections = async () => {
   await useJoinUsStore().fetchSections({ page: "JOIN_US" });
 
@@ -650,10 +687,10 @@ fetchAndMapSections();
 
 const checkCatalogList = computed(() => {
   return (
-    certificates.length &&
-    certificateOfExtracts.length &&
-    bankDetails.length &&
-    directorIDs.length
+    certificates.length > 0 &&
+    certificateOfExtracts.length > 0 &&
+    bankDetails.length > 0 &&
+    directorIDs.length > 0
   );
 });
 </script>
@@ -693,7 +730,7 @@ label em {
   display: inline-block;
 }
 
-.ant-input-affix-wrapper .ant-input:not(:first-child) {
+/* .ant-input-affix-wrapper .ant-input:not(:first-child) {
   padding-left: 50px;
-}
+} */
 </style>

@@ -38,7 +38,8 @@
     "qs": "^6.13.0",
     "vee-validate": "^4.14.7",
     "vue": "latest",
-    "vue-recaptcha-v3": "^2.0.1"
+    "vue-recaptcha-v3": "^2.0.1",
+    "yup": "^1.4.0"
   },
   "overrides": {
     "vue": "latest"
