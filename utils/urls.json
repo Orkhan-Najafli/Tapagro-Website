@@ -28,5 +28,9 @@
   "about_us_sections": "/public/ecommerce/sections",
   "shopping_carts": "/ecommerce/shopping-carts",
   "remove_shooping_cart": "/ecommerce/shopping-carts/${productId}/remove",
-  "shopping_carts_count": "/ecommerce/shopping-carts/count"
+  "shopping_carts_count": "/ecommerce/shopping-carts/count",
+  "frequently_asked_questions": "/public/ecommerce/faqs",
+  "join_us_sections": "/public/ecommerce/sections",
+  "google_recaptcha_siteverify": "/public/ecommerce/google-recaptcha/siteverify",
+  "join_us_applications": "/public/ecommerce/applications"
 }

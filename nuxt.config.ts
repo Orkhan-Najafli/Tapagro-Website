@@ -31,6 +31,13 @@ export default defineNuxtConfig({
           media: "(prefers-color-scheme: dark)",
         },
       ],
+      // script: [
+      //   {
+      //     src: "https://www.google.com/recaptcha/api.js",
+      //     async: true,
+      //     defer: true,
+      //   },
+      // ],
     },
   },
   modules: [
@@ -42,7 +49,6 @@ export default defineNuxtConfig({
     "@nuxtjs/sitemap",
     "@nuxtjs/seo",
   ],
-
   compatibilityDate: "2024-04-03",
   devtools: {
     enabled: true,
@@ -85,5 +91,14 @@ export default defineNuxtConfig({
         },
       },
     },
+    resolve: {
+      dedupe: ["vue"], // Prevent conflicting Vue versions
+    },
+    optimizeDeps: {
+      include: ["vue3-recaptcha-v2"],
+    },
   },
+  // build: {
+  //   transpile: ["vue-recaptcha"], // Ensure the package gets transpiled
+  // },
 });

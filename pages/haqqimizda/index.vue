@@ -1,6 +1,6 @@
 <template>
   <div class="h-full min-h-full">
-    <div class="pt-3 max-w-[1224px] container mx-auto px-6 md:px-0">
+    <div class="pt-3 max-w-[1224px] container mx-auto px-6 xl:px-0">
       <section class="my-6 md:flex flex-row hidden">
         <a-breadcrumb separator=">">
           <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
@@ -19,7 +19,7 @@
       </section>
     </div>
     <section
-      class="h-auto w-full block max-w-[1224px] container mx-auto px-6 md:px-0 mb-16 md:mb-24 mt-6 md:mt-0"
+      class="h-auto w-full block max-w-[1224px] container mx-auto px-6 xl:px-0 mb-16 md:mb-24 mt-6 md:mt-0"
     >
       <div class="flex flex-col md:flex-row items-start">
         <div class="w-full mb-11 md:mb-0">
@@ -65,7 +65,7 @@
     </section>
 
     <section
-      class="h-auto w-full max-w-[1224px] block px-6 container md:px-0 mx-auto mb-6 md:mb-14"
+      class="h-auto w-full max-w-[1224px] block px-6 container xl:px-0 mx-auto mb-6 md:mb-14"
     >
       <div class="video-container">
         <iframe
@@ -138,8 +138,6 @@ const fetchAndMapSections = async () => {
     useAboutStore().getSections.length
   ) {
     useAboutStore().getSections.map((item, index) => {
-      console.log(item);
-
       switch (item.keyword) {
         case "AboutUs.Stats.Seller.Count":
           statisticTargetNumber(item, 0);
