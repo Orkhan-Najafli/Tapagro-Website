@@ -30,7 +30,7 @@ pipeline {
         playbook_staging = '/Projects/ci-cd/playbooks/deploy_front_tapagro_staging_pm2.yaml'
         inventory = '/Projects/ci-cd/inventory-files/all-inventory'
         GIT_LAST_AUTHOR = sh(script: 'git --no-pager show -s --format=\'%an\' $GIT_COMMIT', returnStdout: true).trim()
-        GIT_LAST_COMMIT = sh(script: 'git log -1 --pretty=\'%B\'', returnStdout: true).trim()
+        GIT_LAST_COMMIT = sh(script: 'git log -1 --pretty=\'%B\'', returnStdout: true, encoding: 'UTF-8').trim()
     }
 
     stages {
@@ -95,27 +95,34 @@ pipeline {
     }
 } 
 post {
-        always {
-            script {
-                // Define status icons and other notification-related variables
-                    def statusIcons = [SUCCESS: '\\u2705', FAILED: '\\u274c']
-                    
-                    // Initialize email body
-                    def emailBody = "Status of Job\n"
-                    
-                    // Loop through FAILED_STAGES to append stage results with appropriate icons
-                    FAILED_STAGES.each { stageName, stageStatus ->
-                        def stageIcon = statusIcons[stageStatus] ?: '\\u1F648'
-                        emailBody += "\nRepository/branch: ${env.JOB_NAME}\n" +
-                                     "Stage: ${stageName}\n" +
-                                     "Status: ${stageStatus} ${stageIcon}\n" +
-                                     "Last commit: ```${env.GIT_LAST_COMMIT}```\n" +
-                                     "Author: *${env.GIT_LAST_AUTHOR}*"
+            always {
+                    script {
+            if (env.BRANCH_NAME == 'development' || env.BRANCH_NAME == 'master') {
+            // Define status icons and other notification-related variables
+            def statusIcons = [SUCCESS: '\\u2705', FAILED: '\\u274c']
+            
+            // Initialize email body with repository/branch, last commit, and author displayed once
+            def emailBody = "*Status of Job*\n\n" +
+                            "Repository/branch: ${env.JOB_NAME}\n" +
+                            "Last commit: ```${env.GIT_LAST_COMMIT}```\n" +
+                            "Author: *${env.GIT_LAST_AUTHOR}*\n\n"
+            
+            // Loop through FAILED_STAGES to append only stage results with appropriate icons
+            FAILED_STAGES.each { stageName, stageStatus ->
+                def stageIcon = statusIcons[stageStatus] ?: '\\u1F648'
+                emailBody += "Stage: ${stageName}\n" +
+                             "Status: ${stageStatus} ${stageIcon}\n\n"
+            }
+            
+            // Send the notification
+            googlechatnotification url: 'id:tapagro-deployment',
+                message: emailBody
+            
+            // Check if any stage failed and explicitly set the build result to 'FAILURE'
+            if (FAILED_STAGES.find { it.value == 'FAILED' }) {
+                currentBuild.result = 'FAILURE'
                     }
-                    
-                    // Send the notification
-                    googlechatnotification url: 'id:tapagro-deployment',
-                        message: emailBody
+                }
             }
         }
     }
