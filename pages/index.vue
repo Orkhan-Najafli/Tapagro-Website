@@ -142,7 +142,7 @@
           size="large"
           wrapperClassName="text-green-800"
         >
-          <products
+          <Products
             :classGridSize="true"
             :link="'mehsullar'"
             :products="useMostPurchasedProductsStore().getProducts"

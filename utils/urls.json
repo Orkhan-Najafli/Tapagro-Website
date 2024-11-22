@@ -32,5 +32,6 @@
   "frequently_asked_questions": "/public/ecommerce/faqs",
   "join_us_sections": "/public/ecommerce/sections",
   "google_recaptcha_siteverify": "/public/ecommerce/google-recaptcha/siteverify",
-  "join_us_applications": "/public/ecommerce/applications"
+  "join_us_applications": "/public/ecommerce/applications",
+  "favorites": "/ecommerce/favorites"
 }
