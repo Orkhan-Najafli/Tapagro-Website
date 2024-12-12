@@ -3,7 +3,7 @@
     <div>
       <div v-if="props.products.size == 0">
         <div class="text-base text-gray-600">
-          {{ $t("no_products_matching_your_search_were_found") }}
+          {{ t("no_products_matching_your_search_were_found") }}
         </div>
       </div>
       <div v-else class="w-full min-w-full overflow-hidden scroll">
@@ -29,7 +29,7 @@
               <template #favorite>
                 <a-tooltip v-if="link == 'mehsullar'" placement="top">
                   <template #title>
-                    <span>{{ $t("add_to_my_favorites") }}</span>
+                    <span>{{ t("add_to_my_favorites") }}</span>
                   </template>
                   <div
                     v-if="useAuthenticator().getToken"
@@ -69,7 +69,7 @@
               <template #compare>
                 <a-tooltip placement="bottom">
                   <template #title>
-                    <span>{{ $t("compare_do") }}</span>
+                    <span>{{ t("compare_do") }}</span>
                   </template>
                   <div
                     :class="{
@@ -99,6 +99,8 @@
 <script setup lang="ts">
 import type { FarmerProduct } from "~/utils/types/farmer-product";
 import type { Product } from "~/utils/types/product";
+const { t } = useI18n();
+
 let props = defineProps({
   classGridSize: {
     type: Boolean,

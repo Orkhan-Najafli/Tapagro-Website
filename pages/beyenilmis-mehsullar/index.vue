@@ -29,6 +29,8 @@
       </div>
     </section>
     <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
+    <div>Cookie: {{ useCookie<undefined | any>("favoriteProducts") }}</div>
+
       <div class="mb-6">
         <h1 class="text-2xl font-bold">{{ t("my_favorite") }}</h1>
       </div>
@@ -113,8 +115,10 @@
 <script setup lang="ts">
 import type { ProductDetail } from "~/utils/types/product";
 const { t } = useI18n();
+// import { useCookie } from "#app";
 // import { mapGetters } from "vuex";
 const favoriteProducts = ref<Set<any>>(new Set());
+const cookie = useCookie<undefined | any>("favoriteProducts");
 const productIds = reactive<Array<any>>([]);
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
@@ -141,6 +145,7 @@ let favoriteProductsList = reactive([]);
 //       more: false,
 //     };
 //   },
+console.log("Cookie value on mount:", cookie);
 onMounted(() => {
   setData();
   if (!useAuthenticator().getToken) {
