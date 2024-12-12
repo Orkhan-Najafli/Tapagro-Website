@@ -9,20 +9,20 @@
         >
           <Arrow_left_icon />
           <span class="ml-3 text-gray-600 font-medium text-sm">
-            {{ $t("main_page") }}
+            {{ t("main_page") }}
           </span>
         </nuxt-link>
         <a-breadcrumb class="hidden md:block" separator=">">
           <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
             <nuxt-link to="/">
               <span class="text-gray-600 font-medium text-sm">
-                {{ $t("main_page") }}</span
+                {{ t("main_page") }}</span
               ></nuxt-link
             >
           </a-breadcrumb-item>
           <a-breadcrumb-item class="text-sm leading-5 font-normal">
             <span class="text-gray-800 font-semibold text-sm">
-              {{ $t("my_favorite") }}</span
+              {{ t("my_favorite") }}</span
             >
           </a-breadcrumb-item>
         </a-breadcrumb>
@@ -30,7 +30,7 @@
     </section>
     <section style="max-width: 1224px" class="px-6 lg:container mx-auto">
       <div class="mb-6">
-        <h1 class="text-2xl font-bold">{{ $t("my_favorite") }}</h1>
+        <h1 class="text-2xl font-bold">{{ t("my_favorite") }}</h1>
       </div>
     </section>
     <section
@@ -49,7 +49,7 @@
             :classGridSize="true"
             @removeFavoriteProduct="removeFavoriteProduct"
             :link="'mehsullar'"
-            :products=""
+            :products="[{}]"
             v-if="useMostPurchasedProductsStore().getProducts.size > 0"
           />
         </a-spin>
@@ -78,7 +78,7 @@
           @click="loadMoreFavoriteProducts"
           class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold"
         >
-          {{ $t("more_products") }}
+          {{ t("more_products") }}
         </button>
       </div>
 
@@ -95,14 +95,14 @@
           <p
             class="m-0 p-0 block w-full text-center text-neutral-800 mt-7 mb-14 text-2xl font-medium"
           >
-            {{ $t("no_products_have_been_added_to_my_favorites") }}
+            {{ t("no_products_have_been_added_to_my_favorites") }}
           </p>
           <div class="flex justify-center items-center">
             <nuxt-link
               class="text-green-600 hover:text-green-600 text-base font-semibold"
               tag="a"
               to="/"
-              >{{ $t("main_page") }}</nuxt-link
+              >{{ t("main_page") }}</nuxt-link
             >
           </div>
         </div>
@@ -112,10 +112,8 @@
 </template>
 <script setup lang="ts">
 import type { ProductDetail } from "~/utils/types/product";
-
+const { t } = useI18n();
 // import { mapGetters } from "vuex";
-// import ProductListing from "@/components/common/ProductListing";
-// const FetchingFavoriteProducts = "FetchingFavoriteProducts";
 const favoriteProducts = ref<Set<any>>(new Set());
 const productIds = reactive<Array<any>>([]);
 const queryParams = reactive({
@@ -126,7 +124,7 @@ const queryParams = reactive({
     : undefined,
 });
 let productData = reactive({
-  list: [],
+  list: [] as Array<ProductDetail>,
   page: 0,
   totalPages: null,
   totalElements: 0,
@@ -194,7 +192,7 @@ const removeFavoriteProduct = (val: any) => {
   productData.list.splice(val.index, 1);
   if (useAuthenticator().getToken) {
     productData = {
-      list: [] as Array<ProductDetail>,
+      list: [] as Array<ProductDetail | any>,
       page: 0,
       totalPages: null,
       totalElements: 0,
@@ -207,6 +205,8 @@ const removeFavoriteProduct = (val: any) => {
   }
 };
 const getProduct = async (id: number | any) => {
+  console.log("getProduct....");
+
   if (!useAuthenticator().getToken) {
     try {
       // this.$wait.start(FetchingFavoriteProducts);
@@ -218,6 +218,8 @@ const getProduct = async (id: number | any) => {
       //   .finally(() => {
       //     this.$wait.end(FetchingFavoriteProducts);
       //   });
+      console.log("Product: ", useProductDetailStore().getProduct);
+
       const newProduct = {
         addedToComparisonBasket:
           useProductDetailStore().getProduct.addedToComparisonBasket,
