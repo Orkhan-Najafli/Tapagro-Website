@@ -32,6 +32,7 @@
                     <span>{{ t("add_to_my_favorites") }}</span>
                   </template>
                   <div
+                    @click="toggleProductToFavorite(product, $event, index)"
                     v-if="useAuthenticator().getToken"
                     :class="{
                       'bg-[#16A34A]': product.addedToFavoriteBasket,
@@ -39,8 +40,6 @@
                     }"
                     class="absolute right-2 top-2 md:right-5 md:top-5 z-40 w-9 h-9 flex justify-center items-center shadow-lg rounded-full"
                   >
-                    <!-- @click="toggleProductToFavorite(product, $event, index, link)" -->
-
                     <favorite_icon
                       :size="{ width: '24px', height: '24px' }"
                       :color="
@@ -49,15 +48,14 @@
                     />
                   </div>
                   <div
+                    @click="toggleProductToFavorite(product, $event, index)"
                     v-else
                     :class="{
-                      'bg-[#16A34A]': product.favoriteIsActive,
-                      'bg-white': !product.favoriteIsActive,
+                      'bg-[#16A34A]': useCookie<number[]>('favoriteProducts', { default: () => [] }).value.includes(product.id),
+                      'bg-white': !useCookie<number[]>('favoriteProducts', { default: () => [] }).value.includes(product.id),
                     }"
                     class="absolute right-2 top-2 md:right-5 md:top-5 z-40 w-9 h-9 flex justify-center items-center shadow-lg rounded-full"
                   >
-                    <!-- @click="toggleProductToFavorite(product, $event, index, link)" -->
-
                     <favorite_icon
                       :size="{ width: '24px', height: '24px' }"
                       :color="product.favoriteIsActive ? '#FFFFFF' : '#334155'"
@@ -72,6 +70,9 @@
                     <span>{{ t("compare_do") }}</span>
                   </template>
                   <div
+                    @click="
+                      toggleProductToCompare(product, $event, index, link)
+                    "
                     :class="{
                       'bg-[#16A34A]': product.compareIsActive,
                       'bg-white': !product.compareIsActive,
@@ -80,9 +81,6 @@
                     }"
                     class="absolute right-2 md:right-5 z-40 w-9 h-9 flex justify-center items-center shadow-lg rounded-full"
                   >
-                    @click="toggleProductToCompare(product, $event, index,
-                    link)"
-
                     <scale_logo
                       :size="{ width: '24px', height: '24px' }"
                       :color="product.compareIsActive ? '#FFFFFF' : '#334155'"
@@ -99,7 +97,7 @@
 </template>
 <script setup lang="ts">
 import type { FarmerProduct } from "~/utils/types/farmer-product";
-import type { Product } from "~/utils/types/product";
+import type { Product, ProductDetail } from "~/utils/types/product";
 const { t } = useI18n();
 
 let props = defineProps({
@@ -118,7 +116,83 @@ let props = defineProps({
     type: Boolean,
   },
 });
+let favoriteProductList = new Set();
 let compareProductList = reactive<Array<any>>([]);
+let compareFarmerProductList = reactive<Array<any>>([]);
+const favoriteCookie = useCookie<number[]>("favoriteProducts", {
+  default: () => [],
+});
+onMounted(() => {
+  const cookieValue = favoriteCookie.value || [];
+  favoriteProductList = new Set(cookieValue);
+});
+const toggleProductToFavorite = function (
+  product: ProductDetail | any,
+  event: Event | KeyboardEvent
+) {
+  event.stopPropagation();
+  event.preventDefault();
+  if (useAuthenticator().getToken) {
+    product.addedToFavoriteBasket = !product.addedToFavoriteBasket;
+    if (product.addedToFavoriteBasket) {
+      useFavoriteProductsStore().fetchProductAddToFavorite({
+        productId: product.id,
+      });
+    } else {
+      useFavoriteProductsStore().fetchProductDeleteToFavorite({
+        productId: product.id,
+      });
+    }
+    // isActiveCompare(product.id, product.addedToFavoriteBasket, "favorite");
+    // this.$nuxt.$emit("check", {
+    //   id: product.id,
+    //   product: product,
+    // });
+    // this.$store.dispatch("favorite/fetchCount");
+  } else {
+    toggleProductInFavoriteWhenNotLogin(product);
+  }
+
+  // this.$store.commit("favorite/setFavoriteProductIds", product.id);
+  if (favoriteCookie.value.includes(product.id)) {
+    //   this.getNotification({
+    //     message: this.$t("the_product_has_been_added_to_my_favorites"),
+    //     btnText: this.$t("my_favorites_section"),
+    //     path: "/beyenilmis-mehsullar",
+    //   });
+  }
+  // this.checkProduct();
+};
+
+const toggleProductInFavoriteWhenNotLogin = function (
+  product: ProductDetail | any
+) {
+  // Mövcud məhsul siyahısını `Set` kimi yaradırıq
+  const favoriteProductSet = new Set(favoriteCookie.value);
+
+  // Məhsul artıq siyahıda varsa, onu silirik, əks halda əlavə edirik
+  if (favoriteProductSet.has(product.id)) {
+    favoriteProductSet.delete(product.id); // Məhsulu sil
+  } else {
+    favoriteProductSet.add(product.id); // Məhsulu əlavə et
+  }
+
+  // Yenilənmiş `Set`-i cookie-ə geri yazırıq
+  favoriteCookie.value = Array.from(favoriteProductSet);
+
+  // Cookie-ni dərhal yeniləmək üçün `refreshNuxtData` çağırılır
+  refreshNuxtData();
+  console.log("Updated favorite list:", favoriteCookie.value);
+  // this.isActiveCompare(
+  //   product.id,
+  //   this.favoriteProductList.has(product.id),
+  //   "favorite"
+  // );
+  // this.$nuxt.$emit("check", {
+  //   id: product.id,
+  //   product: product,
+  // });
+};
 
 const toggleProductToCompare = function (
   product: any,
@@ -128,130 +202,178 @@ const toggleProductToCompare = function (
 ) {
   event.stopPropagation();
   event.preventDefault();
-  if (useAuthenticator().getToken) {
-    product.addedToComparisonBasket = !product.addedToComparisonBasket;
-  }
-  if (link == "mehsullar") {
-    if (useAuthenticator().getToken) {
-      if (!product.addedToComparisonBasket) {
-        let index = compareProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        );
-        compareProductList.splice(index, 1);
-        // this.$store.dispatch("compare/removeProductFromCompare", {
-        //   productId: product.id,
-        //   farmerProduct: false,
-        // });
-      } else {
-        compareProductList.push({
-          id: product.id,
-          createdAt: new Date(),
-        });
-        // this.$store.dispatch("compare/addProductToCompare", {
-        //   productId: product.id,
-        //   farmerProduct: false,
-        //   createdAt: new Date(),
-        // });
-      }
-      this.isActiveCompare(product.id, product.addedToComparisonBasket);
-      this.$nuxt.$emit("check", {
-        id: product.id,
-        product: product,
-      });
-    } else {
-      if (
-        this.getCompareProducts.findIndex(
-          (item) => item.id == product.id || item == product.id
-        ) > -1
-      ) {
-        let index = this.compareProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        );
-        this.compareProductList.splice(index, 1);
-      } else {
-        this.compareProductList.push({
-          id: product.id,
-          createdAt: new Date(),
-        });
-      }
-      this.$nuxt.$emit("check", {
-        id: product.id,
-        product: product,
-      });
-      this.isActiveCompare(
-        product.id,
-        this.compareProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        ) > -1
-      );
-    }
-    this.$store.commit("compare/setCompareProductIds", {
-      id: product.id,
-      createdAt: new Date(),
-    });
+  // if (useAuthenticator().getToken) {
+  //   product.addedToComparisonBasket = !product.addedToComparisonBasket;
+  // }
+  // if (link == "mehsullar") {
+  //   if (useAuthenticator().getToken) {
+  //     if (!product.addedToComparisonBasket) {
+  //       let index = compareProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       );
+  //       compareProductList.splice(index, 1);
+  //       // this.$store.dispatch("compare/removeProductFromCompare", {
+  //       //   productId: product.id,
+  //       //   farmerProduct: false,
+  //       // });
+  //     } else {
+  //       compareProductList.push({
+  //         id: product.id,
+  //         createdAt: new Date(),
+  //       });
+  //       // this.$store.dispatch("compare/addProductToCompare", {
+  //       //   productId: product.id,
+  //       //   farmerProduct: false,
+  //       //   createdAt: new Date(),
+  //       // });
+  //     }
+  //     this.isActiveCompare(product.id, product.addedToComparisonBasket);
+  //     this.$nuxt.$emit("check", {
+  //       id: product.id,
+  //       product: product,
+  //     });
+  //   } else {
+  //     if (
+  //       this.getCompareProducts.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       ) > -1
+  //     ) {
+  //       let index = this.compareProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       );
+  //       this.compareProductList.splice(index, 1);
+  //     } else {
+  //       this.compareProductList.push({
+  //         id: product.id,
+  //         createdAt: new Date(),
+  //       });
+  //     }
+  //     this.$nuxt.$emit("check", {
+  //       id: product.id,
+  //       product: product,
+  //     });
+  //     this.isActiveCompare(
+  //       product.id,
+  //       this.compareProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       ) > -1
+  //     );
+  //   }
+  //   this.$store.commit("compare/setCompareProductIds", {
+  //     id: product.id,
+  //     createdAt: new Date(),
+  //   });
+  // } else {
+  //   if (this.loggedIn) {
+  //     if (!product.addedToComparisonBasket) {
+  //       let index = this.compareFarmerProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       );
+  //       this.compareFarmerProductList.splice(index, 1);
+  //       this.$store.dispatch("compare/removeProductFromCompare", {
+  //         productId: product.id,
+  //         farmerProduct: true,
+  //       });
+  //     } else {
+  //       this.compareFarmerProductList.push({
+  //         id: product.id,
+  //         createdAt: new Date(),
+  //       });
+  //       this.$store.dispatch("compare/addProductToCompare", {
+  //         productId: product.id,
+  //         farmerProduct: true,
+  //         createdAt: new Date(),
+  //       });
+  //     }
+  //     this.isActiveCompare(product.id, product.addedToComparisonBasket);
+  //     this.$store.dispatch("compare/fetchCount");
+  //   } else {
+  //     if (
+  //       this.getCompareProducts.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       ) > -1
+  //     ) {
+  //       let index = this.compareFarmerProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       );
+  //       this.compareFarmerProductList.splice(index, 1);
+  //     } else {
+  //       this.compareFarmerProductList.push({
+  //         id: product.id,
+  //         createdAt: new Date(),
+  //       });
+  //     }
+  //     this.isActiveCompare(
+  //       product.id,
+  //       this.compareFarmerProductList.findIndex(
+  //         (item) => item.id == product.id || item == product.id
+  //       ) > -1
+  //     );
+  //   }
+  //   this.$store.commit("compare/setCompareFarmerProductIds", {
+  //     id: product.id,
+  //     createdAt: new Date(),
+  //   });
+  // }
+  // // this.checkProduct();
+  // if (
+  //   this.getCompareProducts.findIndex(
+  //     (item) => item.id == product.id || item == product.id
+  //   ) > -1
+  // ) {
+  //   this.getNotification({
+  //     message: this.$t("the_product_has_been_to_the_comparison"),
+  //     btnText: this.$t("comparison_section"),
+  //     path: "/mehsullarin-muqayisesi",
+  //   });
+  // }
+};
+const isActiveCompare = function (
+  productId: any,
+  compareIsActive: any,
+  check = "compare"
+) {
+  if (check == "compare") {
+    // products.filter((product, i) => {
+    //   if (product.id === productId) {
+    //     this.$set(this.products[i], "compareIsActive", compareIsActive);
+    //   }
+    // });
   } else {
-    if (this.loggedIn) {
-      if (!product.addedToComparisonBasket) {
-        let index = this.compareFarmerProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        );
-        this.compareFarmerProductList.splice(index, 1);
-        this.$store.dispatch("compare/removeProductFromCompare", {
-          productId: product.id,
-          farmerProduct: true,
-        });
-      } else {
-        this.compareFarmerProductList.push({
-          id: product.id,
-          createdAt: new Date(),
-        });
-        this.$store.dispatch("compare/addProductToCompare", {
-          productId: product.id,
-          farmerProduct: true,
-          createdAt: new Date(),
-        });
-      }
-      this.isActiveCompare(product.id, product.addedToComparisonBasket);
-      this.$store.dispatch("compare/fetchCount");
-    } else {
-      if (
-        this.getCompareProducts.findIndex(
-          (item) => item.id == product.id || item == product.id
-        ) > -1
-      ) {
-        let index = this.compareFarmerProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        );
-        this.compareFarmerProductList.splice(index, 1);
-      } else {
-        this.compareFarmerProductList.push({
-          id: product.id,
-          createdAt: new Date(),
-        });
-      }
-      this.isActiveCompare(
-        product.id,
-        this.compareFarmerProductList.findIndex(
-          (item) => item.id == product.id || item == product.id
-        ) > -1
-      );
-    }
-    this.$store.commit("compare/setCompareFarmerProductIds", {
-      id: product.id,
-      createdAt: new Date(),
-    });
+    // const favoriteProductIndex = this.products.findIndex(
+    //   (product) => product.id === productId
+    // );
+    // this.products.filter((item, i) => {
+    //   if (item.id === productId) {
+    //     this.$set(this.products[i], "favoriteIsActive", compareIsActive);
+    //   }
+    // });
   }
-  // this.checkProduct();
-  if (
-    this.getCompareProducts.findIndex(
-      (item) => item.id == product.id || item == product.id
-    ) > -1
-  ) {
-    this.getNotification({
-      message: this.$t("the_product_has_been_to_the_comparison"),
-      btnText: this.$t("comparison_section"),
-      path: "/mehsullarin-muqayisesi",
-    });
+};
+const checkProduct = function () {
+  if (props.products) {
+    if (useAuthenticator().getToken) {
+      props.products.forEach((product: ProductDetail | any) => {
+        isActiveCompare(product.id, product.addedToComparisonBasket);
+        isActiveCompare(product.id, product.addedToFavoriteBasket, "favorite");
+      });
+    } else {
+      props.products.forEach((product) => {
+        if (
+          compareFarmerProductList.findIndex(
+            (item) => item.id == product.id || item == product.id
+          ) > -1 ||
+          compareProductList.findIndex(
+            (item) => item.id == product.id || item == product.id
+          ) > -1
+        ) {
+          isActiveCompare(product.id, true);
+        }
+        if (favoriteProductList.has(product.id)) {
+          isActiveCompare(product.id, true, "favorite");
+        }
+      });
+    }
   }
 };
 </script>

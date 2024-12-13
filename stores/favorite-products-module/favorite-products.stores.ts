@@ -3,8 +3,9 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Product, ProductQuery } from "~/utils/types/product";
-import { stringify } from "qs";
+import type { Product } from "~/utils/types/product";
+// import { stringify } from "qs";
+import type { AddProductsFavorite, ProductID } from "~/utils/types/favorites";
 
 export const useFavoriteProductsStore = defineStore("favorite-products", {
   state: () => ({
@@ -15,6 +16,12 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
     error: null as null | Error,
     favoriteProductIdsForCount: [] as Array<number>,
     favoriteProductIdList: [] as Array<number>,
+    whenAllProductsAddToFavoriteStatus: "" as string,
+    whenProductDeleteToFavoriteStatus: "" as string,
+    whenProductAddToFavoriteStatus: "" as string,
+    whenAllProductsAddToFavoriteError: null as null | Error,
+    whenProductDeleteToFavoriteError: null as null | Error,
+    whenProductAddToFavoriteError: null as null | Error,
     count: 0 as number,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
@@ -63,6 +70,59 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
       this.totalPages = 0;
       this.status = "";
       this.error = null;
+    },
+    async fetchAllSelectedProductsAddToFavorite(
+      queryData?: AddProductsFavorite
+    ) {
+      const { data, status, error } = await useAsyncData<never>(
+        "add-products-favorite-post",
+        () =>
+          $fetch(`${this.baseURL}${urls.favorites_add_products}`, {
+            headers: {
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
+            },
+            body: queryData,
+            method: "POST",
+          })
+      );
+      this.whenAllProductsAddToFavoriteStatus = status.value;
+      this.whenAllProductsAddToFavoriteError = error.value;
+    },
+    async fetchProductAddToFavorite(queryData?: ProductID) {
+      const { data, status, error } = await useAsyncData<never>(
+        "add-product-favorite-post",
+        () =>
+          $fetch(`${this.baseURL}${urls.add_product_to_favorite}`, {
+            headers: {
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
+            },
+            body: queryData,
+            method: "POST",
+          })
+      );
+      this.whenProductAddToFavoriteStatus = status.value;
+      this.whenProductAddToFavoriteError = error.value;
+    },
+    async fetchProductDeleteToFavorite(queryData?: ProductID) {
+      const { data, status, error } = await useAsyncData<never>(
+        "add-product-favorite-post",
+        () =>
+          $fetch(`${this.baseURL}${urls.remove_product_to_favorite}`, {
+            headers: {
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
+            },
+            body: queryData,
+            method: "POST",
+          })
+      );
+      this.whenProductDeleteToFavoriteStatus = status.value;
+      this.whenProductDeleteToFavoriteError = error.value;
     },
     async fetchFavoriteProducts(queryData: any) {
       // const queryString = stringify(queryData, {

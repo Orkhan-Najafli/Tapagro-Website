@@ -33,5 +33,8 @@
   "join_us_sections": "/public/ecommerce/sections",
   "google_recaptcha_siteverify": "/public/ecommerce/google-recaptcha/siteverify",
   "join_us_applications": "/public/ecommerce/applications",
-  "favorites": "/ecommerce/favorites"
+  "favorites": "/ecommerce/favorites",
+  "favorites_add_products": "/ecommerce/favorites/add-products",
+  "add_product_to_favorite": "/ecommerce/favorites/add-product",
+  "remove_product_to_favorite": "/ecommerce/favorites/remove-product"
 }
