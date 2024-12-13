@@ -54,7 +54,7 @@
         >
           <cancel_icon />
           <span class="inline-flex text-[#DC2626] font-normal text-sm ml-2">
-            {{ $t("the_product_is_not_active") }}
+            {{ t("the_product_is_not_active") }}
             {{ props.product.isActive }}</span
           >
         </div>
@@ -223,20 +223,20 @@
           >
             <template #title>
               <span v-if="!props.product.isActive"
-                >{{ $t("the_product_is_not_active") }} <br
+                >{{ t("the_product_is_not_active") }} <br
               /></span>
               <template v-if="!props.product.eligibleToShoppingCart">
                 <span v-if="props.product.price">{{
-                  $t("product_is_out_of_stock")
+                  t("product_is_out_of_stock")
                 }}</span>
-                <span v-else> {{ $t("contact_the_store_to_order") }} </span>
+                <span v-else> {{ t("contact_the_store_to_order") }} </span>
               </template>
             </template>
             <button
               class="flex flex-row justify-center items-center w-full h-auto font-semibold text-sm bg-opacity-40 bg-green-600 rounded-md m-0 p-0 px-3 py-2 text-white cursor-default"
             >
               <basket_logo />
-              <span class="ml-2"> {{ $t("add_to_cart") }}</span>
+              <span class="ml-2"> {{ t("add_to_cart") }}</span>
             </button>
           </a-tooltip>
           <button
@@ -245,7 +245,7 @@
             class="flex flex-row justify-center items-center w-full h-auto font-semibold text-sm bg-green-600 hover:bg-green-700 rounded-md m-0 p-0 px-3 py-2 text-white"
           >
             <basket_logo />
-            <span class="ml-2"> {{ $t("add_to_cart") }}</span>
+            <span class="ml-2"> {{ t("add_to_cart") }}</span>
           </button>
         </a>
       </div>
@@ -325,6 +325,7 @@
 import basket_logo from "@/components/svg/basket_logo.vue";
 import type { FarmerProduct } from "~/utils/types/farmer-product";
 import type { Product } from "~/utils/types/product";
+const { t } = useI18n();
 const baseURL = useRuntimeConfig().public.baseURL;
 const fixed = ref(false);
 const imageHeight = ref(145);
