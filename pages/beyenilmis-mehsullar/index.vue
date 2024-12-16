@@ -158,7 +158,9 @@ onMounted(() => {
 useFavoriteProductsStore().fetchFavoriteProducts({ ...queryParams, page: 0 });
 const setData = () => {
   const favoriteProductsCookie = useCookie<string | null>("favoriteProducts");
-
+    useCookie("favoriteProducts").value = JSON.stringify([
+        // ...favoriteProductIdList,
+      ]);
   // Cookie dəyərini yoxlayırıq və Set-ə çeviririk
   favoriteProducts.value = favoriteProductsCookie.value
     ? new Set(JSON.parse(favoriteProductsCookie.value))

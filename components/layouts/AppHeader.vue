@@ -754,6 +754,13 @@ onBeforeMount(() => {
 
 onMounted(() => {
   scrollListener();
+
+  let IDs = useCookie<Array<number>>("favoriteProducts").value.map((id) => ({
+    productId: id,
+  }));
+  useFavoriteProductsStore().fetchAllSelectedProductsAddToFavorite({
+    productIds: IDs,
+  });
 });
 
 onBeforeUnmount(() => {
