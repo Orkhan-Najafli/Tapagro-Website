@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Product } from "~/utils/types/product";
+import type { Product, ProductDetail } from "~/utils/types/product";
 // import { stringify } from "qs";
 import type { AddProductsFavorite, ProductID } from "~/utils/types/favorites";
 
@@ -30,6 +30,7 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
     getFavoriteProductsStatus: (state) => state.status,
+    getDeleteProductFromFavoriteStatus:(state) =>state.whenProductDeleteToFavoriteStatus,
     getFavoriteProductIdsForCount: (state) => {
       return [...state.favoriteProductIdsForCount];
     },
@@ -41,29 +42,14 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
     },
   },
   actions: {
-    async setFavoriteProduct(payload: Array<any>) {
-      this.favoriteProductIdsForCount = payload;
-      this.favoriteProductIdList = payload;
-    },
-    async setFavoriteProductIds(payload: any) {
-      if (this.favoriteProductIdList.includes(payload)) {
-        this.favoriteProductIdList = this.favoriteProductIdList.filter(
-          (itemId, i) => {
-            if (itemId !== payload) {
-              return itemId;
-            }
-          }
-        );
-      } else {
-        this.favoriteProductIdList.push(payload);
-      }
-      useCookie("favoriteProducts").value = JSON.stringify([
-        ...this.favoriteProductIdList,
-      ]);
-    },
-    async setCount(payload: number) {
-      this.count = payload;
-    },
+    // async deleteProductInFavorites(id:number) {
+    //   for (const product of this.favoriteProducts) {
+    //     if (product.id === id) {
+    //       this.favoriteProducts.delete(product)
+    //       break
+    //     }
+    //   }
+    // },
     async resetProducts() {
       this.favoriteProducts = new Set();
       this.totalElements = 0;
@@ -125,13 +111,6 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
       this.whenProductDeleteToFavoriteError = error.value;
     },
     async fetchFavoriteProducts(queryData: any) {
-      // const queryString = stringify(queryData, {
-      //   encode: false,
-      //   indices: true,
-      //   allowDots: false,
-      //   arrayFormat: "comma", //sortList[0].sortDirection: DESC
-      //   // arrayFormat: "repeat", //sortList.sortDirection: DESC
-      // });
       const { data, status, error } = await useAsyncData<ApiBase<Product>>(
         "favorite-product-list",
         () =>
@@ -145,12 +124,26 @@ export const useFavoriteProductsStore = defineStore("favorite-products", {
           })
       );
       this.totalElements = data.value?.totalElements!;
-      this.totalPages = data.value?.totalPages!;
       data.value?.content.forEach((item: Product) => {
         this.favoriteProducts.add(item);
       });
+      this.totalPages = data.value?.totalPages!;
       this.status = status.value;
       this.error = error.value;
+    },
+    async fetchFavoriteCount() {
+      const { data, status, error } = await useAsyncData<number>(
+        "favorite-product-count",
+        () =>
+          $fetch(`${this.baseURL}${urls.favorite_count}`, {
+            headers: {
+              ...HeaderConfigs({
+                Authorization: useCookie("token").value || "",
+              }),
+            },
+          })
+      );
+      this.count = data.value!;
     },
   },
 });

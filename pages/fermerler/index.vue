@@ -12,7 +12,7 @@
           <span class="font-semibold mr-0.5"> < </span>
 
           <span class="ml-3 text-gray-600 font-medium text-sm">
-            {{ $t("main_page") }}</span
+            {{ t("main_page") }}</span
           >
         </nuxt-link>
         <div class="hidden md:block">
@@ -21,11 +21,11 @@
             tag="span"
             to="/"
           >
-            {{ $t("main_page") }}</nuxt-link
+            {{ t("main_page") }}</nuxt-link
           >
           <span> > </span>
           <span class="text-gray-800 font-semibold text-sm">{{
-            $t("farmers")
+            t("farmers")
           }}</span>
         </div>
       </div>
@@ -36,7 +36,7 @@
           <section>
             <div>
               <div class="mb-6">
-                <h1 class="text-2xl font-bold">{{ $t("farmers") }}</h1>
+                <h1 class="text-2xl font-bold">{{ t("farmers") }}</h1>
               </div>
 
               <div class="flex flex-row mb-6">
@@ -48,7 +48,7 @@
                   }"
                 >
                   <a-input-search
-                    :placeholder="$t('product_name')"
+                    :placeholder="t('product_name')"
                     size="large"
                     class="w-full min-w-full h-auto mb-6 md:mb-11"
                     :maxLength="255"
@@ -71,7 +71,7 @@
               <section class="flex flex-col mb-6 md:mb-10">
                 <div v-if="useFarmersStore().totalElements <= 0">
                   <div class="text-base text-gray-600">
-                    {{ $t("no_farmer_matching_the_search_was_found") }}
+                    {{ t("no_farmer_matching_the_search_was_found") }}
                   </div>
                 </div>
                 <div
@@ -100,7 +100,7 @@
                 @click="loadMoreFarmers"
                 class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold"
               >
-                {{ $t("show_more") }}
+                {{ t("show_more") }}
               </button>
             </div>
           </section>
@@ -112,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,

@@ -28,6 +28,16 @@ export const useAuthenticator = defineStore("Authenticator", {
     setRequiredLoginVisible(visible: boolean) {
       this.requiredLoginVisible = visible;
     },
+
+    //logout
+    async logOut(){
+      useCookie('token').value=undefined
+      useCookie('refresh_token').value=undefined
+      this.token=undefined
+      this.refresh_token = undefined
+      this.loginStatus = ""
+      this.loginError = null
+    },
     //Generate-url
     async fetchGenerateUrl() {
       const { data, status, error } = await useAsyncData<{ url: string }>(
