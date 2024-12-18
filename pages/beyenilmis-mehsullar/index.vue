@@ -83,7 +83,7 @@ const favoriteCookie = useCookie<number[]>("favoriteProducts", {
 let products = reactive<Array<any>>([])
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
-  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 5 : 5,
+  size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 12 : 12,
 });
 
 let ProductDetailStore = useProductDetailStore()
@@ -112,7 +112,7 @@ const removeFavoriteProduct = (product: Product | any) => {
   useFavoriteProductsStore().resetProducts()
   useFavoriteProductsStore().fetchFavoriteProducts({
     page: 0,
-    size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 5 : 5,
+    size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 12 : 12,
   });
 };
 const getProduct = async (id: number | any) => {

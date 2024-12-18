@@ -150,10 +150,10 @@
                       @click="(e) => e.preventDefault()">
                       <span
                         class="w-9 h-9 rounded-full flex justify-center items-center bg-emerald-50 text-emerald-600 m-0 p-0 mr-3">
-                        <a-icon class="text-emerald-600 text-sm" type="user" />
+                        <UserOutlined class="text-emerald-600 text-sm" />
                       </span>
                       <span class="text-emerald-800">
-                        <a-icon type="down" />
+                        <DownOutlined class=" text-sm" />
                       </span>
                     </a>
                     <template #overlay>
@@ -186,7 +186,7 @@
                             </p>
                           </nuxt-link>
                         </a-menu-item>
-                        <a-menu-item @click="useAuthenticator().logOut()" key="1">
+                        <a-menu-item @click="useAuthenticator().logOut()" key="2">
                           <!-- @click="SSO.logout" -->
                           <div class="flex flex-row items-center m-0 p-0">
                             <span class="w-4 h-4 rounded-full flex justify-center items-center m-0 p-0 mr-3">
@@ -210,6 +210,8 @@
             </div>
           </div>
         </div>
+
+        <!-- lg:hidden -->
         <div class="flex flex-row lg:hidden relative h-14 items-center cursor-pointer mobile-box z-40">
           <div>
             <a-tooltip placement="bottom">
@@ -403,6 +405,9 @@
             </li>
           </ul>
         </div>
+        <!-- lg:hidden -->
+
+
       </div>
 
       <div v-if="useAuthenticator().getToken"
