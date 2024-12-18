@@ -77,12 +77,12 @@
                     useShoppingStore().getShoppingCartsCountStatus ===
                     'success'
                   " :count="useShoppingStore().getShoppingCartsCount" :number-style="{
-                      backgroundColor: '#FCD34D',
-                      color: '#065F46',
-                      minWidth: '15px',
-                      height: '15px',
-                      lineHeight: '15px',
-                    }">
+                    backgroundColor: '#FCD34D',
+                    color: '#065F46',
+                    minWidth: '15px',
+                    height: '15px',
+                    lineHeight: '15px',
+                  }">
                     <ShoppingCartOutlined class="text-2xl text-emerald-800" />
                   </a-badge>
                 </ClientOnly>
@@ -96,8 +96,8 @@
                   </template>
 
                   <a-badge @click="$event.stopPropagation()" :count="useAuthenticator().getToken
-                      ? useComparisonBasketsStore().getComparisonCount
-                      : useProductsStore().getProducts.size
+                    ? useComparisonBasketsStore().getComparisonCount
+                    : useProductsStore().getProducts.size
                     " :number-style="{
                       backgroundColor: '#FCD34D',
                       color: '#065F46',
@@ -509,13 +509,6 @@ onBeforeMount(() => {
 
 onMounted(() => {
   scrollListener();
-
-  let IDs = useCookie<Array<number>>("favoriteProducts").value.map((id) => ({
-    productId: id,
-  }));
-  useFavoriteProductsStore().fetchAllSelectedProductsAddToFavorite({
-    productIds: IDs,
-  });
 });
 
 onBeforeUnmount(() => {

@@ -2,280 +2,131 @@
   <main class="overflow-hidden pt-3 min-h-screen">
     <section class="max-w-[1224px] container mx-auto px-6 xl:px-0">
       <div class="mt-6 mb-5 md:mb-9">
-        <nuxt-link
-          tag="div"
+        <nuxt-link tag="div"
           class="text-gray-600 flex flex-row justify-start items-center md:hidden font-medium text-sm cursor-pointer"
-          to="/"
-        >
+          to="/">
           <left_arrow_icon />
           <span class="ml-3 text-gray-600 font-medium text-sm">
-            {{ $t("main_page") }}</span
-          >
+            {{ $t("main_page") }}</span>
         </nuxt-link>
         <ClientOnly>
           <a-breadcrumb class="hidden md:flex" separator=">">
             <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
               <nuxt-link to="/">
                 <span class="text-gray-600 font-medium text-sm">
-                  {{ $t("main_page") }}</span
-                ></nuxt-link
-              >
+                  {{ $t("main_page") }}</span></nuxt-link>
             </a-breadcrumb-item>
             <a-breadcrumb-item class="text-sm leading-5 font-normal">
               <span class="text-gray-800 font-semibold text-sm">
-                {{ $t("join_us") }}</span
-              >
+                {{ $t("join_us") }}</span>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </ClientOnly>
       </div>
     </section>
-    <section
-      class="max-w-[1224px] container mx-auto px-6 xl:px-0"
-      id="demo-form"
-    >
+    <section class="max-w-[1224px] container mx-auto px-6 xl:px-0" id="demo-form">
       <div class="flex flex-row w-full mb-6">
         <!-- <Advertising/> -->
         <div class="w-full relative">
-          <div
-            id="dynamic-title"
-            v-html="title"
-            class="text-3xl font-bold my-6"
-          ></div>
-          <div
-            class="mb-11"
-            id="dynamic-description"
-            v-html="description"
-          ></div>
-          <h2
-            class="block font-semibold text-gray-700 text-3xl md:hidden m-0 p-0 mb-6"
-          >
+          <div id="dynamic-title" v-html="title" class="text-3xl font-bold my-6"></div>
+          <div class="mb-11" id="dynamic-description" v-html="description"></div>
+          <h2 class="block font-semibold text-gray-700 text-3xl md:hidden m-0 p-0 mb-6">
             {{ $t("join_us") }}
           </h2>
-          <div
-            style="
+          <div style="
               box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
                 0px 4px 6px -4px rgba(0, 0, 0, 0.1);
-            "
-            class="w-full border border-t-white border-gray-100 shadow-lg px-3 md:px-11 py-6 mb-6"
-          >
+            " class="w-full border border-t-white border-gray-100 shadow-lg px-3 md:px-11 py-6 mb-6">
             <ClientOnly>
               <a-form class="flex flex-col w-full">
                 <div class="flex flex-col md:flex-row w-full min-w-full">
                   <div class="w-full mr-6">
                     <a-form-item v-bind="validateInfos.name" class="w-full">
-                      <TitleUploadInput
-                        :explanation="'not'"
-                        :labelText="fullName"
-                      />
-                      <a-input
-                        allow-clear
-                        class="w-full text-left"
-                        id="_name"
-                        size="large"
-                        :placeholder="placeholder"
-                        name="name"
-                        v-model:value="formData.name"
-                      />
+                      <TitleUploadInput :explanation="'not'" :labelText="fullName" />
+                      <a-input allow-clear class="w-full text-left" id="_name" size="large" :placeholder="placeholder"
+                        name="name" v-model:value="formData.name" />
                     </a-form-item>
                   </div>
                   <div class="w-full">
-                    <a-form-item
-                      v-bind="validateInfos.companyName"
-                      class="w-full"
-                    >
-                      <TitleUploadInput
-                        :explanation="'not'"
-                        :labelText="LegalName"
-                      />
-                      <a-input
-                        allow-clear
-                        class="w-full text-left"
-                        id="_name"
-                        size="large"
-                        :placeholder="placeholder"
-                        name="companyName"
-                        v-model:value="formData.companyName"
-                      />
+                    <a-form-item v-bind="validateInfos.companyName" class="w-full">
+                      <TitleUploadInput :explanation="'not'" :labelText="LegalName" />
+                      <a-input allow-clear class="w-full text-left" id="_name" size="large" :placeholder="placeholder"
+                        name="companyName" v-model:value="formData.companyName" />
                     </a-form-item>
                   </div>
                 </div>
                 <div class="flex flex-col md:flex-row w-full min-w-full">
                   <div class="w-full mr-6">
-                    <a-form-item
-                      v-bind="validateInfos.phoneNumber"
-                      class="w-full"
-                    >
-                      <TitleUploadInput
-                        :explanation="'not'"
-                        :labelText="phone"
-                      />
-                      <a-input
-                        class="w-full text-left"
-                        addon-before="+994"
-                        id="_phone"
-                        size="large"
-                        placeholder="55 000 00 00"
-                        v-model:value="formData.phoneNumber"
-                      />
+                    <a-form-item v-bind="validateInfos.phoneNumber" class="w-full">
+                      <TitleUploadInput :explanation="'not'" :labelText="phone" />
+                      <a-input class="w-full text-left" addon-before="+994" id="_phone" size="large"
+                        placeholder="55 000 00 00" v-model:value="formData.phoneNumber" />
                     </a-form-item>
                   </div>
                   <div class="w-full">
-                    <a-form-item
-                      v-bind="validateInfos.emailAddress"
-                      class="text-left w-full"
-                    >
-                      <TitleUploadInput
-                        :explanation="'not'"
-                        :labelText="email"
-                      />
-                      <a-input
-                        id="_email"
-                        size="large"
-                        class="text-left"
-                        name="emailAddress"
-                        data-vv-as="Email"
-                        :placeholder="placeholder"
-                        v-model:value="formData.emailAddress"
-                      />
+                    <a-form-item v-bind="validateInfos.emailAddress" class="text-left w-full">
+                      <TitleUploadInput :explanation="'not'" :labelText="email" />
+                      <a-input id="_email" size="large" class="text-left" name="emailAddress" data-vv-as="Email"
+                        :placeholder="placeholder" v-model:value="formData.emailAddress" />
                     </a-form-item>
                   </div>
                 </div>
-                <div
-                  class="flex flex-col justify-start items-start min-w-full w-full h-auto my-6"
-                >
-                  <div
-                    class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto mb-6"
-                  >
-                    <div
-                      class="flex flex-col justify-start items-start w-full md:mr-6"
-                    >
-                      <TitleUploadInput
-                        :explanation="
-                          $t(
-                            'the_copy_of_the_certificate_that_you_are_taxpayer'
-                          )
-                        "
-                        :labelText="$t('copy_of_certificate')"
-                      />
-                      <UploadFile
-                        v-if="certificates.length < 3"
-                        :key="11"
-                        :ID="0"
-                        @handleUpload="uploadCertificateFile"
-                        class=""
-                      />
-                      <CatalogFileList
-                        @removeFile="(event:Event) => removeFile(event, 'certificates')"
-                        :key="0"
-                        :catalogFileList="certificates"
-                      />
-                      <span
-                        class="text-[#f5222d]"
-                        v-if="certificates.length == 0 && checkCatalog"
-                        >{{ $t("this_field_is_mandatory") }}</span
-                      >
+                <div class="flex flex-col justify-start items-start min-w-full w-full h-auto my-6">
+                  <div class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto mb-6">
+                    <div class="flex flex-col justify-start items-start w-full md:mr-6">
+                      <TitleUploadInput :explanation="$t(
+                        'the_copy_of_the_certificate_that_you_are_taxpayer'
+                      )
+                        " :labelText="$t('copy_of_certificate')" />
+                      <UploadFile v-if="certificates.length < 3" :key="11" :ID="0" @handleUpload="uploadCertificateFile"
+                        class="" />
+                      <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'certificates')" :key="0"
+                        :catalogFileList="certificates" />
+                      <span class="text-[#f5222d]" v-if="certificates.length == 0 && checkCatalog">{{
+                        $t("this_field_is_mandatory") }}</span>
                     </div>
                     <div class="flex flex-col justify-start items-start w-full">
-                      <TitleUploadInput
-                        :explanation="
-                          $t(
-                            'copy_of_extract_from_the_register_related_to_state_registration_of_legal_entities'
-                          )
-                        "
-                        :labelText="$t('copy_of_the_receipt')"
-                      />
-                      <UploadFile
-                        v-if="certificateOfExtracts.length < 3"
-                        :key="12"
-                        :ID="1"
-                        @handleUpload="uploadCertificateOfExtract"
-                      />
-                      <CatalogFileList
-                        @removeFile="
-                          (event:Event) => removeFile(event, 'certificateOfExtracts')
-                        "
-                        :key="1"
-                        :catalogFileList="certificateOfExtracts"
-                      />
-                      <span
-                        class="text-[#f5222d]"
-                        v-if="certificateOfExtracts.length == 0 && checkCatalog"
-                        >{{ $t("this_field_is_mandatory") }}</span
-                      >
+                      <TitleUploadInput :explanation="$t(
+                        'copy_of_extract_from_the_register_related_to_state_registration_of_legal_entities'
+                      )
+                        " :labelText="$t('copy_of_the_receipt')" />
+                      <UploadFile v-if="certificateOfExtracts.length < 3" :key="12" :ID="1"
+                        @handleUpload="uploadCertificateOfExtract" />
+                      <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'certificateOfExtracts')
+                        " :key="1" :catalogFileList="certificateOfExtracts" />
+                      <span class="text-[#f5222d]" v-if="certificateOfExtracts.length == 0 && checkCatalog">{{
+                        $t("this_field_is_mandatory") }}</span>
                     </div>
                   </div>
-                  <div
-                    class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto"
-                  >
-                    <div
-                      class="flex flex-col justify-start items-start w-full md:mr-6"
-                    >
-                      <TitleUploadInput
-                        :explanation="
-                          $t('copy_of_bank_details_on_your_business_account')
-                        "
-                        :labelText="$t('copy_of_bank_details')"
-                      />
-                      <UploadFile
-                        v-if="bankDetails.length < 3"
-                        :key="13"
-                        :ID="2"
-                        @handleUpload="uploadBankDetail"
-                        class="m-0 p-0"
-                      />
-                      <CatalogFileList
-                        @removeFile="(event:Event) => removeFile(event, 'bankDetails')"
-                        :key="2"
-                        :catalogFileList="bankDetails"
-                      />
-                      <span
-                        class="text-[#f5222d]"
-                        v-if="bankDetails.length == 0 && checkCatalog"
-                        >{{ $t("this_field_is_mandatory") }}</span
-                      >
+                  <div class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto">
+                    <div class="flex flex-col justify-start items-start w-full md:mr-6">
+                      <TitleUploadInput :explanation="$t('copy_of_bank_details_on_your_business_account')
+                        " :labelText="$t('copy_of_bank_details')" />
+                      <UploadFile v-if="bankDetails.length < 3" :key="13" :ID="2" @handleUpload="uploadBankDetail"
+                        class="m-0 p-0" />
+                      <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'bankDetails')" :key="2"
+                        :catalogFileList="bankDetails" />
+                      <span class="text-[#f5222d]" v-if="bankDetails.length == 0 && checkCatalog">{{
+                        $t("this_field_is_mandatory") }}</span>
                     </div>
 
                     <div class="flex flex-col justify-start items-start w-full">
-                      <TitleUploadInput
-                        :explanation="$t('directors_ID_card_copy')"
-                        :labelText="$t('the_copy_of_the_directors_license')"
-                      />
-                      <UploadFile
-                        v-if="directorIDs.length < 3"
-                        :key="14"
-                        :ID="3"
-                        @handleUpload="uploadDirectorID"
-                      />
-                      <CatalogFileList
-                        @removeFile="(event:Event) => removeFile(event, 'directorIDs')"
-                        :key="3"
-                        :catalogFileList="directorIDs"
-                      />
-                      <span
-                        class="text-[#f5222d]"
-                        v-if="directorIDs.length == 0 && checkCatalog"
-                        >{{ $t("this_field_is_mandatory") }}</span
-                      >
+                      <TitleUploadInput :explanation="$t('directors_ID_card_copy')"
+                        :labelText="$t('the_copy_of_the_directors_license')" />
+                      <UploadFile v-if="directorIDs.length < 3" :key="14" :ID="3" @handleUpload="uploadDirectorID" />
+                      <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'directorIDs')" :key="3"
+                        :catalogFileList="directorIDs" />
+                      <span class="text-[#f5222d]" v-if="directorIDs.length == 0 && checkCatalog">{{
+                        $t("this_field_is_mandatory") }}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="w-full h-auto">
                   <a-form-item class="text-left">
-                    <label
-                      v-html="note"
-                      class="font-medium text-sm"
-                      for="_email"
-                    ></label>
-                    <a-textarea
-                      :placeholder="placeholder"
-                      :maxlength="1024"
-                      name="note"
-                      allow-clear
-                      v-model="formData.note"
-                      :rows="3"
-                    />
+                    <label v-html="note" class="font-medium text-sm" for="_email"></label>
+                    <a-textarea :placeholder="placeholder" :maxlength="1024" name="note" allow-clear
+                      v-model="formData.note" :rows="3" />
                   </a-form-item>
                 </div>
               </a-form>
@@ -292,13 +143,11 @@
 
               <recaptcha @error="onError" @success="onSuccess" />
             </div> -->
-            <a-config-provider
-              :theme="{
-                token: {
-                  colorPrimary: '#16a34a',
-                },
-              }"
-            >
+            <a-config-provider :theme="{
+              token: {
+                colorPrimary: '#16a34a',
+              },
+            }">
               <!-- <div>
                 <input
                   @click="onSuccess"
@@ -311,37 +160,21 @@
                 />
                 <label for="scales">Scales</label>
               </div> -->
-              <a-button
-                :disabled="submitLoading"
-                html-type="submit"
-                size="large"
-                @click.prevent="onSuccess"
+              <a-button :disabled="submitLoading" html-type="submit" size="large" @click.prevent="onSuccess"
                 class="flex justify-center items-center w-full text-base font-semibold text-white bg-green-600 hover:bg-green-700 px-20 py-2 rounded"
-                v-html="btnText"
-              ></a-button>
+                v-html="btnText"></a-button>
             </a-config-provider>
           </div>
         </div>
       </div>
     </section>
-    <section
-      id="faq"
-      class="w-full h-auto max-w-[816px] container mx-auto px-6 py-11"
-    >
+    <section id="faq" class="w-full h-auto max-w-[816px] container mx-auto px-6 py-11">
       <FAQ />
     </section>
-    <a-modal
-      @cancel="handleCancel"
-      :open="visibleSavedInfo"
-      width="600px"
-      :footer="null"
-      centered
-    >
+    <a-modal @cancel="handleCancel" :open="visibleSavedInfo" width="600px" :footer="null" centered>
       <div class="flex flex-col pt-12 pb-10">
         <div class="flex justify-center items-center mb-5">
-          <span
-            class="w-16 h-16 rounded-full flex justify-center items-center bg-[#22C55E] text-white"
-          >
+          <span class="w-16 h-16 rounded-full flex justify-center items-center bg-[#22C55E] text-white">
             <a-icon class="text-4xl" type="check" />
           </span>
         </div>
@@ -351,14 +184,9 @@
           </p>
         </div>
         <div class="flex justify-center items-center mb-4">
-          <div
-            style="background-color: #f6ffed; border: 1px solid #b7eb8f"
-            class="flex flex-row px-4 py-3 rounded-sm"
-          >
-            <span
-              style="background-color: #52c41a"
-              class="w-4 h-4 rounded-full flex justify-center items-center text-white mr-3"
-            >
+          <div style="background-color: #f6ffed; border: 1px solid #b7eb8f" class="flex flex-row px-4 py-3 rounded-sm">
+            <span style="background-color: #52c41a"
+              class="w-4 h-4 rounded-full flex justify-center items-center text-white mr-3">
               i
             </span>
             <span class="p-0 m-0 text-gray-400 font-normal text-sm">
@@ -369,11 +197,8 @@
 
         <div class="flex flex-col justify-center items-center">
           <span class="mb-6"> {{ $t("thank_you") }} </span>
-          <nuxt-link
-            tag="button"
-            to="/"
-            class="flex flex-row justify-center items-center w-full max-w-[130px] border-2 border-[#16A34A] font-semibold text-sm bg-[#16A34A] rounded-md text-white px-3 py-2"
-          >
+          <nuxt-link tag="button" to="/"
+            class="flex flex-row justify-center items-center w-full max-w-[130px] border-2 border-[#16A34A] font-semibold text-sm bg-[#16A34A] rounded-md text-white px-3 py-2">
             {{ $t("main_page") }}
           </nuxt-link>
         </div>
@@ -476,8 +301,6 @@ const { resetFields, validate, validateInfos } = useForm(formData, rulesRef);
 const onSubmit = () => {
   validate()
     .then((result) => {
-      console.log(verified.value);
-
       if (verified.value == false) checkRecaptcha.value = "error";
       // if (!result || !verified.value || !checkCatalogList) {
       if (checkCatalogList.value || !verified.value) {
@@ -515,7 +338,6 @@ const onSubmit = () => {
         });
     })
     .catch((err) => {
-      console.log("error", err);
     });
   // this.$validator.validateAll().then((result) => {
   // if (this.verified == false) this.checkRecaptcha = "error";
@@ -639,7 +461,7 @@ const onSuccess = async function () {
   }
 };
 
-onMounted(() => {});
+onMounted(() => { });
 const fetchAndMapSections = async () => {
   await useJoinUsStore().fetchSections({ page: "JOIN_US" });
 
@@ -711,6 +533,7 @@ const checkCatalogList = computed(() => {
 #dynamic-description blockquote {
   color: #6b7280;
 }
+
 #dynamic-description ul {
   color: #6b7280;
   list-style: none;
@@ -730,6 +553,7 @@ const checkCatalogList = computed(() => {
   content: "• ";
   color: #6b7280;
 }
+
 label :is(h1, h2, h3, h4, h5, h6),
 label strong,
 label u,

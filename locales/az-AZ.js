@@ -165,7 +165,7 @@ export default {
   the_product_has_been_to_the_comparison: "Məhsul müqayisəyə əlavə olundu",
   the_product_has_been_added_to_my_favorites:
     "Məhsul bəyəndiklərimə əlavə olundu",
-  my_favorites_section: "Bəyəndiklərim bölümü ->",
+  my_favorites_section: "Bəyəndiklərim bölümü ",
   comparison_section: "Müqayisə bölümü ->",
   no_farmer_matching_the_search_was_found: "Axtarışa uyğun fermer tapılmadı",
   other_ads_from_the_farmer: "Fermerin diger elanları",

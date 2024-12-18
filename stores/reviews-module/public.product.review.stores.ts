@@ -67,7 +67,6 @@ export const usePublicReviewsStore = defineStore("public-reviews", {
           query: queryData,
         })
       );
-      console.log("reviews: ", data.value);
 
       this.productReviews = data!.value!.content;
       this.productReviewStatus = status.value;

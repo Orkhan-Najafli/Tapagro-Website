@@ -47,16 +47,15 @@
       </div>
       <div class="block w-full min-w-full rounded text-center my-14"
         v-if="useAuthenticator().getToken && useFavoriteProductsStore().getFavoriteProducts.size !== useFavoriteProductsStore().getTotalElements">
-        <div>{{ useFavoriteProductsStore().getTotalElements }}</div>
-        <div>{{ useFavoriteProductsStore().getFavoriteProducts.size }}
-        </div>
         <button @click="loadMoreFavoriteProducts"
           class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold">
           {{ t("more_products") }}
         </button>
       </div>
 
-      <section v-if="!useAuthenticator().getToken ? products.length == 0 : false" class="mt-24">
+      <section
+        v-if="!useAuthenticator().getToken ? products.length == 0 : useFavoriteProductsStore().getFavoriteProducts.size === 0"
+        class="mt-24">
         <div>
           <div class="flex justify-center items-center w-full min-w-full text-gray-400">
             <a-icon type="heart" class="text-6xl"></a-icon>
@@ -85,14 +84,15 @@ let products = reactive<Array<any>>([])
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 5 : 5,
-  storeNamePhrase: useRoute().query.storeNamePhrase
-    ? String(useRoute().query.storeNamePhrase)
-    : undefined,
 });
 
 let ProductDetailStore = useProductDetailStore()
 if (useAuthenticator().getToken) useFavoriteProductsStore().resetProducts()
-if (useAuthenticator().getToken) useFavoriteProductsStore().fetchFavoriteProducts({ ...queryParams, page: 0 })
+if (useAuthenticator().getToken) useFavoriteProductsStore().fetchFavoriteProducts({
+  ...queryParams,
+  ...useRoute().query,
+  page: 0
+})
 
 const setData = () => {
   // Cookie dəyərini yoxlayırıq və Set-ə çeviririk
@@ -109,14 +109,11 @@ const loadMoreFavoriteProducts = () => {
   useRouter().push({ query: { ...useRoute().query, page: queryParams.page } });
 };
 const removeFavoriteProduct = (product: Product | any) => {
-  if (useAuthenticator().getToken) {
-    useFavoriteProductsStore().resetProducts()
-    useFavoriteProductsStore().fetchFavoriteProducts({
-      ...queryParams,
-      ...useRoute().query,
-    });
-    // useFavoriteProductsStore().deleteProductInFavorites(product.id);
-  }
+  useFavoriteProductsStore().resetProducts()
+  useFavoriteProductsStore().fetchFavoriteProducts({
+    page: 0,
+    size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 5 : 5,
+  });
 };
 const getProduct = async (id: number | any) => {
   if (!useAuthenticator().getToken) {
@@ -146,25 +143,23 @@ watch(
   (to: any) => {
     if (useAuthenticator().getToken) {
       useFavoriteProductsStore().fetchFavoriteProducts({
+        // ...useRoute().query,
         ...queryParams,
-        ...useRoute().query,
       });
     }
   },
   { deep: true }
 );
 watch(
-  () => favoriteCookie.value, // İzlənilən dəyişən
+  () => favoriteCookie.value,
   (newValue: any, oldValue: any) => {
     // Köhnə və yeni dəyərlər arasındakı fərqləri tap
     const removedIds = oldValue.filter((id: number) => !newValue.includes(id));
-
     // Silinən məhsulları `products` massivindən çıxar
     removedIds.forEach((id: number) => {
       const index = products.findIndex(product => product.id === id);
       if (index !== -1) {
         products.splice(index, 1); // Məhsulu massivdən sil
-        console.log(`Məhsul silindi: ID = ${id}`);
       }
     });
   },

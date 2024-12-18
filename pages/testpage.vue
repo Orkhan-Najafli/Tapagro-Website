@@ -6,12 +6,8 @@
         <input type="email" name="email" placeholder="Email" />
         <input type="submit" />
       </form>
-      <button
-        @click="handleSubmit"
-        class="g-recaptcha"
-        :data-sitekey="useRuntimeConfig().public.RECAPTCHA_SITE_KEY"
-        data-callback="onSubmit"
-      >
+      <button @click="handleSubmit" class="g-recaptcha" :data-sitekey="useRuntimeConfig().public.RECAPTCHA_SITE_KEY"
+        data-callback="onSubmit">
         Submit
       </button>
     </ClientOnly>
@@ -32,7 +28,6 @@ const handleSubmit = async () => {
   //     "google-recaptcha-token": token ?? "",
   //   },
   // });
-  console.log("Recaptcha => ", token);
 };
 </script>
 <style scoped>
@@ -40,6 +35,7 @@ const handleSubmit = async () => {
   width: 400px;
   margin: 0 auto;
 }
+
 /* .grecaptcha-badge {
   visibility: hidden;
 } */
