@@ -164,7 +164,7 @@ export default {
     "Товары, соответствующие вашему запросу, не найдены",
   the_product_has_been_to_the_comparison: "Товар добавлен в сравнение",
   the_product_has_been_added_to_my_favorites: "Товар добавлен в избранное",
-  my_favorites_section: "Раздел «Мое избранное» ->",
+  my_favorites_section: "Раздел «Мое избранное» ",
   comparison_section: "Раздел сравнения ->",
   no_farmer_matching_the_search_was_found:
     "Фермер, соответствующий запросу, не найден.",

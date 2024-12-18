@@ -164,7 +164,7 @@ export default {
     "The product has been added to the comparison",
   the_product_has_been_added_to_my_favorites:
     "The product has been added to my favorites",
-  my_favorites_section: "My Favorites section ->",
+  my_favorites_section: "My Favorites section ",
   comparison_section: "Comparison section ->",
   no_farmer_matching_the_search_was_found:
     "No farmer matching the search was found",

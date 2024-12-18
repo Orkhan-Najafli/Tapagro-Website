@@ -26,7 +26,6 @@ export const useUsersStore = defineStore("Users", {
           method: "GET",
         })
       );
-      console.log(data.value);
 
       this.userStatus = status.value;
       this.userError = error.value || null;

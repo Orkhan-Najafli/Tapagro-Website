@@ -32,12 +32,10 @@ export const useStoreDetailStore = defineStore("Store-detail", {
         });
     },
     updateDeliveryCities(selectedRegionIDs: Array<any>) {
-      console.log("selectedRegionIDs: ", selectedRegionIDs);
       this.store.deliveryCities =
         this.store.deliveryCities &&
         this.store.deliveryCities.map((deliveryCity: DeliveryCity) => {
           if (selectedRegionIDs.includes(String(deliveryCity.id))) {
-            console.log("true....: ", deliveryCity.id);
 
             return {
               ...deliveryCity,

@@ -1,5 +1,5 @@
 <template>
-  <div @click="useProductDetailStore().fetchProduct(Number(props.product.id))" v-if="props.product">
+  <div @click="loadProduct" v-if="props.product">
     <nuxt-link v-if="link == 'mehsullar'" tag="a" :to="`/mehsullar/mehsul-etraflisi/${props.product?.id}`"
       class="flex flex-col group overflow-hidden relative cursor-pointer z-10 align-baseline h-full">
       <div class="flex w-full h-auto relative">
@@ -226,6 +226,19 @@ let props = defineProps({
     type: Boolean,
   },
 });
+const loadProduct = async function () {
+  if (!props.product || !props.product.id) {
+    console.error("Product or product ID is missing!");
+    return; // Or handle the missing product gracefully
+  }
+
+  try {
+    await useProductDetailStore().fetchProduct(Number(props.product.id))
+  } catch (error) {
+    console.error("Error in fetchProduct:", error); // Log the error for debugging
+    throw new Error(`Error fetching product: ${error}`); // Re-throw with more context
+  }
+}
 
 const stopPropagationProduct = function (event: Event | any) {
   event.stopPropagation();

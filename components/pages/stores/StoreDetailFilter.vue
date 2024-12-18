@@ -5,10 +5,7 @@
         <span class="text-[#374151] text-base font-medium">{{
           $t("filter")
         }}</span>
-        <button
-          @click="resetFilterFields"
-          class="text-gray-800 font-semibold text-sm"
-        >
+        <button @click="resetFilterFields" class="text-gray-800 font-semibold text-sm">
           {{ $t("reset") }}
         </button>
       </div>
@@ -17,24 +14,17 @@
     <a-form>
       <div>
         <section class="my-6">
-          <label
-            :class="{
-              'bg-gray-50': isDiscount,
-            }"
-            class="text-gray-200 hover:bg-gray-50 w-full cursor-pointer flex flex-row justify-start items-center"
-          >
-            <input
-              style="
+          <label :class="{
+            'bg-gray-50': isDiscount,
+          }" class="text-gray-200 hover:bg-gray-50 w-full cursor-pointer flex flex-row justify-start items-center">
+            <input style="
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
                 outline: unset !important;
               "
               class="form-checkbox inline-flex justify-center items-center h-4 w-4 bg-white border border-gray-200 rounded checked:bg-green-600 checked:border-green-600 checked:text-white appearance-none mr-2"
-              type="checkbox"
-              v-model="isDiscount"
-              @change="changeDiscountFilter"
-            />
+              type="checkbox" v-model="isDiscount" @change="changeDiscountFilter" />
             <span class="font-medium text-base text-gray-800">
               {{ $t("discounted") }}
             </span>
@@ -44,33 +34,20 @@
           <h4 class="font-bold text-base text-[#374151] mb-6">
             {{ $t("category") }}
           </h4>
-          <ul
-            class="m-0 p-0 w-full h-auto min-w-full flex flex-col justify-start items-start"
-          >
-            <li
-              @click="changeBaseCategory(category)"
-              v-for="(category, index) in useCategoriesStore()
-                .getBaseCategories"
-              :key="index"
-              :class="{
-                'bg-gray-50': baseCategoryId == category.id,
-              }"
-              class="p-0 m-0 w-full h-auto min-w-full flex flex-row hover:bg-gray-50 justify-between items-center mb-4 cursor-pointer"
-            >
+          <ul class="m-0 p-0 w-full h-auto min-w-full flex flex-col justify-start items-start">
+            <li @click="changeBaseCategory(category)" v-for="(category, index) in useCategoriesStore()
+              .getBaseCategories" :key="index" :class="{
+                  'bg-gray-50': baseCategoryId == category.id,
+                }"
+              class="p-0 m-0 w-full h-auto min-w-full flex flex-row hover:bg-gray-50 justify-between items-center mb-4 cursor-pointer">
               <div class="flex flex-row justify-start items-center">
+                <span class="inline-flex justify-start items-center font-medium text-base text-[#1F2937]">{{
+                  category.name }}</span>
                 <span
-                  class="inline-flex justify-start items-center font-medium text-base text-[#1F2937]"
-                  >{{ category.name }}</span
-                >
-                <span
-                  class="inline-flex items-center justify-center px-0.5 bg-gray-100 ml-2 text-sm font-medium rounded-sm"
-                  >{{ category.productCount }}</span
-                >
+                  class="inline-flex items-center justify-center px-0.5 bg-gray-100 ml-2 text-sm font-medium rounded-sm">{{
+                    category.productCount }}</span>
               </div>
-              <div
-                v-show="baseCategoryId == category.id"
-                class="inline-flex justify-start items-center"
-              >
+              <div v-show="baseCategoryId == category.id" class="inline-flex justify-start items-center">
                 <tick_in_filter_rating />
               </div>
             </li>
@@ -80,27 +57,16 @@
           <hr class="mb-6 mt-2" />
           <button
             class="text-gray-700 text-base font-bold hover:text-gray-700 flex flex-row items-center justify-between mb-3"
-            @click="categoriesBoxShow = !categoriesBoxShow"
-          >
+            @click="categoriesBoxShow = !categoriesBoxShow">
             <span class="">{{ $t("subcategories") }}</span>
-            <DownOutlined
-              :class="{
-                'rotate-180': categoriesBoxShow,
-                'rotate-0': !categoriesBoxShow,
-              }"
-              class="transform"
-            />
+            <DownOutlined :class="{
+              'rotate-180': categoriesBoxShow,
+              'rotate-0': !categoriesBoxShow,
+            }" class="transform" />
           </button>
-          <a-spin
-            size="large"
-            class="mt-1 flex justify-center"
-            :spinning="useCategoriesStore().getCategoriesStatus !== 'success'"
-          >
-            <Tree
-              v-show="categoriesBoxShow"
-              :baseCategoryId="baseCategoryId"
-              :baseCategoryType="baseCategoryType()"
-            />
+          <a-spin size="large" class="mt-1 flex justify-center"
+            :spinning="useCategoriesStore().getCategoriesStatus !== 'success'">
+            <Tree v-show="categoriesBoxShow" :baseCategoryId="baseCategoryId" :baseCategoryType="baseCategoryType()" />
           </a-spin>
         </div>
       </div>
@@ -109,62 +75,36 @@
 
         <button
           class="text-gray-700 text-base font-bold hover:text-gray-700 flex flex-row items-center justify-between mb-3"
-          @click="regionBoxShow = !regionBoxShow"
-        >
+          @click="regionBoxShow = !regionBoxShow">
           <span class="">{{ $t("delivery_area") }}</span>
-          <DownOutlined
-            :class="{
-              'rotate-180': regionBoxShow,
-              'rotate-0': !regionBoxShow,
-            }"
-            class="transform"
-          />
+          <DownOutlined :class="{
+            'rotate-180': regionBoxShow,
+            'rotate-0': !regionBoxShow,
+          }" class="transform" />
         </button>
-        <div
-          v-show="regionBoxShow"
-          class="flex flex-col w-full h-72 overflow-y-scroll scroll-design pb-3 pr-2"
-        >
+        <div v-show="regionBoxShow" class="flex flex-col w-full h-72 overflow-y-scroll scroll-design pb-3 pr-2">
           <div class="">
-            <div
-              class="flex w-full sticky top-0 flex-row justify-start items-center bg-white"
-            >
-              <div
-                class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-              >
+            <div class="flex w-full sticky top-0 flex-row justify-start items-center bg-white">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <search-logo-in-store />
               </div>
-              <input
-                class="px-4 outline-none h-11 pl-10 w-full border rounded-l-md border-gray-200"
-                type="text"
-                v-model="regionSearchValue"
-                :placeholder="$t('search_the_area')"
-              />
+              <input class="px-4 outline-none h-11 pl-10 w-full border rounded-l-md border-gray-200" type="text"
+                v-model="regionSearchValue" :placeholder="$t('search_the_area')" />
             </div>
             <ul class="mt-3">
-              <li
-                class="mb-3 flex flex-row justify-start items-center cursor-pointer hover:bg-gray-50"
-                v-for="(region, index) in filteredRegions"
-                :key="index"
-                :class="{
+              <li class="mb-3 flex flex-row justify-start items-center cursor-pointer hover:bg-gray-50"
+                v-for="(region, index) in filteredRegions" :key="index" :class="{
                   'bg-gray-50': selectedRegions.includes(region.id),
-                }"
-              >
-                <label
-                  class="text-gray-200 w-full cursor-pointer flex flex-row justify-start items-center"
-                >
-                  <input
-                    style="
+                }">
+                <label class="text-gray-200 w-full cursor-pointer flex flex-row justify-start items-center">
+                  <input style="
                       -webkit-appearance: none;
                       -moz-appearance: none;
                       appearance: none;
                       outline: unset !important;
-                    "
-                    :checked="region.checked"
-                    @change="changeUrlCity"
+                    " :checked="region.checked" @change="changeUrlCity"
                     class="form-checkbox outline-none inline-flex justify-center items-center h-4 w-4 bg-white border border-gray-200 rounded checked:border-green-600 checked:text-white appearance-none mr-2"
-                    type="checkbox"
-                    :value="region.id"
-                  />
+                    type="checkbox" :value="region.id" />
                   <!-- :checked="selectedRegions.includes(region.id)" -->
                   <span class="font-medium text-base text-gray-800">
                     {{ region.name }}
@@ -183,33 +123,14 @@
         <div class="flex flex-row justify-between">
           <div class="w-1/2 mr-3">
             <label class="w-full min-w-full inline-flex flex-col text-sm">
-              <a-input
-                v-model:value="minPrice"
-                class="mt-2 w-full min-w-full"
-                :placeholder="$t('minimum')"
-                allow-clear
-                id="num"
-                ref="num"
-                :maxLength="30"
-                @keypress="check"
-                @paste="pasteNone"
-                @change="changeUrlMinPrice"
-              />
+              <a-input v-model:value="minPrice" class="mt-2 w-full min-w-full" :placeholder="$t('minimum')" allow-clear
+                id="num" ref="num" :maxLength="30" @keypress="check" @paste="pasteNone" @change="changeUrlMinPrice" />
             </label>
           </div>
           <div class="w-1/2">
             <label class="w-full min-w-full inline-flex flex-col text-sm">
-              <a-input
-                v-model:value="maxPrice"
-                class="mt-2 w-full min-w-full"
-                :placeholder="$t('maximum')"
-                :maxLength="30"
-                allow-clear
-                id="num"
-                @keypress="check"
-                @paste="pasteNone"
-                @change="changeUrlMaxPrice"
-              />
+              <a-input v-model:value="maxPrice" class="mt-2 w-full min-w-full" :placeholder="$t('maximum')"
+                :maxLength="30" allow-clear id="num" @keypress="check" @paste="pasteNone" @change="changeUrlMaxPrice" />
             </label>
           </div>
         </div>
@@ -319,7 +240,6 @@ const check = function (event: Event | any) {
   } else event.preventDefault();
 };
 const changeBaseCategory = function (category: any) {
-  console.log(category);
   useCategoriesStore().resetCategories();
   useCategoriesStore().fetchCategories(category.id);
   if (baseCategoryId.value == category.id) {

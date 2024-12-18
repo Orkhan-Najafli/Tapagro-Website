@@ -118,7 +118,6 @@ const toggleProductToFavorite = function (
       useFavoriteProductsStore().fetchProductDeleteToFavorite({
         productId: product.id,
       });
-      // useFavoriteProductsStore().getDeleteProductFromFavoriteStatus==='success' &&
       emit("removeFavoriteProduct", { ...product, index: index });
     }
     useFavoriteProductsStore().fetchFavoriteCount()
@@ -128,14 +127,44 @@ const toggleProductToFavorite = function (
 
   // this.$store.commit("favorite/setFavoriteProductIds", product.id);
   if (favoriteCookie.value.includes(product.id)) {
-    //   this.getNotification({
-    //     message: this.$t("the_product_has_been_added_to_my_favorites"),
-    //     btnText: this.$t("my_favorites_section"),
-    //     path: "/beyenilmis-mehsullar",
-    //   });
+    getNotification({
+      message: t("the_product_has_been_added_to_my_favorites"),
+      btnText: t("my_favorites_section"),
+      path: "/beyenilmis-mehsullar",
+    });
   }
   // this.checkProduct();
 };
+const getNotification = function (param: any) {
+  notification.success({
+    message: param.message,
+    placement: "bottomRight",
+    duration: 3,
+    btn: () =>
+      h(
+        "a-button",
+        {
+          type: "primary",
+          size: "small",
+          onClick: () => {
+            notification.close("");
+            useRouter().push({ path: param.path });
+          },
+        },
+        [
+          h("a", {
+            type: "primary",
+            size: "small",
+          },
+            [
+              param.btnText,
+              h("a-button", { style: { marginRight: "5px", fontWeight: "bold", width: '40px' } }, "→"),
+            ]),
+        ]
+        // param.btnText
+      ),
+  });
+}
 
 const toggleProductInFavoriteWhenNotLogin = function (
   product: ProductDetail | any

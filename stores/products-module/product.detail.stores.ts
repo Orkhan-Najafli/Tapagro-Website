@@ -20,6 +20,8 @@ export const useProductDetailStore = defineStore("product-detail", {
   actions: {
     resetProducts(){
       this.products = new Set()
+      this.status = ""
+      this.error = null
     },
     resetProduct() {
       this.product = {} as ProductDetail;
@@ -47,8 +49,6 @@ export const useProductDetailStore = defineStore("product-detail", {
       }
       this.status = status.value;
       this.error = error.value;
-
-      console.log(productId, data.value);
     },
   },
 });

@@ -74,7 +74,14 @@ export const useAuthenticator = defineStore("Authenticator", {
           },
         })
       );
-
+      if (status.value==='success') {
+        let IDs = useCookie<Array<number>>("favoriteProducts").value.map((id) => ({
+          productId: id,
+        }));
+        useAuthenticator().getToken && useFavoriteProductsStore().fetchAllSelectedProductsAddToFavorite({
+          productIds: IDs,
+        });
+      }
       this.access = data.value!;
       this.loginStatus = status.value;
       this.loginError = error.value || null;

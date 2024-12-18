@@ -36,7 +36,6 @@ export const useJoinUsStore = defineStore("Join-us", {
       this.error = error.value;
     },
     async fetchApplications(queryData?: any) {
-      console.log("queryData: ", queryData);
 
       const { data, status, error } = await useAsyncData<any>(
         "applications-post",
@@ -53,7 +52,6 @@ export const useJoinUsStore = defineStore("Join-us", {
             method: "POST",
           })
       );
-      console.log("status join as ", status.value);
 
       this.statusApplications = status.value;
       this.errorApplications = error.value;
