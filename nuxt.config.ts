@@ -17,6 +17,8 @@ export default defineNuxtConfig({
   app: {
     buildAssetsDir: "/",
     head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
       link: [
         {
           rel: "icon",
@@ -44,7 +46,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/i18n",
     "@ant-design-vue/nuxt",
-    "@ant-design-vue/nuxt",
+    // "@ant-design-vue/nuxt",
     "@vee-validate/nuxt",
     "@nuxtjs/sitemap",
     "@nuxtjs/seo",
