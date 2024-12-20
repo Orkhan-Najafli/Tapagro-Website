@@ -378,7 +378,14 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Copy ​​of bank details on your business account",
   directors_ID_card_copy: "Director's ID card copy",
+
+  //validation
   min: "This field length must contain at least {min} symbols.",
   max: "This field's length must contain maximum {max} symbols.",
+  between: "This field  must be between {min} and {max} only.",
   required: "This field is mandatory.",
+  alpha_spaces: "This field must contain only letters and the space bar",
+  numeric: `This field must contain only numbers.`,
+  digits: "This field {length} must contain numbers.",
+  email: "{email} must be entered in the correct format",
 };
