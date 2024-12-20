@@ -7,18 +7,18 @@
           to="/">
           <left_arrow_icon />
           <span class="ml-3 text-gray-600 font-medium text-sm">
-            {{ $t("main_page") }}</span>
+            {{ t("main_page") }}</span>
         </nuxt-link>
         <ClientOnly>
           <a-breadcrumb class="hidden md:flex" separator=">">
             <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
               <nuxt-link to="/">
                 <span class="text-gray-600 font-medium text-sm">
-                  {{ $t("main_page") }}</span></nuxt-link>
+                  {{ t("main_page") }}</span></nuxt-link>
             </a-breadcrumb-item>
             <a-breadcrumb-item class="text-sm leading-5 font-normal">
               <span class="text-gray-800 font-semibold text-sm">
-                {{ $t("join_us") }}</span>
+                {{ t("join_us") }}</span>
             </a-breadcrumb-item>
           </a-breadcrumb>
         </ClientOnly>
@@ -31,7 +31,7 @@
           <div id="dynamic-title" v-html="title" class="text-3xl font-bold my-6"></div>
           <div class="mb-11" id="dynamic-description" v-html="description"></div>
           <h2 class="block font-semibold text-gray-700 text-3xl md:hidden m-0 p-0 mb-6">
-            {{ $t("join_us") }}
+            {{ t("join_us") }}
           </h2>
           <div style="
               box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
@@ -74,50 +74,50 @@
                 <div class="flex flex-col justify-start items-start min-w-full w-full h-auto my-6">
                   <div class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto mb-6">
                     <div class="flex flex-col justify-start items-start w-full md:mr-6">
-                      <TitleUploadInput :explanation="$t(
+                      <TitleUploadInput :explanation="t(
                         'the_copy_of_the_certificate_that_you_are_taxpayer'
                       )
-                        " :labelText="$t('copy_of_certificate')" />
+                        " :labelText="t('copy_of_certificate')" />
                       <UploadFile v-if="certificates.length < 3" :key="11" :ID="0" @handleUpload="uploadCertificateFile"
                         class="" />
                       <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'certificates')" :key="0"
                         :catalogFileList="certificates" />
                       <span class="text-[#f5222d]" v-if="certificates.length == 0 && checkCatalog">{{
-                        $t("this_field_is_mandatory") }}</span>
+                        t("this_field_is_mandatory") }}</span>
                     </div>
                     <div class="flex flex-col justify-start items-start w-full">
-                      <TitleUploadInput :explanation="$t(
+                      <TitleUploadInput :explanation="t(
                         'copy_of_extract_from_the_register_related_to_state_registration_of_legal_entities'
                       )
-                        " :labelText="$t('copy_of_the_receipt')" />
+                        " :labelText="t('copy_of_the_receipt')" />
                       <UploadFile v-if="certificateOfExtracts.length < 3" :key="12" :ID="1"
                         @handleUpload="uploadCertificateOfExtract" />
                       <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'certificateOfExtracts')
                         " :key="1" :catalogFileList="certificateOfExtracts" />
                       <span class="text-[#f5222d]" v-if="certificateOfExtracts.length == 0 && checkCatalog">{{
-                        $t("this_field_is_mandatory") }}</span>
+                        t("this_field_is_mandatory") }}</span>
                     </div>
                   </div>
                   <div class="flex flex-col md:flex-row justify-start items-start w-full min-w-full h-auto">
                     <div class="flex flex-col justify-start items-start w-full md:mr-6">
-                      <TitleUploadInput :explanation="$t('copy_of_bank_details_on_your_business_account')
-                        " :labelText="$t('copy_of_bank_details')" />
+                      <TitleUploadInput :explanation="t('copy_of_bank_details_on_your_business_account')
+                        " :labelText="t('copy_of_bank_details')" />
                       <UploadFile v-if="bankDetails.length < 3" :key="13" :ID="2" @handleUpload="uploadBankDetail"
                         class="m-0 p-0" />
                       <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'bankDetails')" :key="2"
                         :catalogFileList="bankDetails" />
                       <span class="text-[#f5222d]" v-if="bankDetails.length == 0 && checkCatalog">{{
-                        $t("this_field_is_mandatory") }}</span>
+                        t("this_field_is_mandatory") }}</span>
                     </div>
 
                     <div class="flex flex-col justify-start items-start w-full">
-                      <TitleUploadInput :explanation="$t('directors_ID_card_copy')"
-                        :labelText="$t('the_copy_of_the_directors_license')" />
+                      <TitleUploadInput :explanation="t('directors_ID_card_copy')"
+                        :labelText="t('the_copy_of_the_directors_license')" />
                       <UploadFile v-if="directorIDs.length < 3" :key="14" :ID="3" @handleUpload="uploadDirectorID" />
                       <CatalogFileList @removeFile="(event: Event) => removeFile(event, 'directorIDs')" :key="3"
                         :catalogFileList="directorIDs" />
                       <span class="text-[#f5222d]" v-if="directorIDs.length == 0 && checkCatalog">{{
-                        $t("this_field_is_mandatory") }}</span>
+                        t("this_field_is_mandatory") }}</span>
                     </div>
                   </div>
                 </div>
@@ -180,7 +180,7 @@
         </div>
         <div class="flex flex-col justify-center items-center mb-4">
           <p class="p-0 m-0 text-[#262626] font-medium text-2xl mb-1">
-            {{ $t("your_request_has_been_registered") }}
+            {{ t("your_request_has_been_registered") }}
           </p>
         </div>
         <div class="flex justify-center items-center mb-4">
@@ -190,16 +190,16 @@
               i
             </span>
             <span class="p-0 m-0 text-gray-400 font-normal text-sm">
-              {{ $t("we_will_contact_you_soon") }}
+              {{ t("we_will_contact_you_soon") }}
             </span>
           </div>
         </div>
 
         <div class="flex flex-col justify-center items-center">
-          <span class="mb-6"> {{ $t("thank_you") }} </span>
+          <span class="mb-6"> {{ t("thank_you") }} </span>
           <nuxt-link tag="button" to="/"
             class="flex flex-row justify-center items-center w-full max-w-[130px] border-2 border-[#16A34A] font-semibold text-sm bg-[#16A34A] rounded-md text-white px-3 py-2">
-            {{ $t("main_page") }}
+            {{ t("main_page") }}
           </nuxt-link>
         </div>
       </div>

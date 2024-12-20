@@ -5,7 +5,7 @@
         <div class="flex flex-col items-center w-full h-auto justify-between">
           <div class="flex flex-row justify-between items-center w-full h-auto">
             <div class="">
-              <a v-if="$route.path == '/'" href="/"
+              <a v-if="useRoute().path == '/'" href="/"
                 class="flex-shrink-0 cursor-pointer text-emerald-600 hover:text-emerald-600">
                 <TapagroLogo />
               </a>
