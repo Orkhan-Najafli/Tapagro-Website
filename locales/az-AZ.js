@@ -380,7 +380,15 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Sahibkarlıq hesabınıza dair bank rekvizitlərinin surəti",
   directors_ID_card_copy: "Direktorun şəxsiyyət vəsiqəsinin surəti.",
+
+  //validation
   min: "Bu sahənin uzunluğu ən az {min} simvoldan ibarət olmalıdır.",
   max: "Bu sahənin uzunluğu ən çox {max} simvoldan ibarət olmalıdır.",
+  between: "Bu sahənin uzunluğu yalnız {min} və {max} arası olmalıdır.",
+  alpha_spaces:
+    "Bu sahə yalnız hərflərdən və ara simvolundan (space) ibarət olmalıdır.",
   required: "Bu sahəni doldurmaq zəruridir.",
+  numeric: `Bu sahə yalnız tam rəqəmlərdən ibarət olmalıdır.`,
+  digits: "Bu sahə {length} rəqəmdən ibarət olmalıdır.",
+  email: "{email} düzgün formatda daxil olunmalıdır.",
 };

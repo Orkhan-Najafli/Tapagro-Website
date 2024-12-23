@@ -10,8 +10,12 @@
       <div class="block">
         <!-- <ClientOnly> -->
         <div class="bg-white rounded-xl border border-gray-200">
-          <div class="flex flex-row items-center bordered border-b-2 py-5 px-6 text-emerald-900">
-            <span class="w-14 h-14 bg-[#F0FDF4] rounded-full flex justify-center items-center mr-5">
+          <div
+            class="flex flex-row items-center bordered border-b-2 py-5 px-6 text-emerald-900"
+          >
+            <span
+              class="w-14 h-14 bg-[#F0FDF4] rounded-full flex justify-center items-center mr-5"
+            >
               <UserOutlined class="text-lg" />
             </span>
 
@@ -26,57 +30,120 @@
               </h5>
               <p class="text-zinc-900 font-medium text-lg p-0 m-0">
                 {{
-                  `${useUsersStore().getUserData.firstName} ${useUsersStore().getUserData.lastName}
+                  `${useUsersStore().getUserData.firstName} ${
+                    useUsersStore().getUserData.lastName
+                  }
                 ${useUsersStore().getUserData.fatherName}`
                 }}
               </p>
             </div>
           </div>
           <div class="flex flex-col md:flex-row px-6">
-            <div class="flex flex-col text-left sm:max-w-md">
+            <div
+              class="flex flex-col text-left w-full md:w-[382px] md:max-w-[382px]"
+            >
               <a-form-item class="text-left" ref="storeName" name="storeName">
-                <label class="text-gray-400 font-medium text-base" for="_storeName">{{ t("seller_name") }}</label>
-                <a-config-provider :theme="{
-                  token: {
-                    colorPrimary: '#16a34a',
-                  },
-                }">
-                  <a-input size="large" id="_storeName" class="text-left" v-model:value="userData.storeName" />
+                <label
+                  class="text-gray-400 font-medium text-base"
+                  for="_storeName"
+                  >{{ t("seller_name") }}</label
+                >
+                <a-config-provider
+                  :theme="{
+                    token: {
+                      colorPrimary: '#16a34a',
+                    },
+                  }"
+                >
+                  <a-input
+                    size="large"
+                    id="_storeName"
+                    class="text-left"
+                    v-model:value="userData.storeName"
+                  />
                 </a-config-provider>
               </a-form-item>
-              <!-- <a-form-item class="text-left" v-bind="userData.storeName">
-                <label class="text-gray-400 font-medium text-base" for="_storeName">{{ t("seller_name") }}</label>
-                <a-input id="_storeName" size="large" class="text-left" name="storeName"
-                  v-validate="'alpha_spaces|min:3|max:255'" v-model="userData.storeName" />
-              </a-form-item> -->
             </div>
           </div>
           <div class="flex flex-col md:flex-row px-6">
-            <div class="flex flex-col w-full sm:w-60 mr-16 justify-start items-start">
-              <!-- <a-form-item class="w-full" v-bind="userData.phoneNumber">
-                <label class="text-gray-400 font-medium text-base" for="_phone">{{ t("mobile_number") }}</label>
-                <a-input class="w-full text-left" addon-before="+994" id="_phone" size="large"
-                  placeholder="55 111 11 11" v-model="userData.phoneNumber" name="Telefon No"
-                  v-validate="'max:9|min:9|digits:9'" />
-              </a-form-item> -->
+            <div
+              class="flex flex-col w-full md:w-[382px] md:max-w-[382px] mr-16 justify-start items-start"
+            >
+              <a-form-item
+                class="text-left w-full"
+                ref="phoneNumber"
+                name="phoneNumber"
+              >
+                <label
+                  class="text-gray-400 font-medium text-base"
+                  for="_phone"
+                  >{{ t("mobile_number") }}</label
+                >
+                <a-config-provider
+                  :theme="{
+                    token: {
+                      colorPrimary: '#16a34a',
+                    },
+                  }"
+                >
+                  <a-input
+                    size="large"
+                    id="_phone"
+                    placeholder="55 111 11 11"
+                    class="text-left w-full"
+                    v-model:value="userData.phoneNumber"
+                  />
+                </a-config-provider>
+              </a-form-item>
             </div>
-            <div class="flex flex-col text-left sm:max-w-md">
-              <!-- <a-form-item class="text-left" name="emailAddress" v-bind="userData.emailAddress">
-                <label class="text-gray-400 font-medium text-base" for="_email">{{ t("e_mail") }}</label>
-                <a-input id="_email" size="large" class="text-left" name="email" placeholder="email@gmail.com"
-                  v-validate="'email'" v-model="userData.emailAddress" />
-              </a-form-item> -->
+            <div
+              class="flex flex-col text-left w-full md:w-[382px] md:max-w-[382px]"
+            >
+              <a-form-item
+                class="text-left w-full"
+                ref="emailAddress"
+                name="emailAddress"
+              >
+                <label
+                  class="text-gray-400 font-medium text-base"
+                  for="_email"
+                  >{{ t("e_mail") }}</label
+                >
+                <a-config-provider
+                  :theme="{
+                    token: {
+                      colorPrimary: '#16a34a',
+                    },
+                  }"
+                >
+                  <a-input
+                    size="large"
+                    id="_email"
+                    placeholder="email@gmail.com"
+                    class="text-left w-full"
+                    v-model:value="userData.emailAddress"
+                  />
+                </a-config-provider>
+              </a-form-item>
             </div>
           </div>
         </div>
         <!-- </ClientOnly> -->
-
       </div>
       <div class="block mt-6 h-auto">
         <div class="bg-white rounded-xl border border-gray-200">
-          <div class="flex flex-row items-center bordered border-b-2 py-5 px-3 md:px-6 text-emerald-900">
-            <span class="w-14 h-14 bg-[#F0FDF4] rounded-full flex justify-center items-center mr-5">
-              <img width="20px" height="26px" src="../../../assets/img/areas.svg" alt="" />
+          <div
+            class="flex flex-row items-center bordered border-b-2 py-5 px-3 md:px-6 text-emerald-900"
+          >
+            <span
+              class="w-14 h-14 bg-[#F0FDF4] rounded-full flex justify-center items-center mr-5"
+            >
+              <img
+                width="20px"
+                height="26px"
+                src="../../../assets/img/areas.svg"
+                alt=""
+              />
             </span>
 
             <p class="p-0 m-0 font-medium text-lg">
@@ -85,7 +152,7 @@
           </div>
           <div class="flex flex-row mt-5 px-3 md:px-6">
             <div class="flex flex-col w-full">
-              <a-form-item class="w-full md:max-w-xs h-10" name="cityId" v-bind="userData.city.name">
+              <a-form-item class="w-full md:max-w-xs h-10" name="cityId">
                 <label class="text-gray-400 font-medium text-base" for="_area">
                   {{ t("region_title") }}
                 </label>
@@ -101,17 +168,22 @@
               </a-form-item>
             </div>
           </div>
-          <div class="inline-flex flex-col justify-start items-start mb-6 mx-3 md:mx-6" :class="{
-            'border-2 border-[#f5222d]': checkRecaptcha == 'error',
-            'border-0 border-transparent': checkRecaptcha == 'success',
-          }">
+          <div
+            class="inline-flex flex-col justify-start items-start mb-6 mx-3 md:mx-6"
+            :class="{
+              'border-2 border-[#f5222d]': checkRecaptcha == 'error',
+              'border-0 border-transparent': checkRecaptcha == 'success',
+            }"
+          >
             <!-- <recaptcha @error="onError" @success="onSuccess" /> -->
           </div>
         </div>
       </div>
       <div class="flex justify-end mt-6">
-        <button @click="handleSubmit"
-          class="bg-[#16A34A] h-[38px] px-10 py-2 rounded-md font-semibold text-base text-white">
+        <button
+          @click="handleSubmit"
+          class="bg-[#16A34A] h-[38px] px-10 py-2 rounded-md font-semibold text-base text-white"
+        >
           {{ t("save") }}
         </button>
       </div>
@@ -119,85 +191,57 @@
   </div>
 </template>
 <script setup lang="ts">
-import { validateAlphaSpaces } from '~/utils/validation/validationMethods';
-
-// import { useForm } from 'vee-validate';
-// import * as yup from 'yup';
-// import { defineRule } from 'vee-validate';
-// import { required, alpha, numeric, digits, ext, alpha_spaces } from '@vee-validate/rules';
-
-// Define the rules
-// defineRule('required', required);
-// defineRule('alpha', alpha);
-// defineRule('numeric', numeric);
-// defineRule('digits', digits);
-// defineRule('ext', ext);
-
-// import type { UnwrapRef } from 'vue';
-// import type { Rule } from 'ant-design-vue/es/form';
-
-const { t, locale } = useI18n()
-useUsersStore().fetchUserData()
+const { t, locale } = useI18n();
+useUsersStore().fetchUserData();
 const formRef = ref();
 interface FormState {
-  emailAddress: string | null,
-  phoneNumber: string | null,
+  emailAddress: string | undefined;
+  phoneNumber: string | undefined;
   city: {
-    name: string | null,
-    id: number | null,
-  },
-  storeName: string | undefined
+    name: string | null;
+    id: number | null;
+  };
+  storeName: string | undefined;
 }
-// import { mapGetters } from "vuex";
-// import SelectCustom from "@/components/inc/SelectCustom.vue";
-// import { notification } from "ant-design-vue";
 const userData = reactive<FormState>({
   // cityId: useUsersStore().getUserData?.city?.id || undefined,
-  emailAddress: null,
-  phoneNumber: null,
+  emailAddress: undefined,
+  phoneNumber: undefined,
   city: {
     name: null,
     id: null,
   },
-  storeName: undefined
-})
-const verified = ref(false)
-const checkRecaptcha = ref(undefined)
+  storeName: undefined,
+});
+const verified = ref(false);
+const checkRecaptcha = ref(undefined);
 const rules = computed(() => ({
   storeName: [
-    { required: true, message: t("required"), trigger: ["change", "blur"] },
+    // { required: true, message: t("required"), trigger: ["change", "blur"] },
+    { min: 3, message: t("min", 3), trigger: ["change", "blur"] },
+    { max: 255, message: t("max", 255), trigger: ["change", "blur"] },
     {
-      validator: validateAlphaSpaces,
-      //  (_: any, value: any) => {
-      //   const alphaSpacesRegex = /^[a-zA-Z\s]+$/; // Yalnız hərf və boşluqlar üçün regex
-      //   if (!alphaSpacesRegex.test(value)) {
-      //     return Promise.reject(new Error(t("only_alpha_spaces")));
-      //   }
-      //   if (value.length < 3 || value.length > 255) {
-      //     return Promise.reject(
-      //       new Error(t("length_should_be_between_3_and_255"))
-      //     );
-      //   }
-      //   return Promise.resolve();
-      // },
-      trigger: "change",
+      pattern: /^[a-zA-Z\s]+$/, // Ancaq hərflər və boşluqlar
+      message: t("alpha_spaces"),
+      trigger: ["change", "blur"],
     },
   ],
-  // region: [{ required: true, message: t("select_activity_zone"), trigger: "change" }],
-  // date1: [{ required: true, message: t("pick_a_date"), trigger: "change", type: "object" }],
-  // type: [
-  //   {
-  //     type: "array",
-  //     required: true,
-  //     message: t("select_at_least_one_activity_type"),
-  //     trigger: "change",
-  //   },
-  // ],
-  // resource: [{ required: true, message: t("select_activity_resource"), trigger: "change" }],
-  // desc: [{ required: true, message: t("input_activity_form"), trigger: "blur" }],
+  phoneNumber: [
+    {
+      pattern: /^\d{9}$/, // Tam olaraq 9 rəqəm olmalıdır
+      message: t("digits", { length: 9 }),
+      trigger: ["change", "blur"],
+    },
+  ],
+  emailAddress: [
+    {
+      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      message: t("email", { email: "Email adres" }),
+      trigger: ["change", "blur"],
+    },
+  ],
 }));
 watch(locale, () => {
-  // Formun vəziyyətini sıfırlayın və qaydaları yenidən tətbiq edin
   formRef.value?.clearValidate();
 });
 
@@ -246,7 +290,7 @@ const handleSubmit = function (event: Event) {
   //       });
   //     });
   // });
-}
+};
 //     setUserData() {
 //       this.userData.emailAddress = this.loggedUser
 //         ? this.loggedUser.contactDetails.emailAddress
@@ -288,7 +332,9 @@ const handleSubmit = function (event: Event) {
   padding-right: 13px;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow {
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
   top: 10px;
   right: 13px;
 }
