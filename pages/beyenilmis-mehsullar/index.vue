@@ -30,7 +30,7 @@
     </section>
     <section style="max-width: 1224px" class="w-full h-auto px-6 lg:container mx-auto mb-10 relative">
       <div v-if="!useAuthenticator().getToken" class="flex w-full flex-col">
-        <a-spin :spinning="useAuthenticator().getToken ? useFavoriteProductsStore().getFavoriteProductsStatus !== 'success' : useProductDetailStore().getProductStatus !== 'success'
+        <a-spin :spinning="useProductDetailStore().getProductStatus !== 'success'
           " size="large" wrapperClassName="text-green-800">
           <Products :classGridSize="true" @removeFavoriteProduct="removeFavoriteProduct" :link="'mehsullar'"
             :products="products as any" />

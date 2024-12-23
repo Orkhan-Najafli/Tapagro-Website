@@ -378,6 +378,7 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Копия банковских реквизитов вашего бизнес-счета",
   directors_ID_card_copy: "Копия удостоверения личности директора",
+  something_went_wrong: "Что-то пошло не так, попробуйте позже.",
 
   //validation
   min: "Длина этого поля должна содержать не менее {min} символов.",

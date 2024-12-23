@@ -378,7 +378,8 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Copy ​​of bank details on your business account",
   directors_ID_card_copy: "Director's ID card copy",
-
+  something_went_wrong: "Something went wrong, please try again later.",
+  
   //validation
   min: "This field length must contain at least {min} symbols.",
   max: "This field's length must contain maximum {max} symbols.",

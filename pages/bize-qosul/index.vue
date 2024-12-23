@@ -339,46 +339,7 @@ const onSubmit = () => {
     })
     .catch((err) => {
     });
-  // this.$validator.validateAll().then((result) => {
-  // if (this.verified == false) this.checkRecaptcha = "error";
-  // if (!result || !this.verified || !this.checkCatalogList) {
-  //   this.checkCatalog = true;
-  //   return;
-  // } else {
-  //   this.checkCatalog = false;
-  // }
-  // this.submitLoading = true;
-  // let formData = new FormData();
-  // formData.append("emailAddress", this.formData.emailAddress);
-  // formData.append("companyName", this.formData.companyName);
-  // formData.append("name", this.formData.name);
-  // formData.append("note", this.formData.note);
-  // formData.append("phoneNumber", this.formData.phoneNumber);
-  // this.documents.forEach((document, index) => {
-  //   formData.append(`documents[${index}].type`, document.type);
-  //   formData.append(`documents[${index}].file`, document.file);
-  // });
-  //     this.$axios
-  //       .$post(`/public/ecommerce/applications`, formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       })
-  //       .then((response) => {
-  // this.visibleSavedInfo = true;
-  // this.formData = {};
-  // this.$validator.reset();
-  // this.certificates = [];
-  // this.certificateOfExtracts = [];
-  // this.bankDetails = [];
-  // this.directorIDs = [];
-  // this.documents = [];
-  //       })
-  // .finally(() => {
-  //   this.submitLoading = false;
-  // });
-  //   });
-  // },
+
 };
 const handleCancel = function () {
   visibleSavedInfo.value = false;
@@ -445,6 +406,8 @@ const onError = function (error: Error) {
 const onSuccess = async function () {
   try {
     const { token } = await executeRecaptcha(RecaptchaAction.login);
+    console.log(token);
+
     await useRecaptchaStore().fetchRecaptcha({ response: token });
     if (useRecaptchaStore().getStatus === "success") {
       verified.value = true;
