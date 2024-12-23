@@ -380,6 +380,7 @@ export default {
   copy_of_bank_details_on_your_business_account:
     "Sahibkarlıq hesabınıza dair bank rekvizitlərinin surəti",
   directors_ID_card_copy: "Direktorun şəxsiyyət vəsiqəsinin surəti.",
+  something_went_wrong: "Nəsə səhv baş verdi, zəhmət olmasa, yenidən cəhd edin.",
 
   //validation
   min: "Bu sahənin uzunluğu ən az {min} simvoldan ibarət olmalıdır.",
