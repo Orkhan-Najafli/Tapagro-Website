@@ -36,8 +36,8 @@
                     class="w-9 h-9 rounded-full overflow-hidden flex mr-2 justify-center items-center bg-emerald-100">
                     <img width="20px" height="26px" class="block" src="../../assets/img/areas.svg" alt="" />
                   </div>
-                  <p v-if="useUsersStore().getUserData.city" class="text-gray-500 p-0 m-0">
-                    {{ useUsersStore().getUserData.city.name }}
+                  <p v-if="useUsersStore().getUserData?.city" class="text-gray-500 p-0 m-0">
+                    {{ useUsersStore().getUserData?.city?.name }}
                   </p>
                   <p v-else class="p-0 m-0 text-gray-500">{{ t("region") }}</p>
                 </div>
@@ -422,8 +422,8 @@
             <div class="w-9 h-9 rounded-full overflow-hidden flex mr-2 justify-center items-center bg-emerald-100">
               <img width="20px" height="26px" class="block" src="../../assets/img/areas.svg" alt="" />
             </div>
-            <p v-if="useUsersStore().getUserData.city" class="text-emerald-800 p-0 m-0">
-              {{ useUsersStore().getUserData.city.name }}
+            <p v-if="useUsersStore().getUserData?.city" class="text-emerald-800 p-0 m-0">
+              {{ useUsersStore().getUserData?.city?.name }}
             </p>
             <p v-else class="p-0 m-0 text-emerald-800">
               {{ t("region") }}

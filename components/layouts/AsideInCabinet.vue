@@ -17,18 +17,18 @@
                         </p>
                     </div>
                     <div class="flex flex-col rounded-xl shadow-lg mt-8 pt-8 px-8 bg-white">
-                        <nuxt-link to="/kabinet/tenzimlemelerim/" external
+                        <nuxt-link to="/kabinet/tenzimlemelerim/"
                             class="flex flex-row items-center justify-start text-gray-400 cursor-pointer hover:text-green-800 focus:text-green-800">
                             <IdcardOutlined :class="{
                                 'font-semibold text-green-900': useRoute().path == '/kabinet/tenzimlemelerim',
-                            }" class="text-xl mr-4" />
+                            }" class="text-lg mr-4" />
                             <p :class="{
                                 'font-semibold text-green-900': useRoute().path == '/kabinet/tenzimlemelerim',
                             }" class="font-medium text-lg p-0 m-0">
                                 {{ t("my_information") }}
                             </p>
                         </nuxt-link>
-                        <nuxt-link external to="/kabinet/sifarislerim"
+                        <nuxt-link to="/kabinet/sifarislerim"
                             class="flex flex-row items-center justify-start text-gray-400 my-5 cursor-pointer hover:text-green-800 focus:text-green-800">
                             <ShoppingCartOutlined :class="{
                                 'font-semibold text-green-900': useRoute().path == '/kabinet/sifarislerim',
@@ -39,7 +39,7 @@
                                 {{ t("my_orders") }}
                             </p>
                         </nuxt-link>
-                        <nuxt-link external to="/kabinet/elanlarim"
+                        <nuxt-link to="/kabinet/elanlarim"
                             class="flex flex-row items-center justify-start text-gray-400 mb-5 cursor-pointer hover:text-green-800 focus:text-green-800">
                             <FileImageOutlined :class="{
                                 'font-semibold text-green-900': useRoute().path == '/kabinet/elanlarim',
@@ -50,7 +50,7 @@
                                 {{ t("my_announcements") }}
                             </p>
                         </nuxt-link>
-                        <nuxt-link external to="/kabinet/mehsul-qiymetlendirilmesi"
+                        <nuxt-link to="/kabinet/mehsul-qiymetlendirilmesi"
                             class="flex flex-row items-center justify-start text-gray-400 mb-5 cursor-pointer hover:text-green-800 focus:text-green-800">
                             <CommentOutlined :class="{
                                 'font-semibold text-green-900': useRoute().path == '/kabinet/mehsul-qiymetlendirilmesi',

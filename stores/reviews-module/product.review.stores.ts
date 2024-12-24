@@ -7,7 +7,7 @@ import type { Review } from "~/utils/types/reviews";
 
 export const useReviewsStore = defineStore("reviews", {
   state: () => ({
-    reviews: new Set<Review>() || ([] as Array<Review>),
+    reviews: [] as Array<Review>,
     totalElements: 0 as number,
     totalPages: 0 as number,
     status: "" as string,
@@ -22,7 +22,7 @@ export const useReviewsStore = defineStore("reviews", {
     getReviews: (state) => state.reviews,
     getTotalElements: (state) => state.totalElements,
     getTotalPages: (state) => state.totalPages,
-    getProductsStatus: (state) => state.status,
+    getStatus: (state) => state.status,
 
     getReviewed: (state) => state.reviewed,
     getReviewedStatus: (state) => state.reviewedStatus,
@@ -30,7 +30,7 @@ export const useReviewsStore = defineStore("reviews", {
   },
   actions: {
     async resetReviews() {
-      this.reviews = new Set();
+      this.reviews = [] as Array<Review>;
       this.totalElements = 0;
       this.totalPages = 0;
       this.status = "";
@@ -51,9 +51,10 @@ export const useReviewsStore = defineStore("reviews", {
       );
       this.totalElements = data.value?.totalElements!;
       this.totalPages = data.value?.totalPages!;
-      data.value?.content.forEach((item: Review) => {
-        this.reviews.add(item);
-      });
+      // data.value?.content.forEach((item: Review) => {
+      //   this.reviews.add(item);
+      // });
+      this.reviews = data.value?.content!;
       this.status = status.value;
       this.error = error.value;
     },
