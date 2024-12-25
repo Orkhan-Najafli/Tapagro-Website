@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { Review } from "~/utils/types/reviews";
+import type { DeleteReview, Review, ReviewDetail } from "~/utils/types/reviews";
 
 export const useReviewsStore = defineStore("reviews", {
   state: () => ({
@@ -16,6 +16,14 @@ export const useReviewsStore = defineStore("reviews", {
     reviewed: {},
     reviewedStatus: "" as string,
     reviewedError: null as null | Error,
+
+    deletedReviewed: {},
+    deletedReviewedStatus: "" as string,
+    deletedReviewedError: null as null | Error,
+
+    detailReview: {} as ReviewDetail,
+    detailReviewStatus: "" as string,
+    detailReviewError: null as null | Error,
     baseURL: useRuntimeConfig().public.baseURL,
   }),
   getters: {
@@ -27,6 +35,13 @@ export const useReviewsStore = defineStore("reviews", {
     getReviewed: (state) => state.reviewed,
     getReviewedStatus: (state) => state.reviewedStatus,
     getReviewedError: (state) => state.reviewedError,
+
+    getReviewDetail: (state) => state.detailReview,
+    getReviewDetailStatus: (state) => state.detailReviewStatus,
+    getReviewDetailError: (state) => state.detailReviewError,
+
+    getDeletedReviewedStatus: (state) => state.deletedReviewedStatus,
+    getDeletedReviewedResult: (state) => state.deletedReviewed,
   },
   actions: {
     async resetReviews() {
@@ -35,6 +50,14 @@ export const useReviewsStore = defineStore("reviews", {
       this.totalPages = 0;
       this.status = "";
       this.error = null;
+    },
+    async setReviewPhotos() {
+      this.detailReview.photos = this.detailReview.photos.map((photo) => {
+        return {
+          data: this.baseURL + photo.path,
+          id: photo.id,
+        };
+      });
     },
     async fetchReviews(queryData: any) {
       const { data, status, error } = await useAsyncData<ApiBase<Review>>(
@@ -51,9 +74,6 @@ export const useReviewsStore = defineStore("reviews", {
       );
       this.totalElements = data.value?.totalElements!;
       this.totalPages = data.value?.totalPages!;
-      // data.value?.content.forEach((item: Review) => {
-      //   this.reviews.add(item);
-      // });
       this.reviews = data.value?.content!;
       this.status = status.value;
       this.error = error.value;
@@ -75,6 +95,52 @@ export const useReviewsStore = defineStore("reviews", {
       this.reviewed = data!.value!;
       this.reviewedStatus = status.value;
       this.reviewedError = error.value;
+    },
+    async fetchDeleteReview(queryData: any) {
+      const { data, status, error } = await useAsyncData<DeleteReview>(
+        "delete-review",
+        () =>
+          $fetch(
+            `${this.baseURL}${parseUrl(urls.delete_product_review, {
+              id: queryData,
+            })}`,
+            {
+              headers: {
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
+              },
+              query: queryData,
+              method: "DELETE",
+            }
+          )
+      );
+      this.deletedReviewed = data!.value!;
+      this.deletedReviewedStatus = status.value;
+      this.deletedReviewedError = error.value;
+    },
+    async fetchDetailReview(queryData: any) {
+      const { data, status, error } = await useAsyncData<ReviewDetail>(
+        "detail-review",
+        () =>
+          $fetch(
+            `${this.baseURL}${parseUrl(urls.delete_product_review, {
+              id: queryData,
+            })}`,
+            {
+              headers: {
+                ...HeaderConfigs({
+                  Authorization: useCookie("token").value || "",
+                }),
+              },
+              query: queryData,
+              method: "GET",
+            }
+          )
+      );
+      this.detailReview = data!.value!;
+      this.detailReviewStatus = status.value;
+      this.detailReviewError = error.value;
     },
     async fetchProductReview(queryData: any) {
       const { data, status, error } = await useAsyncData<

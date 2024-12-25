@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    :visible="true"
+    :open="true"
     :title="$t('product_evaluation')"
     width="724px"
     :dialog-style="{ top: '20px' }"
@@ -15,25 +15,17 @@
               class="flex flex-col md:flex-row justify-start items-start md:items-center w-full h-auto mb-3"
             >
               <!-- Detail and Edit -->
-              <a :href="`/mehsullar/${props.product.id}`" target="_blank">
-                <picture
+              <a :href="`/mehsullar/${props.product.product.id}`" target="_blank">
+                <div
                   class="m-0 p-0 mr-6 w-auto overflow-hidden inline-flex relative justify-center items-center"
                 >
                   <img
-                    v-if="hasValidThumbnail(props.product)"
-                    :src="`${baseURL}/${props.product.thumbnailPath}`"
-                    :alt="props.product.name"
+                    :src="`${useRuntimeConfig().public.baseURL}/${props.product.product.thumbnail}`"
+                    :alt="props.product.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover"
                     @error="setDefaultImage"
                   />
-                  <img
-                    v-else
-                    :src="require(`@/assets/img/no-image.svg`)"
-                    style="width: 86px; height: 86px"
-                    :alt="props.product.name"
-                    class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover p-0"
-                  />
-                </picture>
+              </div>
               </a>
               <div class="flex flex-col items-start justify-start">
                 <span class="flex flex-col md:flex-row w-full h-auto mb-3">
@@ -41,11 +33,11 @@
                     >{{ $t("product") }}:
                   </span>
                   <a
-                    :href="`/mehsullar/${props.product.id}`"
+                    :href="`/mehsullar/${props.product.product.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ props.product.name }}</a
+                    {{ props.product.product.name }}</a
                   >
                 </span>
                 <span class="flex flex-col md:flex-row w-full h-auto">
@@ -72,17 +64,10 @@
                 >
                   <img
                     v-if="hasValidThumbnail(props.product)"
-                    :src="`${baseURL}/${props.product.thumbnailPath}`"
-                    :alt="props.product.name"
+                    :src="`${useRuntimeConfig().public.baseURL}/${props.product.product.thumbnail}`"
+                    :alt="props.product.product.name"
                     class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover"
                     @error="setDefaultImage"
-                  />
-                  <img
-                    v-else
-                    :src="require(`@/assets/img/no-image.svg`)"
-                    style="width: 86px; height: 86px"
-                    :alt="props.product.name"
-                    class="w-[86px] h-[86px] max-w-[86px] max-h-[86px] min-w-[86px] min-h-[86px] object-cover p-0"
                   />
                 </picture>
               </a>
@@ -92,11 +77,11 @@
                     >{{ $t("product") }}:
                   </span>
                   <a
-                    :href="`/mehsullar/${props.product.id}`"
+                    :href="`/mehsullar/${props.product.product.id}`"
                     target="_blank"
                     class="text-[#374151] text-xl font-semibold"
                   >
-                    {{ props.product.name }}</a
+                    {{ props.product.product.name }}</a
                   >
                 </span>
                 <span class="flex flex-col md:flex-row w-full h-auto">
@@ -119,18 +104,14 @@
             <div
               class="flex flex-col md:flex-row justify-start items-start md:items-center w-full h-auto mb-3"
             >
-              <a-form-model-item
-                class="!m-0"
-                :help="errors.first('rating')"
-                :validate-status="errors.first('rating') ? 'error' : ''"
-              >
+              <a-form-model-item class="!m-0">
                 <template slot="label">
                   <label
                     class="ant-form-item-required text-[#374151] text-2xl font-semibold"
                     >{{ $t("rating_title") }}</label
                   >
                 </template>
-                <div class="flex flex-col whitespace-nowrap w-auto m-0 p-0">
+                <!-- <div class="flex flex-col whitespace-nowrap w-auto m-0 p-0">
                   <a-rate
                     @change="changeRate(formData.rating)"
                     :allow-clear="false"
@@ -145,7 +126,7 @@
                   <span class="text-[#6B7280] text-base font-medium italic">{{
                     rateValueText
                   }}</span>
-                </div>
+                </div> -->
               </a-form-model-item>
             </div>
             <hr class="w-full min-w-full h-[1px] bg-[#CBD5E1] my-3" />
@@ -154,8 +135,7 @@
             <div class="flex flex-col justify-start items-start w-full h-auto">
               <a-form-model-item
                 class="w-full m-0 p-0"
-                :help="errors.first('comment')"
-                :validate-status="errors.first('comment') ? 'error' : ''"
+               
               >
                 <template slot="label">
                   <label
@@ -198,126 +178,52 @@
           </li>
           <li class="flex flex-col w-full min-w-full h-auto">
             <div class="flex flex-col justify-start items-start w-full h-auto">
-              <a-form-item>
-                <template slot="label">
-                  <label
-                    for="_phone"
-                    class="text-[#374151] w-full text-2xl font-semibold m-0 p-0 pr-40 md:pr-80"
-                    >{{ $t("picture_title") }}
-                  </label>
-                </template>
-                <section
-                  id="components-upload-demo-pictures-wall"
-                  class="code-box"
+
+<!-- 
+              <div class="relative group w-[102px] h-[102px] rounded-lg overflow-hidden border shadow-md">
+                <img
+                  src="https://via.placeholder.com/150" 
+                  alt="Uploaded Image"
+                  class="w-full h-full object-cover"
+                />
+                <div
+                  class="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 >
-                  <section class="code-box-demo">
-                    <div class="clearfix">
-                      <span class="ant-upload-picture-card-wrapper">
-                        <div
-                          class="ant-upload-list ant-upload-list-picture-card"
-                        >
-                          <div
-                            class="ant-upload-list-picture-card-container"
-                            v-for="(item, index) in otherFileList"
-                            :key="index"
-                          >
-                            <span>
-                              <div
-                                class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card"
-                              >
-                                <div class="ant-upload-list-item-info">
-                                  <span>
-                                    <img
-                                      :src="item.data"
-                                      alt="image.png"
-                                      class="ant-upload-list-item-thumbnail ant-upload-list-item-image"
-                                    />
-                                  </span>
-                                </div>
-                                <span class="ant-upload-list-item-actions">
-                                  <i
-                                    v-if="action.action != 'detail'"
-                                    aria-label="icon: delete"
-                                    tabindex="-1"
-                                    class="anticon anticon-delete"
-                                    :title="$t('delete_the_image')"
-                                    @click="removeOtherImage(index)"
-                                  >
-                                    <remove_image_icon />
-                                  </i>
-                                  <span
-                                    class="cursor-pointer"
-                                    @click="handlePreview(item.data)"
-                                  >
-                                    <a-icon
-                                      style="color: white"
-                                      type="eye"
-                                      class="text-lg"
-                                    />
-                                  </span>
-                                </span>
-                                <a-modal
-                                  :visible="previewVisible"
-                                  :footer="null"
-                                  @cancel="handleCancelUpload"
-                                  width="500px"
-                                  height="500px"
-                                >
-                                  <img
-                                    alt="example"
-                                    style="
-                                      width: 100%;
-                                      height: 100%;
-                                      max-height: 500px;
-                                    "
-                                    :src="previewImage"
-                                  />
-                                </a-modal>
-                              </div>
-                            </span>
-                          </div>
-                        </div>
-                        <div v-if="action.action != 'detail'">
-                          <a-upload
-                            accept="image/png, image/gif, image/jpeg"
-                            v-if="otherFileList.length < 3"
-                            :showUploadList="false"
-                            :before-upload="beforeUploadOther"
-                          >
-                            <div
-                              class="ant-upload ant-upload-select ant-upload-select-picture-card"
-                              style="background-color: #fafafa"
-                            >
-                              <span
-                                role="button"
-                                tabindex="0"
-                                class="ant-upload"
-                              >
-                                <input
-                                  type="file"
-                                  accept=""
-                                  style="display: none"
-                                />
-                                <div>
-                                  <i
-                                    aria-label="icon: plus"
-                                    class="anticon anticon-plus mb-3"
-                                  >
-                                    <add_image_icon />
-                                  </i>
-                                  <div class="ant-upload-text text-[#00000073]">
-                                    {{ $t("download") }}
-                                  </div>
-                                </div>
-                              </span>
-                            </div>
-                          </a-upload>
-                        </div>
-                      </span>
+                  <button class="text-white mx-2 p-2 rounded-full bg-gray-700 hover:bg-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.137 21H7.863a2 2 0 01-1.996-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3m-4 0h14" />
+                    </svg>
+                  </button>
+                  <button class="text-white mx-2 p-2 rounded-full bg-gray-700 hover:bg-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12m0 0a3 3 0 11-6 0 3 3 0 016 0zm7.489-3.396C20.887 5.149 17.791 3 12 3S3.113 5.149 1.511 8.604a9.812 9.812 0 000 6.792C3.113 18.851 6.209 21 12 21s8.887-2.149 10.489-5.604a9.812 9.812 0 000-6.792z" />
+                    </svg>
+                  </button>
+                </div>
+              </div> -->
+
+              <div class="clearfix">
+                  <a-upload
+                      v-if="photos!.length <= 3"
+                      accept="image/png, image/gif, image/jpeg"
+                      list-type="picture-card"
+                      @preview="handlePreview"
+                      name="avatar"
+                      class="avatar-uploader"
+                      :show-upload-list="true"
+                      :before-upload="beforeUpload"
+                      @change="handleChangeFile"
+                      :showDownloadIcon="false"
+                  >
+                    <div v-if="photos!.length < 3">
+                      <plus-outlined />
+                      <div style="margin-top: 8px">{{ t("download") }}</div>
                     </div>
-                  </section>
-                </section>
-              </a-form-item>
+                  </a-upload>
+                  <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancelPreview">
+                    <img alt="example" style="width: 100%" :src="previewImage" />
+                  </a-modal>
+                </div>
             </div>
             <hr class="w-full min-w-full h-[1px] bg-[#CBD5E1] mb-3" />
           </li>
@@ -420,7 +326,7 @@
           {{ $t("close_modal") }}
         </button>
         <div v-if="props.action.action != 'detail'">
-          <button
+          <!-- <button
             v-if="props.action.action == 'edit'"
             :disabled="hasChange"
             :class="{
@@ -445,7 +351,7 @@
             @click="handleOk"
           >
             <span>{{ $t("add") }}</span>
-          </button>
+          </button> -->
         </div>
       </div>
     </template>
@@ -455,16 +361,51 @@
 <script setup lang="ts">
 import moment from "moment";
 import type { Product, ProductDetail } from "~/utils/types/product";
-const baseURL = useRuntimeConfig().public.baseURL;
-function getBase64(img: any, callback: any) {
+// const baseURL = useRuntimeConfig().public.baseURL;
+function getBase64(img: Blob, callback: (base64Url: string) => void) {
   const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
+  reader.addEventListener('load', () => callback(reader.result as string));
   reader.readAsDataURL(img);
 }
+
+
+
+import { PlusOutlined } from '@ant-design/icons-vue';
+import type { UploadProps } from 'ant-design-vue';
+import type { ReviewDetail } from "~/utils/types/reviews";
+
+// function getBase64(file: File) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = () => resolve(reader.result);
+//     reader.onerror = error => reject(error);
+//   });
+// }
+
+const previewVisible = ref(false);
+const previewImage = ref('');
+const previewTitle = ref('');
+
+// const fileList = ref<UploadProps['fileList']>([])
+const handleCancelPreview = () => {    
+  previewVisible.value = false;
+  previewTitle.value = '';
+};
+const handlePreview = async (file: any) => {
+  if (!file.url && !file.preview) {
+    file.preview = (await getBase64(file.originFileObj)) as string;
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+  previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+};
+
+
 const { t } = useI18n();
 const props = defineProps({
   product: {
-    type: Object as PropType<ProductDetail>,
+    type: Object as PropType<ReviewDetail>,
     default: {},
   },
   action: {
@@ -473,10 +414,10 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["handleOk", "close"]);
-const previewVisible = ref(false);
-const previewImage = ref("");
+// const previewVisible = ref(false);
+// const previewImage = ref("");
 const otherFileList: any = reactive([]);
-const photos = reactive<any>([]);
+let photos = reactive<any>([]);
 const hasChange = ref(true);
 const allowFileTypes = reactive(["image/jpeg", "image/png", "image/jpg"]);
 const allowFileSize = ref(5242880); //5 mb (binary)
@@ -485,40 +426,57 @@ const descriptionLength = ref(300);
 const dateFormat = ref("DD/MM/YYYY HH:mm:ss");
 const formData = reactive({
   rating: 0,
-  comment: null,
+  comment: undefined as undefined | any,
 });
 const desc = t("desc");
 
 //   mounted() {
-// if (props.action.action == "detail") {
-//   formData.rating = !Number.isInteger(Number(props.product.rating))
-//     ? Number(`${Math.floor(props.product.rating)}.${5}`)
-//     : props.product.rating;
-// } else if (this.action.action == "edit") {
-//   formData.rating = props.product.rating;
-// }
-// if (props.action.action == "detail" || props.action.action == "edit") {
-//   formData.comment = props.product.comment;
-//   this.changeRate(this.formData.rating);
-//   this.otherFileList = [...this.product.photos];
-//   // this.photos = [...this.product.photos];
-//   this.photos = this.product.photos.map((photo) => {
-//     return {
-//       file: null,
-//       id: photo.id,
-//     };
-//   });
-//   this.descriptionLength -= this.formData.comment
-//     ? this.formData.comment.length
-//     : 0;
-// }
+  const handleChangeFile = function (params:any) {
+    console.log(params);
+    
+  }
+// onMounted(async () => {
+  if (props.action.action == "detail") {
+  // formData.rating = !Number.isInteger(Number(props.product.rating))
+  //   ? Number(`${Math.floor(props.product.rating)}.${5}`)
+  //   : props.product.rating;
+} else if (props.action.action == "edit") {
+  // formData.rating = props.product.rating;
+}
+  if (props.action.action == "detail" || props.action.action == "edit") {
+  formData.comment = props.product.comment;
+  // changeRate(formData.rating);
+  
+  photos = props.product.photos.map((photo) => {
+    return {
+      uid: photo.id,
+      name:  "",
+      status: 'done',
+      url:photo.data
+    }
+  })
+
+  // this.photos = [...this.product.photos];
+  // photos = props.product.photos.map((photo) => {
+  //   return {
+  //     file: null,
+  //     id: photo.id,
+  //   };
+  // });
+   descriptionLength.value -= formData.comment && formData.comment.length
+    ? formData.comment.length
+    : 0;
+}
+// })
+
 // },
 //   methods: {
 const dateModel = function (value: any) {
   let dat = new Date(value).toString();
   return moment(dat).format("DD/MM/yyyy HH:mm:ss");
 };
-const beforeUploadOther = function (file: any) {
+
+const beforeUpload = function (file: any) {
   if (file && allowFileTypes.includes(file.type)) {
     if (file.size <= allowFileSize.value) {
       const obj = {
@@ -530,7 +488,7 @@ const beforeUploadOther = function (file: any) {
       };
       getBase64(file, (imageUrl: any) => {
         obj.data = imageUrl;
-        otherFileList.push(obj);
+        photos.push(obj);
         if (props.action.action == "edit") {
           photos.push({
             file: { data: imageUrl, name: file.name },
@@ -541,11 +499,7 @@ const beforeUploadOther = function (file: any) {
         }
         hasChange.value = false;
       });
-    } else {
-      // this.$message.error(this.$t("image_size"));
-    }
-  } else {
-    // this.$message.error(this.$t("file_type"));
+    } 
   }
   return false;
 };
@@ -560,22 +514,22 @@ const calculateTextSymbolCount = function (val: any) {
   descriptionLength.value -= val.srcElement.textLength;
 };
 const changeRate = function (val: any) {
-  if (val != props.product.rating) {
-    hasChange.value = false;
-  }
-  if (val <= 1) {
-    rateValueText.value = t("descObj", { returnObjects: true }).very_bad;
-  } else if (1 < val && val <= 2) {
-    rateValueText.value = t("descObj").bad;
-  } else if (2 < val && val <= 3) {
-    rateValueText.value = t("descObj").average;
-  } else if (3 < val && val <= 4) {
-    rateValueText.value = t("descObj").good;
-  } else if (4 < val && val <= 5) {
-    rateValueText.value = t("descObj").very_good;
-  } else if (val == undefined) {
-    rateValueText.value = "";
-  }
+  // if (val != props.product.rating) {
+  //   hasChange.value = false;
+  // }
+  // if (val <= 1) {
+  //   rateValueText.value = t("descObj", { returnObjects: true }).very_bad;
+  // } else if (1 < val && val <= 2) {
+  //   rateValueText.value = t("descObj").bad;
+  // } else if (2 < val && val <= 3) {
+  //   rateValueText.value = t("descObj").average;
+  // } else if (3 < val && val <= 4) {
+  //   rateValueText.value = t("descObj").good;
+  // } else if (4 < val && val <= 5) {
+  //   rateValueText.value = t("descObj").very_good;
+  // } else if (val == undefined) {
+  //   rateValueText.value = "";
+  // }
 };
 
 const resolveStatusStyle = function (record: any) {
@@ -624,21 +578,23 @@ const handleOk = function () {
     //     });
   }
 };
-const handlePreview = function (file: any) {
-  previewImage.value = file;
-  previewVisible.value = true;
-};
-const handleCancelUpload = function () {
-  previewVisible.value = false;
-};
+// const handlePreview = function (file: any) {
+//   previewImage.value = file;
+//   previewVisible.value = true;
+// };
+// const handleCancelUpload = function () {
+//   previewVisible.value = false;
+// };
 const handleCancel = function () {
   emit("close", false);
 };
-const setDefaultImage = async function (event: Event | any) {
-  event.target.src = await require(`@/assets/img/no-image.svg`);
-  event.target.className = "p-16";
+const defaultImagePath = await import("@/assets/img/no-image.svg");
+const setDefaultImage = (event: Event | any) => {
+  event.target.src = defaultImagePath.default;
+  event.target.className = "p-4 w-[70px] h-[70px] max-w-[70px] max-h-[70px] min-w-[70px] min-h-[70px] ";
 };
-const hasValidThumbnail = function (product: ProductDetail) {
+
+const hasValidThumbnail = function (product: ReviewDetail) {
   if (props.action.action === "edit" || props.action.action == "detail") {
     return product.thumbnailPath;
   } else {
@@ -647,6 +603,7 @@ const hasValidThumbnail = function (product: ProductDetail) {
 };
 //   },
 // };
+
 </script>
 <style scoped>
 .ant-form-item-label {

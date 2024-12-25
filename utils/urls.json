@@ -23,6 +23,7 @@
   "public_product_reviews": "/public/ecommerce/product-reviews",
   "product_reviews": "/ecommerce/product-reviews/",
   "reviewed": "/ecommerce/product-reviews/reviewed",
+  "delete_product_review": "/ecommerce/product-reviews/${id}",
   "farmer": "/public/ecommerce/farmers",
   "farmer_contact": "/public/ecommerce/farmers/${id}/contact-details",
   "about_us_sections": "/public/ecommerce/sections",
@@ -37,5 +38,5 @@
   "favorites_add_products": "/ecommerce/favorites/add-products",
   "add_product_to_favorite": "/ecommerce/favorites/add-product",
   "remove_product_to_favorite": "/ecommerce/favorites/remove-product",
-  "favorite_count":"/ecommerce/favorites/count"
+  "favorite_count": "/ecommerce/favorites/count"
 }
