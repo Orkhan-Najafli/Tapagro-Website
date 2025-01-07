@@ -31,11 +31,11 @@
                     <template v-for="i in 5" :key="i">
                       <a-tooltip placement="top">
                         <template #title>
-                          <span v-if="text == 1">{{ t("desc.0") }}</span>
-                          <span v-if="text == 2">{{ t("desc.1") }}</span>
-                          <span v-if="text == 3">{{ t("desc.2") }}</span>
-                          <span v-if="text == 4">{{ t("desc.3") }}</span>
-                          <span v-if="text == 5">{{ t("desc.4") }}</span>
+                          <span v-if="i == 1">{{ t("desc.0") }}</span>
+                          <span v-if="i == 2">{{ t("desc.1") }}</span>
+                          <span v-if="i == 3">{{ t("desc.2") }}</span>
+                          <span v-if="i == 4">{{ t("desc.3") }}</span>
+                          <span v-if="i == 5">{{ t("desc.4") }}</span>
                         </template>
                         <rate
                           :class="
@@ -150,10 +150,9 @@ const baseURL = useRuntimeConfig().public.baseURL;
 const reviewsStore = useReviewsStore();
 
 const totalElements = computed(() => reviewsStore.getTotalElements);
-const totalPages = computed(() => reviewsStore.getTotalPages);
+// const totalPages = computed(() => reviewsStore.getTotalPages);
 
 const handlePageChange = (page: number) => {
-  console.log(page);
   pagination.current = page;
   fetchReviews();
 };
@@ -171,7 +170,6 @@ const isSuccesData = reactive({
 });
 
 const loadDetail = async function (record: Review|any, detail: string) {
-  console.log(record)
   try {
     action = { action: detail };
     await reviewsStore.fetchDetailReview(record.id);
@@ -188,6 +186,7 @@ const loadDetail = async function (record: Review|any, detail: string) {
 const onSuccessOperation = function (val: any) {
   if (val) {
     isDetail.value = false;
+    reviewsStore.resetReviews()
     reviewsStore.fetchReviews({});
     // this.$message.success(t("operation_was_successful"));
   }
