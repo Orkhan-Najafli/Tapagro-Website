@@ -19,10 +19,9 @@
               :loading="reviewsStore.getStatus !== 'success'"
               bordered
               :columns="columns as any"
-              :data-source="[...reviewsStore.getReviews]"
+              :data-source="reviewsStore.getReviews?.length ? [...reviewsStore.getReviews] : []"
               :pagination="false"
               size="middle"
-              @change="handleTableChange"
               :scroll="{ x: true }"
               :locale="{ emptyText: t('there_is_no_information') }"
             >
@@ -32,11 +31,11 @@
                     <template v-for="i in 5" :key="i">
                       <a-tooltip placement="top">
                         <template #title>
-                          <span v-if="text == 1">{{ t("desc.0") }}</span>
-                          <span v-if="text == 2">{{ t("desc.1") }}</span>
-                          <span v-if="text == 3">{{ t("desc.2") }}</span>
-                          <span v-if="text == 4">{{ t("desc.3") }}</span>
-                          <span v-if="text == 5">{{ t("desc.4") }}</span>
+                          <span v-if="i == 1">{{ t("desc.0") }}</span>
+                          <span v-if="i == 2">{{ t("desc.1") }}</span>
+                          <span v-if="i == 3">{{ t("desc.2") }}</span>
+                          <span v-if="i == 4">{{ t("desc.3") }}</span>
+                          <span v-if="i == 5">{{ t("desc.4") }}</span>
                         </template>
                         <rate
                           :class="
@@ -61,8 +60,8 @@
 
                 <template v-if="column.key === 'actions'">
                   <div class="flex flex-row justify-center items-center">
-                    <a
-                      @click="loadDetail(text, 'edit')"
+                    <button
+                      @click="loadDetail(record, 'edit')"
                       class="cursor-pointer mx-2"
                       v-if="
                         record.status.label == 'CREATED' ||
@@ -70,23 +69,23 @@
                       "
                     >
                       <edit_icon />
-                    </a>
-                    <a
-                      @click="loadDetail(text, 'detail')"
+                    </button>
+                    <button
+                      @click="loadDetail(record, 'detail')"
                       v-if="
                         record.status.label == 'IN_INSPECTION' ||
                         record.status.label == 'REJECTED'
                       "
                     >
                       <detail_icon class="cursor-pointer mx-2" />
-                    </a>
-                    <a
+                    </button>
+                    <button
                       class="mx-2"
                       v-if="record.status.label != 'IN_INSPECTION'"
                       @click="deleteReview(record)"
                     >
                       <delete_icon />
-                    </a>
+                    </button>
                   </div>
                 </template>
               </template>
@@ -105,6 +104,19 @@
           </ClientOnly>
         </div>
       </a-config-provider>
+      <Valuation
+        v-if="isDetail"
+        :product="valuationDetail"
+        @close="closeDetail"
+        @ok="onSuccessOperation"
+        :action="action"
+      />
+      <Review_is_succes
+        :data="isSuccesData"
+        @handleCancel="closeSuccesMessageModal"
+        @deleteReviewCompleted="deleteReviewCompleted"
+        v-if="reviewIsSucces"
+      />
     </div>
   </div>
 </template>
@@ -113,7 +125,7 @@ const { t } = useI18n();
 const current = ref(1);
 import moment from "moment";
 import Columns from "~/utils/Table/valuation";
-import type { Review } from "~/utils/types/reviews";
+import type { Review, ReviewDetail } from "~/utils/types/reviews";
 const columns =
   Columns.getColumnDetail(
     t("product_name"),
@@ -127,8 +139,8 @@ const reviewIsSucces = ref(false);
 const desc = ref<any>(t("desc"));
 const id = ref();
 const isDetail = ref(false);
-const valuationDetail = reactive({});
-const action = reactive({});
+let valuationDetail = reactive<ReviewDetail|any>({});
+let action = reactive({action:'detail'});
 
 const pagination = reactive({
   current: 1,
@@ -137,12 +149,10 @@ const pagination = reactive({
 const baseURL = useRuntimeConfig().public.baseURL;
 const reviewsStore = useReviewsStore();
 
-// totalElements, totalPages üçün store dəyərlərini alırıq
 const totalElements = computed(() => reviewsStore.getTotalElements);
-const totalPages = computed(() => reviewsStore.getTotalPages);
+// const totalPages = computed(() => reviewsStore.getTotalPages);
 
 const handlePageChange = (page: number) => {
-  console.log(page);
   pagination.current = page;
   fetchReviews();
 };
@@ -159,22 +169,24 @@ const isSuccesData = reactive({
   section: "deletereview",
 });
 
-const loadDetail = function (record: Review, detail: string) {
-  //  this.action = { action: detail };
-  //     this.$store.dispatch("review/getRate", record.id).then((res) => {
-  //     res.photos = res.photos.map((photo) => {
-  //     return {
-  //     data: baseURL + photo.path,
-  //   id: photo.id,
-  //        };
-  //    });
-  //  this.valuationDetail = res || {};
-  //this.isDetail = true;
-  //       });
+const loadDetail = async function (record: Review|any, detail: string) {
+  try {
+    action = { action: detail };
+    await reviewsStore.fetchDetailReview(record.id);
+    if (reviewsStore.getReviewDetailStatus === 'success') {
+      reviewsStore.setReviewPhotos()
+      valuationDetail = reviewsStore.getReviewDetail || {};
+      isDetail.value = true;
+    }
+  } catch (error) {
+    console.error("Error while loading review details:", error);
+  }
 };
+
 const onSuccessOperation = function (val: any) {
   if (val) {
     isDetail.value = false;
+    reviewsStore.resetReviews()
     reviewsStore.fetchReviews({});
     // this.$message.success(t("operation_was_successful"));
   }
@@ -185,14 +197,22 @@ const closeDetail = function () {
 const closeSuccesMessageModal = function () {
   reviewIsSucces.value = false;
 };
-const deleteReviewCompleted = function () {
-  // this.$store.dispatch("review/deleteReview", this.id).then((res) => {
-  reviewsStore.fetchReviews({ ...pagination });
-  reviewIsSucces.value = false;
-  // });
+const deleteReviewCompleted = async function () {
+  try {
+    await reviewsStore.fetchDeleteReview(id.value);
+    if (reviewsStore.getDeletedReviewedStatus === "success") {
+      await reviewsStore.fetchReviews({
+        page: pagination.current - 1,
+        size: pagination.pageSize,
+      });
+    }
+    reviewIsSucces.value = false;
+  } catch (error) {
+    console.error("Error while deleting the review:", error);
+  }
 };
+
 const deleteReview = function (record: Review | any) {
-  console.log(record.id);
   id.value = record.id;
   reviewIsSucces.value = true;
 };

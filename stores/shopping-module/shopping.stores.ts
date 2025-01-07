@@ -84,7 +84,7 @@ export const useShoppingStore = defineStore("shopping", {
         "remove-shopping-carts",
         () =>
           $fetch(
-            `${this.baseURL}${parseUrl(urls.remove_shooping_cart, {
+            `${this.baseURL}${parseUrl(urls.remove_shopping_cart, {
               id: queryData,
             })}`,
             {

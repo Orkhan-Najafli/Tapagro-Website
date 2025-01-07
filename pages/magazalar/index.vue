@@ -9,20 +9,20 @@
         >
           <arrow_left_icon />
           <span class="ml-3 text-gray-600 font-medium text-sm">
-            {{ $t("main_page") }}
+            {{ t("main_page") }}
           </span>
         </nuxt-link>
         <a-breadcrumb class="hidden md:block" separator=">">
           <a-breadcrumb-item class="text-sm leading-5 font-normal" href="">
             <nuxt-link to="/">
               <span class="text-gray-600 font-medium text-sm">
-                {{ $t("main_page") }}
+                {{ t("main_page") }}
               </span></nuxt-link
             >
           </a-breadcrumb-item>
           <a-breadcrumb-item class="text-sm leading-5 font-normal">
             <span class="text-gray-800 font-semibold text-sm">
-              {{ $t("stores") }}</span
+              {{ t("stores") }}</span
             >
           </a-breadcrumb-item>
         </a-breadcrumb>
@@ -34,7 +34,7 @@
           <section>
             <div>
               <div class="mb-6">
-                <h1 class="text-2xl font-bold">{{ $t("stores") }}</h1>
+                <h1 class="text-2xl font-bold">{{ t("stores") }}</h1>
               </div>
 
               <a-config-provider
@@ -45,7 +45,7 @@
                 }"
               >
                 <a-input-search
-                  :placeholder="$t('product_name')"
+                  :placeholder="t('product_name')"
                   size="large"
                   class="w-full min-w-full h-auto mb-6 md:mb-11"
                   :maxLength="255"
@@ -66,7 +66,7 @@
               <section class="flex flex-col mb-6 md:mb-10">
                 <div v-if="useStoresStore().getTotalElements <= 0">
                   <div class="text-base text-gray-600">
-                    {{ $t("no_store_matching_your_search_was_found") }}
+                    {{ t("no_store_matching_your_search_was_found") }}
                   </div>
                 </div>
                 <div
@@ -96,7 +96,7 @@
                 @click="loadMoreStores"
                 class="px-8 py-1 rounded text-amber-400 border border-amber-400 hover:text-white bg-white hover:bg-amber-400 text-sm font-semibold"
               >
-                {{ $t("more_products") }}
+                {{ t("more_products") }}
               </button>
             </div>
           </section>
@@ -107,6 +107,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
 const queryParams = reactive({
   page: useRoute().query.page ? Number(useRoute().query.page) : 0,
   size: useRoute().query.page ? (Number(useRoute().query.page) + 1) * 15 : 15,
