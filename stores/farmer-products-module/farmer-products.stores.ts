@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import urls from "@/utils/urls.json";
 import { useRuntimeConfig } from "#app";
 import type { ApiBase } from "~/utils/types";
-import type { FarmerProduct, QueryParams } from "~/utils/types/farmer-product";
+import type {FarmerProduct, QueryParams} from "~/utils/types/farmer-product";
 import { stringify } from "qs";
 export const useFarmerProductsStore = defineStore("farmer-products", {
   state: () => ({
