@@ -3,7 +3,7 @@
     <div class="flex flex-col w-full min-w-full">
       <div class="block text-left mb-3.5">
         <h3 class="text-emerald-600 font-semibold text-xl">
-          {{ $t("review_link") }}
+          {{ t("review_link") }}
         </h3>
       </div>
       <a-config-provider
@@ -98,8 +98,8 @@
               v-model:current="pagination.current"
               :total="totalElements"
               :pageSize="pagination.pageSize"
-              show-less-items
               @change="handlePageChange"
+              :showSizeChanger="false"
             />
           </ClientOnly>
         </div>

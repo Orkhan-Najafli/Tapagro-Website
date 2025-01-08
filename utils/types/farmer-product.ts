@@ -33,7 +33,6 @@ export interface QueryParams {
   sortDirection?: string;
   createdBy?: string | string[];
 }
-
 interface sortList {
   sortBy: string;
   sortDirection: string;
