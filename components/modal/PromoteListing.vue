@@ -1,8 +1,7 @@
 <template>
   <a-modal
       width="450px"
-      :closable="false"
-      :maskClosable="false"
+   
       :footer="null"
       centered
       @cancel="handleClose"
