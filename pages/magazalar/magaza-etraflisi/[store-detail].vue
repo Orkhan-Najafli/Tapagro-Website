@@ -314,67 +314,10 @@ watch(
   },
   { deep: true }
 );
-
-//   import Page404 from "@/components/common/404.vue";
-
-//     created() {
-//       this.$store.commit("setAppHeroShowAndHide", false);
-
-//       if (this.$route.query) {
-//         let queryString = this.$route.query;
-//         this.searchText = queryString.searchText || undefined;
-//       }
-//     },
-//     async asyncData(context) {
-//       await context.store.dispatch(
-//         "productCategories/getBaseCategoryListByStoreId",
-//         {
-//           storeId: Number(context.route.params.storeAboutDetail),
-//         }
-//       );
-//     },
-//     mounted() {
-//       this.loadStoreDetails();
-//     },
-//     computed: {
-//       storeDetailsLoaded: function () {
-//         return this.store !== undefined;
-//       },
-//     },
-//     methods: {
 const showFilterModal = function () {
   openMobileFilter.value = true;
 };
-//   mobileMenu(event) {
-//     let box =
-//       process.browser && document.getElementsByClassName("mobile-box")[0];
-//     if (!event.composedPath().includes(box)) {
-//       this.showOrderMenu = !this.showOrderMenu;
-//     }
-//   },
-//       formatPhoneNumber,
-//       loadMoreProducts() {
-//         let page = 0;
-//         if (this.$route.query && this.$route.query.page) {
-//           page = parseInt(this.$route.query.page);
-//         }
-//         this.$router.replace({
-//           query: {
-//             ...this.$route.query,
-//             page: ++page,
-//           },
-//         });
-//         this.more = true;
-//       },
-//       searchName: _.debounce(function () {
-//         this.$router.replace({
-//           query: {
-//             ...this.$route.query,
-//             searchText: this.searchText || undefined,
-//             page: undefined,
-//           },
-//         });
-//       }, 600),
+
 const defaultImagePath = await import("@/assets/img/store_logo.svg");
 const setDefaultStoreImage = (event: Event | any) => {
   event.target.src = defaultImagePath.default;

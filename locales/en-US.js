@@ -72,7 +72,6 @@ export default {
   discounted: "Discounted",
   district: "Region",
   search_the_region: "Search the region",
-  store: "Store",
   search_the_store: "Find the store",
   rating_title: "Rating",
   and_more_than_four: " and more than four",
@@ -158,8 +157,6 @@ export default {
   show_less: "Show less",
   no_products_have_been_added_to_my_favorites:
     "No products have been added to my favorites",
-  no_products_matching_your_search_were_found:
-    "No products matching your search were found",
   the_product_has_been_to_the_comparison:
     "The product has been added to the comparison",
   the_product_has_been_added_to_my_favorites:
@@ -236,7 +233,6 @@ export default {
   ad: "Ad №",
   ad_name: "Ad name",
   image: "Image",
-  publication_date: "Publication date",
   status_in_table: "Status",
   back: "Back",
   deactivate: "Deactivate",
@@ -289,8 +285,6 @@ export default {
   comment: "Comment",
   are_you_sure_you_want_to_remove_your_rating:
     "Are you sure you want to remove your rating?",
-  product_evaluation: "Product rating",
-  log_out: "Log out",
   ad_placement: "Ad placement",
   ad_placement_rules: "Ad placement rules",
   see_the_full_rules_for_posting_an_ad: "See the full rules for posting an ad",
@@ -350,7 +344,6 @@ export default {
   points_of_sale_where_the_product_is_available:
     "Points of sale where the product is available",
   delivery_areas: "Delivery areas",
-  ad: "ad",
   it_does: "It does",
   it_does_not: "It doesn't",
   history: "History",
@@ -389,4 +382,6 @@ export default {
   numeric: `This field must contain only numbers.`,
   digits: "This field {length} must contain numbers.",
   email: "{email} must be entered in the correct format",
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Your listing will be featured in the \'VIP Farmer Products\' catalog for 30 days.'
+
 };
