@@ -15,7 +15,6 @@ export default {
   product_compare: "Məhsulların müqayisəsi",
   region: "Bölgə seçin",
   region_title: "Bölgə",
-  log_out: "Çıxış",
   my_account: "Hesabım",
   login: "Daxil ol",
   website_title: "Təsərrüfatınız üçün hər şey bir ünvanda",
@@ -74,7 +73,6 @@ export default {
   discounted: "Endirimli",
   district: "Rayon",
   search_the_region: "Rayonu axtar",
-  store: "Mağaza",
   search_the_store: "Mağazanı axtar",
   rating_title: "Reytinq",
   and_more_than_four: " və daha çox",
@@ -124,7 +122,6 @@ export default {
     "Noyabr",
     "Dekabr",
   ],
-  product_evaluation: "Məhsulun qiymətləndirilməsi",
   product_review: "Məhsul haqqında rəy",
   symbol_title: "simvol",
   picture_title: "Şəkil",
@@ -160,8 +157,6 @@ export default {
   show_less: "Daha az göstər",
   no_products_have_been_added_to_my_favorites:
     "Bəyəndiklərim bölməsinə məhsul əlavə edilməyib",
-  no_products_matching_your_search_were_found:
-    "Axtarışa uyğun məhsul tapılmadı",
   the_product_has_been_to_the_comparison: "Məhsul müqayisəyə əlavə olundu",
   the_product_has_been_added_to_my_favorites:
     "Məhsul bəyəndiklərimə əlavə olundu",
@@ -235,7 +230,6 @@ export default {
   ad: "Elan №",
   ad_name: "Elanın adı",
   image: "Şəkli",
-  publication_date: "Dərc edilmə tarixi",
   status_in_table: "Status",
   back: "Geri",
   deactivate: "Deaktiv et",
@@ -352,7 +346,6 @@ export default {
   points_of_sale_where_the_product_is_available:
     "Məhsulun mövcud olduğu satış nöqtələri",
   delivery_areas: "Çatdırılma əraziləri",
-  ad: "elan",
   it_does: "Edir",
   it_does_not: "Etmir",
   history: "Tarixçə",
@@ -392,4 +385,5 @@ export default {
   numeric: `Bu sahə yalnız tam rəqəmlərdən ibarət olmalıdır.`,
   digits: "Bu sahə {length} rəqəmdən ibarət olmalıdır.",
   email: "{email} düzgün formatda daxil olunmalıdır.",
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Elanınız 30 gün müddətində \'VIP fermer məhsulları\' kataloqunda təsvir olunacaq.'
 };

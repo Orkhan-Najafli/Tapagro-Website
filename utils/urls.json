@@ -39,5 +39,6 @@
   "add_product_to_favorite": "/ecommerce/favorites/add-product",
   "remove_product_to_favorite": "/ecommerce/favorites/remove-product",
   "favorite_count": "/ecommerce/favorites/count",
-  "announcements": "/ecommerce/farmer-products"
+  "announcements": "/ecommerce/farmer-products",
+  "announcement_promote": "/ecommerce/farmer-products/${id}/promote"
 }

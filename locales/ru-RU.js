@@ -74,7 +74,6 @@ export default {
   discounted: "Со скидкой",
   district: "Регион",
   search_the_region: "Поиск по региону",
-  store: "магазин",
   search_the_store: "Найти магазин",
   rating_title: "Рейтинг",
   and_more_than_four: " и больше",
@@ -160,8 +159,6 @@ export default {
   show_less: "Показывай меньше",
   no_products_have_been_added_to_my_favorites:
     "В избранное не добавлено ни одного товара",
-  no_products_matching_your_search_were_found:
-    "Товары, соответствующие вашему запросу, не найдены",
   the_product_has_been_to_the_comparison: "Товар добавлен в сравнение",
   the_product_has_been_added_to_my_favorites: "Товар добавлен в избранное",
   my_favorites_section: "Раздел «Мое избранное» ",
@@ -236,7 +233,6 @@ export default {
   ad: "Объявление №",
   ad_name: "Имя объявления",
   image: "Изображение",
-  publication_date: "Дата публикации",
   status_in_table: "Статус",
   back: "Назад",
   deactivate: "Деактивировать",
@@ -291,8 +287,6 @@ export default {
   comment: "комментарий",
   are_you_sure_you_want_to_remove_your_rating:
     "Вы уверены, что хотите удалить свою оценку?",
-  product_evaluation: "Оценка продукта",
-  log_out: "Выход",
   ad_placement: "Размещение рекламы",
   ad_placement_rules: "Правила размещения рекламы",
   see_the_full_rules_for_posting_an_ad:
@@ -350,7 +344,6 @@ export default {
   points_of_sale_where_the_product_is_available:
     "Точки продаж, где доступен товар",
   delivery_areas: "Области доставки",
-  ad: "объявление",
   it_does: "Оно делает",
   it_does_not: "Не доставляет",
   history: "История",
@@ -389,4 +382,5 @@ export default {
   numeric: `Это поле должно содержать только цифры.`,
   digits: "Это поле {length} должно содержать цифры.",
   email: "{email} необходимо ввести в правильном формате.",
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Ваше объявление будет размещено в каталоге \'VIP фермерские продукты\' на 30 дней.'
 };
