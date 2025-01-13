@@ -3,7 +3,7 @@
     <div class="flex flex-row justify-between items-center mb-3">
       <nuxt-link
           tag="button"
-          to="kabinet/elanlarim/"
+          to="/kabinet/elanlarim/"
           class="flex flex-row justify-center items-center py-2.5 px-3 w-[77px] md:w-[127px] border-2 border-[#E5E7EB] rounded h-[46px] max-h-[46px]"
       >
         <arrow_left_icon/>
@@ -44,9 +44,10 @@
         </button>
         <button
             v-if="announcementsStore.getAnnouncement.status && announcementsStore.getAnnouncement.status.label != 'EXPIRED'"
-            @click="showEditModal(announcementsStore.getAnnouncement.id)"
             class="flex flex-row justify-center items-center py-2.5 px-3 w-auto border-2 border-[#22C55E] rounded h-[46px] max-h-[46px]"
         >
+<!--          @click="showEditModal(announcementsStore.getAnnouncement.id)"-->
+
           <pen_icon/>
           <span
               class="text-[15px] font-semibold text-[#16A34A] ml-2 hidden md:inline-block"
@@ -103,7 +104,7 @@
                     :src="`${useRuntimeConfig().public.baseURL}/${announcementsStore.getAnnouncement.thumbnailPath}`"
                     :alt="t('catalog_photo')"
                     @click="
-                    handlePreview(`${useRuntimeConfig().public.baseURL}/${announcementsStore.getAnnouncement.thumbnailPath}`)
+                    handlePreview(announcementsStore.getAnnouncement.thumbnailPath,announcementsStore.getAnnouncement.thumbnailName)
                   "
                 />
               </div>
@@ -129,7 +130,7 @@
                       class="cursor-pointer"
                       :src="`${useRuntimeConfig().public.baseURL}/${productPhoto.path}`"
                       alt="xxx.png"
-                      @click="handlePreview(`${baseURL}${productPhoto.path}`)"
+                      @click="handlePreview(productPhoto.path,announcementsStore.getAnnouncement.thumbnailName)"
                   />
                 </div>
               </div>
@@ -399,115 +400,24 @@
             </div>
           </div>
         </div>
-        <a-modal
-            :centered="true"
-            :title="t('product_image')"
-            :visible="previewVisible"
+        <LazyPreviewImage
+            :previewImage="previewImage"
+            :previewImageName="previewImageName"
+            v-if="previewVisible"
             @cancel="closePreviewImageModal"
-        >
-          <img
-              style="width: 500px; height: 400px"
-              :alt="t('product_image')"
-              :src="previewPath"
-          />
-          <template slot="footer">
-            <a-button @click="closePreviewImageModal">{{
-                t("close_modal")
-              }}
-            </a-button>
-            <a-button
-                type="primary"
-                @click="downloadImage(previewPath, t('product_image'))"
-            >
-              <DownloadOutlined/>
-              <span class="ml-3">{{ t("download") }}</span>
-            </a-button>
-          </template>
-        </a-modal>
+        />
+        <ToggleStatusModal
+            :textData="toggleStatusModalText"
+            v-if="visibleToggleStatus"
+            @cancel="visibleToggleStatus = false"
+            @ok="submitToggleStatus"
+        />
 
-        <a-modal
-            v-model="visibleDeactiveConfirm"
-            width="450px"
-            :closable="false"
-            :maskClosable="false"
-            :footer="null"
-            centered
-        >
-          <div class="flex flex-col">
-            <div class="flex justify-center items-center">
-              <span
-                  class="h-16 rounded-full flex justify-center items-center text-yellow-500"
-              >
-                <QuestionCircleOutlined class="text-xl"/>
-              </span>
-            </div>
-            <div class="flex flex-col justify-center items-center text-center">
-              <p class="p-0 m-0 text-neutral-800 font-medium text-xl mb-1">
-                {{ t("are_you_sure_you_want_to_disable_the_ad") }}
-              </p>
-              <span class="font-normal text-sm text-gray-400 m-0 p-0 mb-4">
-                {{ t("your_ad_will_not_appear_on_the_web_page") }}
-              </span>
-            </div>
-            <div class="flex flex-row justify-center items-center">
-              <button
-                  @click="visibleDeactiveConfirm = false"
-                  class="text-sm border border-gray-300 font-medium py-2 px-6 rounded-md mr-2"
-              >
-                {{ t("no") }}
-              </button>
-              <button
-                  @click="submitDeactive"
-                  class="text-sm font-medium text-white bg-emerald-600 py-2 px-6 rounded-md"
-              >
-                {{ t("yes") }}
-              </button>
-            </div>
-          </div>
-        </a-modal>
-        <a-modal
-            v-model="visibleActiveConfirm"
-            width="450px"
-            :closable="false"
-            :maskClosable="false"
-            :footer="null"
-            centered
-        >
-          <div class="flex flex-col">
-            <div class="flex justify-center items-center">
-              <span
-                  class="h-16 rounded-full flex justify-center items-center text-yellow-500"
-              >
-                <QuestionCircleOutlined class="text-xl"/>
-              </span>
-            </div>
-            <div class="flex flex-col justify-center items-center text-center">
-              <p class="p-0 m-0 text-neutral-800 font-medium text-xl mb-1">
-                {{ t("are_you_sure_you_want_to_enable_the_ad") }}
-              </p>
-            </div>
-            <div class="flex flex-row justify-center items-center">
-              <button
-                  @click="visibleActiveConfirm = false"
-                  class="text-sm border border-gray-300 font-medium py-2 px-6 rounded-md mr-2"
-              >
-                {{ t("no") }}
-              </button>
-              <button
-                  @click="submitActive"
-                  class="text-sm font-medium text-white bg-emerald-600 py-2 px-6 rounded-md"
-              >
-                {{ t("yes") }}
-              </button>
-            </div>
-          </div>
-        </a-modal>
-
-<!--        <announcementsStore.getAnnouncementUpdateModal-->
-<!--            v-if="updateModalVisible"-->
-<!--            @close="closeEditModal"-->
-<!--            @ok="onSuccessUpdate"-->
-<!--        />-->
+        <!--        <announcementsStore.getAnnouncementUpdateModal-->
+        <!--            v-if="updateModalVisible"-->
+        <!--            @close="closeEditModal"-->
+        <!--            @ok="onSuccessUpdate"-->
+        <!--        />-->
         <PromoteListing
             v-if="visiblePromoteListing"
             :data="textData"
@@ -524,166 +434,132 @@
   </main>
 </template>
 <script setup lang="ts">
-import {use} from "h3";
+import type {Announcements, FarmerProductHistories} from "~/utils/types/announcement";
+import moment from "moment";
+import ToggleStatusModal from "~/components/modal/ToggleStatusModal.vue";
 
 const {t} = useI18n()
 const announcementsStore = useAnnouncementsStore()
-const type = ref()
-const visibleDeactiveConfirm = ref(false)
+const previewVisible = ref(false);
+const previewImage = ref()
+const previewImageName = ref<string>()
+const types = ref<null | any>()
 const visiblePromoteListing = ref(false)
-import moment from "moment";
-
 const visibleStatusDetail = ref(false)
 let textData = reactive({})
 const statusData = reactive({
-  published: [],
-  rejected: [],
-  registered: [],
-  expired: [],
-  unPublished: [],
+  published: [] as Array<FarmerProductHistories>,
+  rejected: [] as Array<FarmerProductHistories>,
+  registered: [] as Array<FarmerProductHistories>,
+  expired: [] as Array<FarmerProductHistories>,
+  unPublished: [] as Array<FarmerProductHistories>,
 })
-
-onUnmounted(()=>{
+const toggleStatusType = ref()
+let toggleStatusModalText = reactive({})
+// const visibleAnnouncement = ref(false)
+const selectedId = ref()
+const visibleToggleStatus = ref(false)
+onUnmounted(() => {
   announcementsStore.resetAnnouncement()
 })
 watch(
     () => useRoute().params.announcementdetail,
     (newId) => {
-      if (newId && announcementsStore.getAnnouncementStatus!=='success') {
-        announcementsStore.fetchAnnouncementDetail(newId);
+      if (newId && announcementsStore.getAnnouncementStatus !== 'success') {
+        announcementsStore.fetchAnnouncementDetail(Number(newId));
       }
     },
     {immediate: true, deep: true}
-);// import announcementsStore.getAnnouncementUpdateModal from "@/components/common/announcementsStore.getAnnouncement/announcementsStore.getAnnouncementUpdateModal.vue";
-// import promoteAnnouncement from "@/components/common/announcement/promoteAnnouncement.vue";
-//
-// import urls from "@/configs/urls";
-//
-// export default {
-//   components: {
-//     monetary_unit_logo,
-//     vip_icon,
-//     sort_ascending_icon,
-//     arrow_left_icon,
-//     pen_icon,
-//     x_icon,
-//     announcementsStore.getAnnouncementUpdateModal,
-//     promoteAnnouncement,
-//     active_repair_icon,
-//   },
-//   data() {
-//     return {
-//       baseURL: urls.getParam("API_BASE_URL"),
-//       statusDetailBool: false,
-//       published: [],
-//       rejected: [],
-//       registered: [],
-//       expired: [],
-//       unPublished: [],
-//       previewVisible: false,
-//       previewPath: "",
-//       announcementsStore.getAnnouncement: {},
-//       selectedId: null,
-//       updateModalVisible: false,
-//       visibleAnnouncementModal: false,
-//       visibleDeactiveConfirm: false,
-//       visibleActiveConfirm: false,
-//       textData: {},
-//     };
-//   },
-//   computed: {
-//     ...mapGetters({
-//       //   announcementsStore.getAnnouncement: "advertisement/announcementsStore.getAnnouncement",
-//     }),
-//   },
-//   created() {
-//     this.loadAnnouncementDetail();
-//   },
-//   methods: {
-    const onClose = function () {
-      visiblePromoteListing.value = false;
+);
+
+const onClose = function () {
+  visiblePromoteListing.value = false;
+}
+const onSucces = async function (type: any) {
+  console.log(type)
+  if (type.type == "promote") {
+    try {
+      await announcementsStore.fetchAnnouncementPromote(announcementsStore.getAnnouncement.id)
+      if (announcementsStore.getAnnouncementPromoteStatus === 'success') {
+        visiblePromoteListing.value = false;
+        message.success(t("ad_has_been_promoted"), 2, onClose)
+        // announcementsStore.fetchAnnouncementDetail(Number(useRoute().params.announcementdetail))
+      }
+    } catch (e) {
+      console.error(e)
     }
-    const onSucces = function (type:any) {
-      console.log(type)
-      // if (type.type == "promote") {
-      //   this.$store
-      //       .dispatch("advertisement/promoteAnnouncement", {
-      //         id: this.announcementsStore.getAnnouncement.id,
-      //       })
-      //       .then((res) => {
-      //         this.visibleAnnouncementModal = false;
-      //         this.$message.success("Elanınız irəli çəkildi");
-      //         this.loadAnnouncementDetail();
-      //       });
-      // } else {
-      //   this.$store
-      //       .dispatch("advertisement/vipDoAnnouncement", {
-      //         id: this.announcementsStore.getAnnouncement.id,
-      //       })
-      //       .then((res) => {
-      //         this.visibleAnnouncementModal = false;
-      //         this.$message.success("Elanınız VIP edilmişdir");
-      //         this.loadAnnouncementDetail();
-      //       });
-      // }
+  } else {
+    try {
+      await announcementsStore.fetchAnnouncementVIP(announcementsStore.getAnnouncement.id)
+      if (announcementsStore.getAnnouncementVIPStatus === 'success') {
+        visiblePromoteListing.value = false;
+        message.success(t("ad_has_been_made_VIP"), 2, onClose)
+        // announcementsStore.fetchAnnouncementDetail(Number(useRoute().params.announcementdetail))
+      }
+    } catch (e) {
+      console.error(e)
     }
-//     promoteAnnouncement(id) {
-//       this.visibleAnnouncementModal = true;
-//       this.textData = {
-//         title: "Elanı irəli çəkmək istədiyinizdən əminsinizmi? ",
-//         description:
-//             'Elanınız "Fermer məhsulları" kataloqunda daha irəlidə təsvir olunacaq ',
-//         type: "promote",
-//       };
-//     },
-    const vipDoAnnouncement = function (id:number) {
-      visiblePromoteListing.value = true;
-      textData = {
-        title: t('are_you_sure_you_want_to_make_the_announcement_VIP'),
-        description:
-            t('your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days'),
-        type: "vip",
-      };
-    }
+  }
+}
+const promoteAnnouncement = function (id: number | any) {
+  visiblePromoteListing.value = true;
+  textData = {
+    title: t("are_you_sure_want_to_move_the_ad_forward"),
+    description:
+        t('ad_will_be_featured_further_in_the_Farm_Products_directory'),
+    type: "promote",
+  };
+}
+const vipDoAnnouncement = function (id: number) {
+  visiblePromoteListing.value = true;
+  textData = {
+    title: t('are_you_sure_you_want_to_make_the_announcement_VIP'),
+    description:
+        t('your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days'),
+    type: "vip",
+  };
+}
 const showDeactiveConfirm = function (id: number, type = null) {
   selectedId.value = id;
-  type.value = type;
-  visibleDeactiveConfirm.value = true;
+  toggleStatusType.value = 'deactive';
+  visibleToggleStatus.value = true;
+  toggleStatusModalText = {
+    pharagraph_0: t("are_you_sure_you_want_to_disable_the_ad"),
+    pharagraph_1: t("your_ad_will_not_appear_on_the_web_page"),
+  }
 }
-//     submitDeactive() {
-//       this.$store
-//           .dispatch("advertisement/deactiveannouncementsStore.getAnnouncement", this.selectedId)
-//           .then(() => {
-//             this.loadAnnouncementDetail();
-//             this.visibleDeactiveConfirm = false;
-//
-//             if (this.type) {
-//               this.$store.dispatch(
-//                   "advertisement/getannouncementsStore.getAnnouncementById",
-//                   this.selectedId
-//               );
-//             }
-//           });
-//     },
-//     showActiveConfirm(id, type = null) {
-//       this.selectedId = id;
-//       this.type = type;
-//       this.visibleActiveConfirm = true;
-//     },
-//     submitActive() {
-//       this.$store
-//           .dispatch("advertisement/activeannouncementsStore.getAnnouncement", this.selectedId)
-//           .then(() => {
-//             this.loadAnnouncementDetail();
-//             this.visibleActiveConfirm = false;
-//             if (this.type) {
-//               this.$store.dispatch(
-//                   "advertisement/getannouncementsStore.getAnnouncementById",
-//                   this.selectedId
-//               );
-//             }
-//           });
-//     },
+
+const showActiveConfirm = function (id: number, type = null) {
+  selectedId.value = id;
+  toggleStatusType.value = 'active';
+  visibleToggleStatus.value = true;
+  toggleStatusModalText = {
+    pharagraph_0: t("are_you_sure_you_want_to_enable_the_ad"),
+  }
+}
+const submitToggleStatus = async function () {
+  if (toggleStatusType.value === "active") {
+    try {
+      await announcementsStore.fetchAnnouncementActive(selectedId.value)
+      if (announcementsStore.getAnnouncementActivateStatus === 'success') {
+        visibleToggleStatus.value = false;
+        await announcementsStore.fetchAnnouncementDetail(Number(useRoute().params.announcementdetail))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  } else {
+    try {
+      await announcementsStore.fetchAnnouncementDeactive(selectedId.value)
+      if (announcementsStore.getAnnouncementDeactivateStatus === 'success') {
+        visibleToggleStatus.value = false;
+        await announcementsStore.fetchAnnouncementDetail(Number(useRoute().params.announcementdetail))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+}
 //     showEditModal(id) {
 //       this.selectedId = id;
 //       this.$store
@@ -705,41 +581,16 @@ const showDeactiveConfirm = function (id: number, type = null) {
 //       this.loadAnnouncementDetail();
 //       this.updateModalVisible = false;
 //     },
-//     loadAnnouncementDetail() {
-//       this.$store
-//           .dispatch(
-//               "advertisement/getannouncementsStore.getAnnouncementByIdInDetail",
-//               this.$route.params.announcementDetail
-//           )
-//           .then((res) => {
-//             this.announcementsStore.getAnnouncement = res;
-//             this.$store.commit("advertisement/setannouncementsStore.getAnnouncement", res);
-//           });
-//     },
-//     async downloadImage(imageSrc, nameOfDownload = "my-image.png") {
-//       const response = await fetch(imageSrc);
-//
-//       const blobImage = await response.blob();
-//
-//       const href = URL.createObjectURL(blobImage);
-//
-//       const anchorElement = document.createElement("a");
-//       anchorElement.href = href;
-//       anchorElement.download = nameOfDownload;
-//
-//       document.body.appendChild(anchorElement);
-//       anchorElement.click();
-//
-//       document.body.removeChild(anchorElement);
-//       window.URL.revokeObjectURL(href);
-//     },
-//     closePreviewImageModal() {
-//       this.previewVisible = false;
-//     },
-//     async handlePreview(path) {
-//       this.previewPath = path;
-//       this.previewVisible = true;
-//     },
+
+const closePreviewImageModal = function () {
+  previewVisible.value = false;
+}
+const handlePreview = function (thumbnailPath: string, thumbnailName: string) {
+  previewImage.value = `${useRuntimeConfig().public.baseURL}/${thumbnailPath}`;
+  previewImageName.value = thumbnailName;
+  previewVisible.value = true;
+}
+
 const resolveStatusClass = function (status: any) {
   if (status.label == "PUBLISHED") {
     return "text-green-600";
@@ -769,24 +620,24 @@ const dateModel = function (value: Date | string) {
 //       this.$store.commit("setannouncementsStore.getAnnouncementDetailModal", false);
 //     },
 const statusDetail = function () {
-  statusData.rejected = announcementsStore.getAnnouncement.farmerProductHistories.filter((el) => {
+  statusData.rejected = announcementsStore.getAnnouncement.farmerProductHistories.filter((el: FarmerProductHistories) => {
     return el.status.label == "REJECTED";
   });
   statusData.published = announcementsStore.getAnnouncement.farmerProductHistories.filter(
-      (el) => {
+      (el: FarmerProductHistories) => {
         return el.status.label == "PUBLISHED";
       }
   );
   statusData.registered = announcementsStore.getAnnouncement.farmerProductHistories.filter(
-      (el) => {
+      (el: FarmerProductHistories) => {
         return el.status.label == "REGISTERED";
       }
   );
-  statusData.expired = announcementsStore.getAnnouncement.farmerProductHistories.filter((el) => {
+  statusData.expired = announcementsStore.getAnnouncement.farmerProductHistories.filter((el: FarmerProductHistories) => {
     return el.status.label == "EXPIRED";
   });
   statusData.unPublished = announcementsStore.getAnnouncement.farmerProductHistories.filter(
-      (el) => {
+      (el: FarmerProductHistories) => {
         return el.status.label == "UNPUBLISHED";
       }
   );
@@ -796,16 +647,5 @@ const statusDetail = function () {
 const closeStatusDetail = function () {
   visibleStatusDetail.value = false;
 }
-// },
-//   async asyncData({ store, query }) {
-//     if (query && query.id) {
-//       store
-//         .dispatch("advertisement/getannouncementsStore.getAnnouncementById", query.id)
-//         .then(() => {
-//           store.commit("setannouncementsStore.getAnnouncementDetailModal", true);
-//         });
-//     }
-//   },
-//   watchQuery: ["id"],
-// };
+
 </script>

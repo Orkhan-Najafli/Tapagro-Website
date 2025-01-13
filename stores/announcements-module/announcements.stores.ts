@@ -17,6 +17,12 @@ export const useAnnouncementsStore = defineStore("announcements", {
         announcementStatus: "" as string,
         announcementError: null as null | Error,
 
+        announcementPromoteStatus: "" as string,
+        announcementPromoteError: null as null | Error,
+
+        announcementVIPStatus: "" as string,
+        announcementDeactivateStatus: "" as string,
+        announcementActivateStatus: "" as string,
         baseURL: useRuntimeConfig().public.baseURL,
     }),
     getters: {
@@ -28,6 +34,11 @@ export const useAnnouncementsStore = defineStore("announcements", {
         getAnnouncement: (state) => state.announcement,
         getAnnouncementStatus: (state) => state.announcementStatus,
         getAnnouncementError: (state) => state.announcementError,
+
+        getAnnouncementPromoteStatus: (state) => state.announcementPromoteStatus,
+        getAnnouncementVIPStatus: (state) => state.announcementVIPStatus,
+        getAnnouncementDeactivateStatus: (state) => state.announcementDeactivateStatus,
+        getAnnouncementActivateStatus: (state) => state.announcementActivateStatus,
     },
     actions: {
         async resetAnnouncements() {
@@ -101,8 +112,70 @@ export const useAnnouncementsStore = defineStore("announcements", {
                         }
                     )
             );
-            // this.announcementPromoteStatus = status.value;
-            // this.announcementPromoteError = error.value;
+            this.announcementPromoteStatus = status.value;
+        },
+        async fetchAnnouncementVIP(queryData: number) {
+            const {data, status, error} = await useAsyncData<any>(
+                "announcement-VIP",
+                () =>
+                    $fetch(
+                        `${this.baseURL}${parseUrl(urls.vip, {
+                            id: queryData,
+                        })}`,
+                        {
+                            headers: {
+                                ...HeaderConfigs({
+                                    Authorization: useCookie("token").value || "",
+                                }),
+                            },
+                            // query: queryData,
+                            method: "PATCH",
+                        }
+                    )
+            );
+            this.announcementVIPStatus = status.value;
+        },
+        async fetchAnnouncementDeactive(queryData: number) {
+            const {data, status, error} = await useAsyncData<any>(
+                "announcement-VIP",
+                () =>
+                    $fetch(
+                        `${this.baseURL}${parseUrl(urls.deactivate_announcement, {
+                            id: queryData,
+                        })}`,
+                        {
+                            headers: {
+                                ...HeaderConfigs({
+                                    Authorization: useCookie("token").value || "",
+                                }),
+                            },
+                            // query: queryData,
+                            method: "DELETE",
+                        }
+                    )
+            );
+            this.announcementDeactivateStatus = status.value;
+        },
+        async fetchAnnouncementActive(queryData: number) {
+            const {data, status, error} = await useAsyncData<any>(
+                "announcement-VIP",
+                () =>
+                    $fetch(
+                        `${this.baseURL}${parseUrl(urls.deactivate_announcement, {
+                            id: queryData,
+                        })}`,
+                        {
+                            headers: {
+                                ...HeaderConfigs({
+                                    Authorization: useCookie("token").value || "",
+                                }),
+                            },
+                            // query: queryData,
+                            method: "PATCH",
+                        }
+                    )
+            );
+            this.announcementActivateStatus = status.value;
         },
     },
 });

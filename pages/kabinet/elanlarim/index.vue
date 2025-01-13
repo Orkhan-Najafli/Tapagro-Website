@@ -223,7 +223,7 @@ const previewImageName = ref<string>()
 const previewVisible = ref(false)
 const selectedId = ref()
 const visibleDeactiveConfirm = ref(false)
-const type = ref<null | any | undefined>()
+const types = ref<null | any | undefined>()
 const visibleActiveConfirm = ref(false)
 announcementsStore.resetAnnouncements()
 const fetchAnnouncements = function () {
@@ -237,36 +237,6 @@ const handlePageChange = function (page: number) {
   fetchAnnouncements()
 };
 const totalElements = computed(() => announcementsStore.getTotalElements);
-
-//
-// export default {
-//   scrollToTop: true,
-//   layout: "my-areas-page-layout",
-//   components: {},
-//   data() {
-//     return {
-
-
-//       baseURL: urls.getParam("API_BASE_URL"),
-//       : false,
-//       : null,
-//       updateModalVisible: false,
-//       visibleDeactiveConfirm: false,
-//       visibleActiveConfirm: false,
-//       editType: null,
-//     };
-//   },
-//   computed: {
-//     ...mapGetters({
-//       farmerProductList: "advertisement/farmerProductList",
-//       farmerProduct: "advertisement/farmerProduct",
-//       farmer_product_detail_modal: "getFarmerProductDetailModal",
-//       getOwnAnnouncementErrorMessage:
-//           "advertisement/getOwnAnnouncementErrorMessage",
-//     }),
-//   },
-//   methods: {
-
 const closePreviewImageModal = () => {
   previewVisible.value = false;
 }
@@ -279,7 +249,6 @@ const handlePreview = function (id: number, record: Announcements | any) {
 const setQuery = function (id: number) {
   selectedId.value = id;
   announcementsStore.fetchAnnouncementDetail(id)
-  // useRouter().push({path: useRoute().fullPath, query: {id: id}});
 }
 const resolveStatusClass = function (status: any) {
   if (!status || typeof status !== 'object' || !status.label) {
@@ -305,101 +274,7 @@ const dateModal = function (value: Date | string) {
   let dat = new Date(value).toString();
   return moment(dat).format("DD/MM/yyyy HH:mm:ss");
 }
-//     showEditModal(id, editType = null) {
-//       this.editType = editType;
-//       this.selectedId = id;
-//       this.$store
-//           .dispatch("advertisement/getFarmerProductById", id)
-//           .then(() => {
-//             this.updateModalVisible = true;
-//           });
-//     },
-//     closeEditModal() {
-//       this.updateModalVisible = false;
-//       if (this.editType) {
-//         this.$store.commit("setFarmerProductDetailModal", true);
-//       }
-//     },
-//     onSuccessUpdate() {
-//       this.$store.dispatch("advertisement/getFarmerProductList", {
-//         ...this.pagination,
-//       });
-//       if (this.editType) {
-//         this.$store.dispatch(
-//             "advertisement/getFarmerProductById",
-//             this.selectedId
-//         );
-//         this.$store.commit("setFarmerProductDetailModal", true);
-//       }
-//       this.updateModalVisible = false;
-//     },
-const showDeactiveConfirm = function (id: number, type = null) {
-  selectedId.value = id;
-  type.value = type;
-  visibleDeactiveConfirm.value = true;
-}
-const submitDeactive = function () {
-  // this.$store
-  //     .dispatch("advertisement/deactiveFarmerProduct", this.selectedId)
-  //     .then(() => {
-  //       this.$store.dispatch("advertisement/getFarmerProductList", {
-  //         ...this.pagination,
-  //       });
-  //       this.visibleDeactiveConfirm = false;
-  //
-  //       if (this.type) {
-  //         this.$store.dispatch(
-  //             "advertisement/getFarmerProductById",
-  //             this.selectedId
-  //         );
-  //       }
-  //     });
-}
-//     showActiveConfirm(id, type = null) {
-//       this.selectedId = id;
-//       this.type = type;
-//       this.visibleActiveConfirm = true;
-//     },
-const submitActive = function () {
-  // this.$store
-  //     .dispatch("advertisement/activeFarmerProduct", this.selectedId)
-  //     .then(() => {
-  //       this.$store.dispatch("advertisement/getFarmerProductList", {
-  //         ...this.pagination,
-  //       });
-  //       this.visibleActiveConfirm = false;
-  //       if (this.type) {
-  //         this.$store.dispatch(
-  //             "advertisement/getFarmerProductById",
-  //             this.selectedId
-  //         );
-  //       }
-  //     });
-}
-//   },
-//   created() {
-//     this.$store.commit("setAppHeroShowAndHide", false);
-//     this.$store.dispatch("advertisement/getFarmerProductList", {
-//       ...this.pagination,
-//     });
-//   },
-//   destroyed() {
-//     this.$store.commit("advertisement/setOwnAnnouncementErrorMessage", {
-//       show: false,
-//       errorMessage: "",
-//     });
-//   },
-//   async asyncData({ store, query }) {
-//     if (query && query.id) {
-//       store
-//           .dispatch("advertisement/getFarmerProductById", query.id)
-//           .then(() => {
-//             store.commit("setFarmerProductDetailModal", true);
-//           });
-//     }
-//   },
-//   watchQuery: ["id"],
-// };
+
 fetchAnnouncements()
 </script>
 <style>
