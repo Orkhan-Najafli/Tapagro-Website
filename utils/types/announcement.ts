@@ -52,15 +52,16 @@ export interface AnnouncementDetail {
             "path": string
         },
     ],
-    "farmerProductHistories": [
-        {
-            "status": {
-                "label": string,
-                "status": string
-            },
-            "note": string | null,
-            "createdAt": string
-        }
-    ],
+    "farmerProductHistories": Array<FarmerProductHistories>,
     "vipAt": Date | string | null
+}
+
+export interface FarmerProductHistories {
+    "status": {
+        "label": string,
+        "status": string
+    },
+    "note": string | null,
+    "createdAt": string
+
 }
