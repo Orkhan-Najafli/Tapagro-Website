@@ -69,7 +69,9 @@
                 </div>
               </div>
             </div>
-            <TotalPayment :shoppingCarts="shoppingCarts"/>
+            <div class="w-full lg:w-1/4 lg:pb-16">
+              <TotalPayment :shoppingCarts="shoppingCarts"/>
+            </div>
           </section>
           <section v-if="shoppingCarts && !shoppingCarts?.items?.length">
             <div>

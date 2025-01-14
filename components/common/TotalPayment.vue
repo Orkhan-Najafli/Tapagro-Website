@@ -127,12 +127,12 @@
 </template>
 <script setup lang="ts">
 import type {PropType} from "vue";
-import type {Item} from "~/utils/types/shopping";
+import type {Item, Shopping} from "~/utils/types/shopping";
 
 const {t} = useI18n()
 const props = defineProps({
   shoppingCarts: {
-    type: Object as PropType<Item>,
+    type: Object as Shopping,
     default: {} as PropType<Item>,
   },
 });
