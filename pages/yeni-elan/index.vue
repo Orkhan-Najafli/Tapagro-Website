@@ -65,15 +65,13 @@
               <a-form class="block">
                 <div class="flex flex-col md:flex-row">
                   <div class="md:mr-6 w-full leading-none">
-                    <a-form-item v-bind="validateInfos.subcategoryId" class="w-full leading-none">
-                      <template #label>
-                        <label>{{
-                            t("product")
-                          }}</label>
-                      </template>
+                    <a-form-item v-bind="validateInfos.subcategoryId" class=" flex flex-col w-full leading-none">
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("product") }}</label>
                       <a-tree-select
+                          :selectable="false"
                           class="w-full leading-none"
-                          v-model="formData.typeId"
+                          v-model:value="formData.typeId"
                           :showSearch="true"
                           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                           :placeholder="t('select_the_product')"
@@ -85,16 +83,13 @@
                           @click="clickCategory"
                       >
                         <a-tree-select-node
-                            :selectable="false"
-                            v-for="(subcategory, index) in subcategories"
+                            v-for="(subcategory, index) in useCategoriesStore().getProductCategories.subcategories"
                             :key="index"
                             :value="subcategory.id"
                             :title="subcategory.name"
                         >
                           <a-tree-select-node
-                              v-for="(subcategoryType, typeIndex) in subcategories[
-                            index
-                          ].types"
+                              v-for="(subcategoryType, typeIndex) in useCategoriesStore().getProductCategories.subcategories[index].types"
                               :key="`${index}-${typeIndex}`"
                               :value="subcategoryType.id"
                               :title="subcategoryType.name"
@@ -107,11 +102,7 @@
                   </div>
                   <div class="w-full mr-6">
                     <a-form-item v-bind="validateInfos.advertisementName" class="w-full leading-none">
-                      <template #label>
-                        <label for="_phone">{{
-                            t("ad_name")
-                          }}</label>
-                      </template>
+                      <label class="flex flex-row justify-start items-center h-8"> {{ t("ad_name") }}</label>
                       <a-tooltip
                           trigger="click"
                           placement="top"
@@ -123,9 +114,9 @@
                           arrow-point-at-center
                       >
                         <a-input
-                            class="w-full mt-1"
+                            class="w-full"
                             :maxLength="64"
-                            v-model="formData.name"
+                            v-model:value="formData.name"
                             id="_phone"
                             :placeholder="t('insert')"
                             allow-clear
@@ -137,18 +128,15 @@
                   </div>
                   <div class="w-full">
                     <a-form-item v-bind="validateInfos.price" class="w-full leading-none">
-                      <template #label>
-                        <label>{{
-                            t("price")
-                          }}</label>
-                      </template>
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("price") }}</label>
                       <a-input
                           class="w-full"
                           suffix="AZN"
                           id="_price"
                           allow-clear
                           :maxLength="255"
-                          v-model="formData.price"
+                          v-model:value="formData.price"
                           placeholder="0.00"
                           name="price"
                       />
@@ -158,11 +146,8 @@
                 <div class="flex flex-col md:flex-row">
                   <div class="w-full mr-6">
                     <a-form-item v-bind="validateInfos.measurementValue" class="w-full leading-none">
-                      <template #label>
-                        <label for="_measurementValue">{{
-                            t("unit_quantity_and_size")
-                          }}</label>
-                      </template>
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("unit_quantity_and_size") }}</label>
                       <a-tooltip
                           trigger="click"
                           placement="top"
@@ -174,7 +159,7 @@
                             class="w-full mt-1"
                             id="_measurementValue"
                             allow-clear
-                            v-model="formData.measurementValue"
+                            v-model:value="formData.measurementValue"
                             :placeholder="t('insert')"
                             name="measurementValue"
                         >
@@ -204,40 +189,20 @@
                     >
                   </div>
                   <div class="w-full md:mr-6">
-                    <a-form-item v-bind="validateInfos.cityId" class="w-full leading-none">
-                      <template #label>
-                        <label for="_cityId">{{
-                            t("region_title")
-                          }}</label>
-                      </template>
-                      <a-select
-                          name="cityId"
-                          allow-clear
-                          class="w-full"
-                          id="_cityId"
-                          show-search
-                          v-model="formData.cityId"
-                          :placeholder="t('region')"
-                          option-filter-prop="children"
-                          :filter-option="filterOption"
-                      >
-                        <a-select-option
-                            v-for="(cityName, index) in cities"
-                            :key="index"
-                            :value="cityName.id"
-                        >
-                          {{ cityName.name }}
-                        </a-select-option>
+                    <a-form-item v-bind="validateInfos.cityId" class=" flex flex-col w-full leading-none">
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("region_title") }}</label>
+                      <a-select :value="formData.cityId" class="w-full max-w-full mt-1"
+                                id="_city" show-search placeholder="" :options="cities" :filter-option="filterOption"
+                                @change="handleChangeCity" @search="handleSearch" allow-clear>
+
                       </a-select>
                     </a-form-item>
                   </div>
                   <div class="w-full">
                     <a-form-item v-bind="validateInfos.phoneNumber" class="w-full leading-none">
-                      <template #label>
-                        <label for="_phone">{{
-                            t("phone_number")
-                          }}</label>
-                      </template>
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("phone_number") }}</label>
                       <a-input
                           addon-before="+994"
                           class="w-full mt-1"
@@ -245,7 +210,7 @@
                           id="_phone"
                           name="phoneNumber"
 
-                          v-model="formData.phoneNumber"
+                          v-model:value="formData.phoneNumber"
                           placeholder="55 111 11 11"
                       >
                       </a-input>
@@ -254,11 +219,8 @@
                 </div>
                 <div class="flex w-full h-auto">
                   <a-form-item v-bind="validateInfos.description" class="w-full leading-none">
-                    <template #label>
-                      <label for="_phone">{{
-                          t("general_description")
-                        }}</label>
-                    </template>
+                    <label class="flex flex-row justify-start items-center"> <span
+                        class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("general_description") }}</label>
                     <a-tooltip
                         trigger="focus"
                         placement="top"
@@ -279,145 +241,11 @@
                 </div>
                 <div class="flex flex-col md:flex-row">
                   <div class="w-full">
-                    <!--                    <a-form-item class="">-->
-                    <!--                      <label-->
-                    <!--                          class="ant-form-item-required"-->
-                    <!--                          style="color: rgba(0, 0, 0, 0.85)"-->
-                    <!--                      >{{ t("catalog_photo") }}</label-->
-                    <!--                      >-->
-
-                    <!--                      <section-->
-                    <!--                          id="components-upload-demo-pictures-wall"-->
-                    <!--                          class="code-box"-->
-                    <!--                      >-->
-                    <!--                        <section class="code-box-demo">-->
-                    <!--                          <div class="clearfix">-->
-                    <!--                          <span class="ant-upload-picture-card-wrapper">-->
-                    <!--                            <div-->
-                    <!--                                class="ant-upload-list ant-upload-list-picture-card"-->
-                    <!--                            >-->
-                    <!--                              <div-->
-                    <!--                                  class="ant-upload-list-picture-card-container"-->
-                    <!--                                  style="height: 264px; width: 264px"-->
-                    <!--                                  v-for="(item, index) in catalogFileList"-->
-                    <!--                                  :key="item.uid"-->
-                    <!--                              >-->
-                    <!--                                <span>-->
-                    <!--                                  <div-->
-                    <!--                                      class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card"-->
-                    <!--                                      style="-->
-                    <!--                                      height: 264px;-->
-                    <!--                                      width: 264px;-->
-                    <!--                                      padding: 0 !important;-->
-                    <!--                                    "-->
-                    <!--                                  >-->
-                    <!--                                    <div class="ant-upload-list-item-info">-->
-                    <!--                                      <span>-->
-                    <!--                                        <img-->
-                    <!--                                            :src="item.data"-->
-                    <!--                                            alt="image.png"-->
-                    <!--                                            class="ant-upload-list-item-thumbnail ant-upload-list-item-image"-->
-                    <!--                                        />-->
-                    <!--                                      </span>-->
-                    <!--                                    </div>-->
-                    <!--                                    <span class="ant-upload-list-item-actions">-->
-                    <!--                                      <i-->
-                    <!--                                          aria-label="icon: delete"-->
-                    <!--                                          tabindex="-1"-->
-                    <!--                                          class="anticon anticon-delete"-->
-                    <!--                                          :title="t('delete_the_image')"-->
-                    <!--                                          @click="removeCatalogImage(index)"-->
-                    <!--                                      >-->
-                    <!--                                        <svg-->
-                    <!--                                            viewBox="64 64 896 896"-->
-                    <!--                                            data-icon="delete"-->
-                    <!--                                            width="1em"-->
-                    <!--                                            height="1em"-->
-                    <!--                                            fill="currentColor"-->
-                    <!--                                            aria-hidden="true"-->
-                    <!--                                            focusable="false"-->
-                    <!--                                            class=""-->
-                    <!--                                        >-->
-                    <!--                                          <path-->
-                    <!--                                              d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"-->
-                    <!--                                          ></path>-->
-                    <!--                                        </svg>-->
-                    <!--                                      </i>-->
-                    <!--                                    </span>-->
-                    <!--                                    &lt;!&ndash;&ndash;&gt;-->
-                    <!--                                  </div>-->
-                    <!--                                </span>-->
-                    <!--                              </div>-->
-                    <!--                            </div>-->
-                    <!--                            <a-upload-->
-                    <!--                                accept="image/png, image/gif, image/jpeg"-->
-                    <!--                                v-if="catalogFileList.length < 1"-->
-                    <!--                                :showUploadList="false"-->
-                    <!--                                :before-upload="beforeUploadCatalog"-->
-                    <!--                            >-->
-                    <!--                              <div-->
-                    <!--                                  class="ant-upload ant-upload-select ant-upload-select-picture-card"-->
-                    <!--                                  style="-->
-                    <!--                                  height: 264px;-->
-                    <!--                                  width: 264px;-->
-                    <!--                                  background-color: #fafafa;-->
-                    <!--                                "-->
-                    <!--                              >-->
-                    <!--                                <span-->
-                    <!--                                    role="button"-->
-                    <!--                                    tabindex="0"-->
-                    <!--                                    class="ant-upload"-->
-                    <!--                                >-->
-                    <!--                                  <input-->
-                    <!--                                      type="file"-->
-                    <!--                                      accept=""-->
-                    <!--                                      style="display: none"-->
-                    <!--                                  />-->
-                    <!--                                  <div>-->
-                    <!--                                    <i-->
-                    <!--                                        aria-label="icon: plus"-->
-                    <!--                                        class="anticon anticon-plus mb-3"-->
-                    <!--                                    >-->
-                    <!--                                      <svg-->
-                    <!--                                          viewBox="64 64 896 896"-->
-                    <!--                                          data-icon="plus"-->
-                    <!--                                          width="26"-->
-                    <!--                                          height="26"-->
-                    <!--                                          fill="currentColor"-->
-                    <!--                                          aria-hidden="true"-->
-                    <!--                                          focusable="false"-->
-                    <!--                                          class=""-->
-                    <!--                                      >-->
-                    <!--                                        <path-->
-                    <!--                                            d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"-->
-                    <!--                                        ></path>-->
-                    <!--                                        <path-->
-                    <!--                                            d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"-->
-                    <!--                                        ></path>-->
-                    <!--                                      </svg>-->
-                    <!--                                    </i>-->
-                    <!--                                    <div-->
-                    <!--                                        class="ant-upload-text text-[#00000073] text-xl font-medium"-->
-                    <!--                                    >-->
-                    <!--                                      {{ t("download") }}-->
-                    <!--                                    </div>-->
-                    <!--                                  </div>-->
-                    <!--                                </span>-->
-                    <!--                              </div>-->
-                    <!--                            </a-upload>-->
-                    <!--                          </span>-->
-                    <!--                          </div>-->
-                    <!--                        </section>-->
-                    <!--                      </section>-->
-                    <!--                    </a-form-item>-->
-                    <a-form-item v-bind="validateInfos.description" class="w-full leading-none">
-                      <template #label>
-                        <label for="_catalog_photo">{{
-                            t("catalog_photo")
-                          }}</label>
-                      </template>
+                    <a-form-item v-bind="validateInfos.catalogFile" class="w-full leading-none">
+                      <label class="flex flex-row justify-start items-center"> <span
+                          class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("catalog_photo") }}</label>
                       <div class="block w-full h-auto my-3">
-                        <div v-for="(photo,index) in catalogFileList"
+                        <div v-for="(photo,index) in catalogFile"
                              class=" float-left relative group w-[264px] h-[264px] rounded-lg overflow-hidden border shadow-md mr-2 p-1">
                           <img
                               :src="`${photo.data}`"
@@ -427,41 +255,31 @@
                           <div
                               class="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           >
-                            <!--                            <button-->
-                            <!--                                @click="handlePreview(photo.data,photo.name)"-->
-                            <!--                                class="hover:text-white text-gray-300 p-2 rounded-full">-->
-                            <!--                              <eye_icon/>-->
-                            <!--                            </button>-->
                             <button
-                                @click="removeOtherImage(index)"
+                                @click="removeFromCatalogFile(index)"
                                 class="text-gray-300 hover:text-white p-2 rounded-full ">
                               <remove_image_icon/>
                             </button>
                           </div>
                         </div>
-                        <div class="clearfix float-left">
-                          <a-upload
-                              style="height: 264px; width: 264px"
-                              v-if="showUploadButton"
+                        <div
+                            v-if="catalogFile.length <= 0"
+                            class="clearfix float-left">
+                          <a-upload-dragger
+                              :before-upload="beforeUpload"
                               accept="image/png, image/gif, image/jpeg"
                               list-type="picture-card"
-                              name="avatar"
-                              class="avatar-uploader"
+                              name="catalogFile"
+                              class=" flex justify-center items-center min-w-[264px] min-h-[264px] avatar-uploader"
                               :show-upload-list="false"
-                              :before-upload="beforeUpload"
-                              @change="handleChangeFile"
                               :showDownloadIcon="false"
                           >
                             <div>
                               <plus-outlined/>
                               <div style="margin-top: 8px">{{ t("download") }}</div>
                             </div>
-                          </a-upload>
+                          </a-upload-dragger>
                         </div>
-                        <a-modal :open="previewVisible" :title="previewTitle" :footer="null"
-                                 @cancel="handleCancelPreview">
-                          <img alt="example" style="width: 100%" :src="previewImage"/>
-                        </a-modal>
                       </div>
                     </a-form-item>
                     <div>
@@ -475,104 +293,52 @@
                       </p>
                     </div>
                   </div>
-                  <!--                  <div class="w-full">-->
-                  <!--                    <a-form-item :label="t('other_images_maximum_number')">-->
-                  <!--                      <section-->
-                  <!--                          id="components-upload-demo-pictures-wall"-->
-                  <!--                          class="code-box"-->
-                  <!--                      >-->
-                  <!--                        <section class="code-box-demo">-->
-                  <!--                          <div class="clearfix">-->
-                  <!--                          <span class="ant-upload-picture-card-wrapper">-->
-                  <!--                            <div-->
-                  <!--                                class="ant-upload-list ant-upload-list-picture-card"-->
-                  <!--                            >-->
-                  <!--                              <div-->
-                  <!--                                  class="ant-upload-list-picture-card-container"-->
-                  <!--                                  v-for="(item, index) in otherFileList"-->
-                  <!--                                  :key="item.uid"-->
-                  <!--                              >-->
-                  <!--                                <span>-->
-                  <!--                                  <div-->
-                  <!--                                      class="ant-upload-list-item ant-upload-list-item-done ant-upload-list-item-list-type-picture-card"-->
-                  <!--                                  >-->
-                  <!--                                    <div class="ant-upload-list-item-info">-->
-                  <!--                                      <span>-->
-                  <!--                                        <img-->
-                  <!--                                            :src="item.data"-->
-                  <!--                                            alt="image.png"-->
-                  <!--                                            class="ant-upload-list-item-thumbnail ant-upload-list-item-image"-->
-                  <!--                                        />-->
-                  <!--                                      </span>-->
-                  <!--                                    </div>-->
-                  <!--                                    <span class="ant-upload-list-item-actions">-->
-                  <!--                                      <i-->
-                  <!--                                          aria-label="icon: delete"-->
-                  <!--                                          tabindex="-1"-->
-                  <!--                                          class="anticon anticon-delete"-->
-                  <!--                                          title="şəkli sil"-->
-                  <!--                                          @click="removeOtherImage(index)"-->
-                  <!--                                      >-->
-                  <!--                                    <RemoveImageIcon/>-->
-                  <!--                                      </i>-->
-                  <!--                                    </span>-->
-                  <!--                                    &lt;!&ndash;&ndash;&gt;-->
-                  <!--                                  </div>-->
-                  <!--                                </span>-->
-                  <!--                              </div>-->
-                  <!--                            </div>-->
-                  <!--                            <a-upload-->
-                  <!--                                accept="image/png, image/gif, image/jpeg"-->
-                  <!--                                v-if="otherFileList.length < 5"-->
-                  <!--                                :showUploadList="false"-->
-                  <!--                                :before-upload="beforeUploadOther"-->
-                  <!--                            >-->
-                  <!--                              <div-->
-                  <!--                                  class="ant-upload ant-upload-select ant-upload-select-picture-card"-->
-                  <!--                                  style="background-color: #fafafa"-->
-                  <!--                              >-->
-                  <!--                                <span-->
-                  <!--                                    role="button"-->
-                  <!--                                    tabindex="0"-->
-                  <!--                                    class="ant-upload"-->
-                  <!--                                >-->
-                  <!--                                  <input-->
-                  <!--                                      type="file"-->
-                  <!--                                      accept=""-->
-                  <!--                                      style="display: none"-->
-                  <!--                                  />-->
-                  <!--                                  <div>-->
-                  <!--                                    <i-->
-                  <!--                                        aria-label="icon: plus"-->
-                  <!--                                        class="anticon anticon-plus mb-3"-->
-                  <!--                                    >-->
-                  <!--                                     <AddImageIcon/>-->
-                  <!--                                    </i>-->
-                  <!--                                    <div-->
-                  <!--                                        class="ant-upload-text text-[#00000073]"-->
-                  <!--                                    >-->
-                  <!--                                      {{ t("download") }}-->
-                  <!--                                    </div>-->
-                  <!--                                  </div>-->
-                  <!--                                </span>-->
-                  <!--                              </div>-->
-                  <!--                            </a-upload>-->
-                  <!--                          </span>-->
-                  <!--                          </div>-->
-                  <!--                        </section>-->
-                  <!--                      </section>-->
-                  <!--                    </a-form-item>-->
-                  <!--                  </div>-->
+                  <div class="w-full">
+                    <a-form-item v-bind="validateInfos.otherFileList" class="w-full leading-none">
+                      <label class="flex flex-row justify-start items-center h-8"> {{
+                          t("other_images_maximum_number")
+                        }}</label>
+                      <div v-for="(photo,index) in otherFileList"
+                           class=" float-left relative group w-[102px] h-[102px] rounded-lg overflow-hidden border shadow-md mr-2 p-1 mt-1.5">
+                        <img
+                            :src="`${photo.data}`"
+                            :alt="photo.name"
+                            class="w-full h-full object-cover"
+                        />
+                        <div
+                            class="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          <button
+                              @click="removeOtherImage(index)"
+                              class="text-gray-300 hover:text-white p-2 rounded-full ">
+                            <remove_image_icon/>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                          v-if="otherFileList.length < 5"
+                          class="clearfix float-left">
+                        <a-upload
+                            accept="image/png, image/gif, image/jpeg"
+                            list-type="picture-card"
+                            name="otherFileList"
+                            class="avatar-uploader mt-1.5"
+                            :show-upload-list="false"
+                            :before-upload="beforeUploadOtherFiles"
+                            :showDownloadIcon="false"
+                        >
+                          <div>
+                            <plus-outlined/>
+                            <div style="margin-top: 8px">{{ t("download") }}</div>
+                          </div>
+                        </a-upload>
+                      </div>
+                    </a-form-item>
+                  </div>
                 </div>
-                <div class="w-full mb-6 md:w-1/2 order-1 md:order-2">
+                <div class="w-full my-4 md:w-1/2 order-1 md:order-2">
                   <a-form-item class="w-full leading-none">
-                    <!--                    <template #label>-->
-                    <!--                      <label for="">{{-->
-                    <!--                          t("i_am_delivering")-->
-                    <!--                        }}</label>-->
-                    <!--                    </template>-->
                     <span class="mr-4"> {{ t("i_am_delivering") }} </span>
-
                     <a-switch
                         :checked-children="t('yes_switch')"
                         :un-checked-children="t('no_switch')"
@@ -582,15 +348,6 @@
                   </a-form-item>
 
                 </div>
-                <!--              <div-->
-                <!--                  class="inline-flex flex-col justify-start items-start"-->
-                <!--                  :class="{-->
-                <!--                  'border-2 border-[#f5222d]': checkRecaptcha == 'error',-->
-                <!--                  'border-0 border-transparent': checkRecaptcha == 'success',-->
-                <!--                }"-->
-                <!--              >-->
-                <!--                <recaptcha @error="onError" @success="onSuccess" />-->
-                <!--              </div>-->
                 <div class="w-full mb-4 mt-11 text-center">
                   <p v-html="adUseRules"></p>
                 </div>
@@ -621,8 +378,8 @@ const {$recaptcha} = useNuxtApp();
 const useForm = Form.useForm;
 const subcategories = reactive([])
 let measurementUnits = reactive([])
-const cities = reactive([])
-let catalogFileList = reactive([])
+let catalogFile = reactive<Array<{ file: any; uid: number; name: any; data: string; id: null; }>>([])
+const thumbnailName = ref()
 const visibleMeasurementUnit = ref(false)
 const formData = reactive({
   cityId: ref(),
@@ -644,6 +401,7 @@ const formData = reactive({
   thumbnailName: ref(),
   typeId: ref(),
 })
+const otherFileList: any = reactive<Array<any>>([]);
 const allowFileTypes = ref(["image/jpeg", "image/png", "image/jpg"])
 const allowFileSize = ref(5242880)
 const rulesRef = reactive({
@@ -660,7 +418,7 @@ const rulesRef = reactive({
     },
     {
       pattern: /^[0-9]+(\.[0-9]{1,6})?$/,
-      message: t("decimal"),
+      message: t("decimal", {decimals: 6}),
       trigger: "change",
     },
   ],
@@ -671,7 +429,7 @@ const rulesRef = reactive({
     },
     {
       pattern: /^[0-9]+(\.[0-9]{1,6})?$/,
-      message: t("decimal"),
+      message: t("decimal", {decimals: 6}),
       trigger: "change",
     },
   ],
@@ -688,8 +446,8 @@ const rulesRef = reactive({
     },
     {
       pattern: /^(55|51|99|77|70|12)\d{7}$/,
-      message: t("invalid_phone_number"), // "Telefon nömrəsi yanlışdır" tərcümə edilmiş mesaj
-      trigger: "blur",
+      message: t("enter_a_valid_phone_number"),
+      trigger: "change",
     },
   ],
   description: [
@@ -708,82 +466,42 @@ const rulesRef = reactive({
       trigger: "change",
     },
   ],
-  // companyName: [
-  //   {
-  //     required: true,
-  //     message: t("required"),
-  //   },
-  // ],
-  // emailAddress: [
-  //   {
-  //     required: true,
-  //     message: t("required"),
-  //   },
-  //   {
-  //     email: true,
-  //     message: "Email olmalidir",
-  //   },
-  // ],
+  catalogFile: [
+    {
+      required: true,
+      message: t("required"),
+    },
+  ]
 })
+const clickCategoryData = ref(false)
+const waitResponse = ref(false)
 const adUseRules = computed(() => t('ad_use_rules'));
-const getBase64 = function (img: any, callback: any) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
+useCitiesStore().fetchCities()
+useCategoriesStore().fetchProductCategories()
+
+function getBase64Async(img: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(img);
+  });
 }
+
 const {resetFields, validate, validateInfos} = useForm(formData, rulesRef);
 
-//
-// export default {
-//   middleware: "auth",
-//   data() {
-//     return {
-//       verified: false,
-//       waitResponse: false,
-//       checkRecaptcha: undefined,
-//       otherFileList: [],
-//       rules: {
-//         phoneNumber: [
-//           {
-//             pattern: new RegExp("^[0-9]{9}$"),
-//             message: this.t("enter_a_valid_phone_number"),
-//             trigger: "change",
-//           },
-//         ],
-//       },
-//       clickCategoryData: false,
-//     };
-//   },
-//   mounted() {
-//     this.loadCities();
-//     this.loadProductCategories();
-//     this.$store.commit("setAppHeroShowAndHide", false);
-//   },
 
-//   computed: {
-//     formattedProducts() {
-//       return this.t("ad_use_rules");
-//     },
-//   },
-//   methods: {
-//     onError(error) {
-//       this.$recaptcha.reset();
-//     },
-//     onSuccess(token) {
-//       this.$store
-//           .dispatch("auth/checkChaptchaToken", {
-//             response: token,
-//           })
-//           .then((response) => {
-//             this.verified = true;
-//             this.checkRecaptcha = "success";
-//           })
-//           .catch((err) => {
-//             this.$recaptcha.reset();
-//             this.verified = true;
-//             this.checkRecaptcha = "error";
-//           });
-//     },
+const handleSearch = (value: string) => {
+  useCitiesStore().fetchCities(value)
+};
+const handleChangeCity = (value: any, options: any) => {
+  formData.cityId.value = options.id;
+};
+const filterOption = (input: string, option: any) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+const cities = computed(() => useCitiesStore().getCities.map(item => ({value: item.name, id: item.id})))
+
 const measurementUnitIdChange = function (value: any) {
   value != null
       ? (visibleMeasurementUnit.value = false)
@@ -791,67 +509,70 @@ const measurementUnitIdChange = function (value: any) {
 }
 const selectSubCategory = function () {
   let key = extra.selectedNodes[0].key.at(0);
-  measurementUnits.concat(...subcategories[key].measurementUnits);
+  measurementUnits.concat(subcategories[key].measurementUnits);
   formData.subcategoryId.value = subcategories[key].id;
 }
 const selectSubCategoryChange = function (value: any) {
   if (value == null) {
-    measurementUnits.length = [];
+    measurementUnits.length = 0;
     formData.measurementUnitId.value = undefined;
   }
 }
-//     beforeUploadCatalog(file) {
-//       if (file && this.allowFileTypes.includes(file.type)) {
-//         if (file.size <= this.allowFileSize) {
-//           const obj = {
-//             file,
-//             uid: Date.now(),
-//             name: file && file.name,
-//             data: "",
-//             id: null,
-//           };
-//           getBase64(file, (imageUrl) => {
-//             obj.data = imageUrl;
-//             this.thumbnailName = file.name;
-//             this.catalogFileList.push(obj);
-//           });
-//         } else {
-//           this.$message.error("Faylın ölçüsü 5 mb-dən çox ola bilməz");
-//         }
-//       } else {
-//         this.$message.error("Fayl tipi düzgün deyil");
-//       }
-//       return false;
-//     },
-//     beforeUploadOther(file) {
-//       if (file && this.allowFileTypes.includes(file.type)) {
-//         if (file.size <= this.allowFileSize) {
-//           const obj = {
-//             file,
-//             uid: Date.now(),
-//             name: file && file.name,
-//             data: "",
-//             id: null,
-//           };
-//           getBase64(file, (imageUrl) => {
-//             obj.data = imageUrl;
-//             this.otherFileList.push(obj);
-//           });
-//         } else {
-//           this.$message.error("Faylın ölçüsü 5 mb-dən çox ola bilməz");
-//         }
-//       } else {
-//         this.$message.error("Fayl tipi düzgün deyil");
-//       }
-//       return false;
-//     },
-//     removeCatalogImage(index) {
-//       this.catalogFileList.splice(index, 1);
-//     },
-//     removeOtherImage(index) {
-//       this.otherFileList.splice(index, 1);
-//     },
-//     handleOk() {
+const beforeUpload = function (file: any) {
+  if (file && allowFileTypes.value.includes(file.type)) {
+    if (file.size <= allowFileSize.value) {
+      let obj = {
+        file,
+        uid: Date.now(),
+        name: file && file.name,
+        data: "",
+        id: null,
+      };
+      getBase64Async(file).then((imageUrl: string) => {
+        obj.data = imageUrl;
+        thumbnailName.value = file.name;
+        catalogFile.push(obj);
+        // photos.value.push({data: imageUrl, name: file.name});
+      });
+      console.log(catalogFile)
+    } else {
+      message['error']("Faylın ölçüsü 5 mb-dən çox ola bilməz");
+    }
+  } else {
+    message["error"]("Fayl tipi düzgün deyil");
+  }
+  return false;
+};
+const beforeUploadOtherFiles = function (file: any) {
+  if (file && allowFileTypes.value.includes(file.type)) {
+    if (file.size <= allowFileSize.value) {
+      const obj = {
+        file,
+        uid: Date.now(),
+        name: file && file.name,
+        data: "",
+        id: null,
+      };
+      getBase64Async(file).then((imageUrl: string) => {
+        obj.data = imageUrl;
+        otherFileList.push(obj);
+        // hasChange.value = false;
+      });
+    } else {
+      message['error']("Faylın ölçüsü 5 mb-dən çox ola bilməz");
+    }
+  } else {
+    message["error"]("Fayl tipi düzgün deyil");
+  }
+  return false;
+};
+const removeFromCatalogFile = function (index: number) {
+  catalogFile.splice(index, 1);
+}
+const removeOtherImage = function (index: number) {
+  otherFileList.splice(index, 1);
+};
+const handleOk = function () {
 //       this.$validator.validateAll().then((result) => {
 //         if (!this.formData.measurementUnitId) {
 //           this.visibleMeasurementUnit = true;
@@ -911,7 +632,7 @@ const selectSubCategoryChange = function (value: any) {
 //           },
 //         });
 //       });
-//     },
+}
 //     filterOption(input, option) {
 //       return (
 //           option.componentOptions.children[0].text
@@ -947,23 +668,24 @@ const selectSubCategoryChange = function (value: any) {
 //             }
 //           });
 //     },
-//     clickCategory() {
-//       !this.clickCategoryData &&
-//       setTimeout(() => {
-//         this.addClickEvent();
-//       }, 500);
-//     },
-//     addClickEvent() {
-//       const buttons = document.querySelectorAll(
-//           ".ant-select-tree-node-content-wrapper"
-//       );
-//       buttons.forEach(function (button) {
-//         button.addEventListener("click", function () {
-//           this.previousSibling.click();
-//         });
-//       });
-//       this.clickCategoryData = true;
-//     },
+
+const clickCategory = function () {
+  clickCategoryData.value &&
+  setTimeout(() => {
+    addClickEvent();
+  }, 500);
+}
+const addClickEvent = function () {
+  const buttons = document.querySelectorAll(
+      ".ant-select-tree-node-content-wrapper"
+  );
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      previousSibling.click();
+    });
+  });
+  clickCategoryData.value = true;
+}
 //   },
 // };
 </script>

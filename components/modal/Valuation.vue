@@ -416,6 +416,7 @@ const setRating = (value: number) => {
   changeRate(formData.rating);
 };
 const handleChangeFile = function (params: any) {
+
 }
 
 function getBase64Async(img: Blob): Promise<string> {

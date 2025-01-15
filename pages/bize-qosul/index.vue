@@ -208,7 +208,6 @@
 </template>
 
 <script setup lang="ts">
-import { localize, setLocale } from "@vee-validate/i18n";
 import useGoogleRecaptcha, {
   RecaptchaAction,
 } from "~/composables/useGoogleRecaptcha";

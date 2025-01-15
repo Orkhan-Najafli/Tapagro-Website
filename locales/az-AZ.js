@@ -386,5 +386,5 @@ export default {
   digits: "Bu sahə {length} rəqəmdən ibarət olmalıdır.",
   email: "{email} düzgün formatda daxil olunmalıdır.",
   your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Elanınız 30 gün müddətində \'VIP fermer məhsulları\' kataloqunda təsvir olunacaq.',
-  decimal:"`Bu sahə yalnız rəqəmlərdən və nöqtədən sonra {decimals} onluq ədəddən ibarət olmalıdır."
+  decimal:"Bu sahə yalnız rəqəmlərdən və nöqtədən sonra {decimals} onluq ədəddən ibarət olmalıdır."
 };
