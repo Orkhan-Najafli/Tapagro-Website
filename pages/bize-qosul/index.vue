@@ -209,7 +209,6 @@
 
 <script setup lang="ts">
 import { localize, setLocale } from "@vee-validate/i18n";
-// const { t } = useI18n();
 import useGoogleRecaptcha, {
   RecaptchaAction,
 } from "~/composables/useGoogleRecaptcha";

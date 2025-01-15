@@ -382,5 +382,6 @@ export default {
   numeric: `Это поле должно содержать только цифры.`,
   digits: "Это поле {length} должно содержать цифры.",
   email: "{email} необходимо ввести в правильном формате.",
-  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Ваше объявление будет размещено в каталоге \'VIP фермерские продукты\' на 30 дней.'
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Ваше объявление будет размещено в каталоге \'VIP фермерские продукты\' на 30 дней.',
+  decimal:'Это поле должно содержать только цифры и до {decimals} десятичных знаков после точки.'
 };

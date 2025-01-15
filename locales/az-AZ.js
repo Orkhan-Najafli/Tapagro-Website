@@ -293,17 +293,17 @@ export default {
   you_must_select_a_unit_of_measure: "Ölçü vahidi seçməyiniz zəruridir",
   product_more_description:
     "Məhsulunuzu mümkün qədər ətraflı təsvir edin, xatırladırıq ki, elanın təsvirində əlaqə nömrəsi və digər saytların linklərini yerləşdirmək qadağandır.",
-  // ad_use_rules:
-  //   "Elan yerləşdirərək, siz saytın <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> istifadə qaydaları </a> ilə razı olduğunuzu təsdiq edirsiniz.",
+  ad_use_rules:
+    "Elan yerləşdirərək, siz saytın <a class='text-[#16A34A] hover:text-[#16A34A] focus:hover:text-[#16A34A]'> istifadə qaydaları </a> ilə razı olduğunuzu təsdiq edirsiniz.",
   create_an_ad: "Elanı yarat",
   enter_a_valid_phone_number:
     "Düzgün telefon nömrəsi daxil edin (məs: 501234567)",
-  advertisement_texts: [
-    "Eyni elanı bir neçə dəfə təqdim etməyin",
-    "Təsvir və ya şəkillərdə telefon, email və ya sayt ünvanı qeyd etməyin",
-    "Əlaqə məlumatlarınızı dəqiq qeyd etdiyinizdən əmin olun",
-    "Elanınız moderator yoxlamasından keçdikdən sonra saytda dərc olunacaq",
-  ],
+  advertisement_texts: {
+    item0: "Eyni elanı bir neçə dəfə təqdim etməyin",
+    item1:"Təsvir və ya şəkillərdə telefon, email və ya sayt ünvanı qeyd etməyin",
+    item2:"Əlaqə məlumatlarınızı dəqiq qeyd etdiyinizdən əmin olun",
+    item3:"Elanınız moderator yoxlamasından keçdikdən sonra saytda dərc olunacaq",
+  },
   error: "Xəta",
   contact_the_farmer: "Fermerlə əlaqə",
   number_of_views: "Baxış sayı",
@@ -385,5 +385,6 @@ export default {
   numeric: `Bu sahə yalnız tam rəqəmlərdən ibarət olmalıdır.`,
   digits: "Bu sahə {length} rəqəmdən ibarət olmalıdır.",
   email: "{email} düzgün formatda daxil olunmalıdır.",
-  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Elanınız 30 gün müddətində \'VIP fermer məhsulları\' kataloqunda təsvir olunacaq.'
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Elanınız 30 gün müddətində \'VIP fermer məhsulları\' kataloqunda təsvir olunacaq.',
+  decimal:"`Bu sahə yalnız rəqəmlərdən və nöqtədən sonra {decimals} onluq ədəddən ibarət olmalıdır."
 };

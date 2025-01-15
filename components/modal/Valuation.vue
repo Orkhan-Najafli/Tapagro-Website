@@ -575,7 +575,7 @@ const handleCancelPreview = () => {
 const handleCancel = function () {
   emit("close", false);
 };
-const defaultImagePath = await import("@/assets/img/no-image.svg");
+const defaultImagePath = await import("assets/img/no-image.svg");
 const setDefaultImage = (event: Event | any) => {
   event.target.src = defaultImagePath.default;
   event.target.className = "p-4 w-[70px] h-[70px] max-w-[70px] max-h-[70px] min-w-[70px] min-h-[70px] ";
