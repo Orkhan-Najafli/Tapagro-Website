@@ -9,7 +9,7 @@
         </div>
         <nuxt-link
             tag="button"
-            to="/fermer-mehsullari/yeni-elan"
+            to="/yeni-elan"
             class="bg-[#16A34A] rounded-md px-6 py-2 font-semibold text-base text-white h-10 flex items-center"
         >
           <a-icon type="plus" class="mr-1"/>

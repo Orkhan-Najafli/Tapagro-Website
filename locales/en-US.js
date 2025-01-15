@@ -382,6 +382,6 @@ export default {
   numeric: `This field must contain only numbers.`,
   digits: "This field {length} must contain numbers.",
   email: "{email} must be entered in the correct format",
-  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Your listing will be featured in the \'VIP Farmer Products\' catalog for 30 days.'
-
+  your_listing_will_be_featured_in_the_VIP_Farmer_Products_catalog_for_30_days:'Your listing will be featured in the \'VIP Farmer Products\' catalog for 30 days.',
+  decimal:'This field must contain only numbers and up to {decimals} decimal places after the dot.'
 };

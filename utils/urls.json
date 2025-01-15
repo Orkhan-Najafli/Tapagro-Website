@@ -11,6 +11,7 @@
   "categories": "/public/ecommerce/products/base-categories/${baseCategoryId}/categories",
   "product-types": "/public/ecommerce/products/base-categories/${baseCategoryId}/categories/${categoryId}/types",
   "subcategories": "/public/ecommerce/farmer-products/subcategories",
+  "product_categories": "/public/ecommerce/product-categories",
   "farmer-product-types": "/public/ecommerce/farmer-products/subcategories/${id}/types",
   "users": "/ecommerce/users",
   "farmer-products": "/public/ecommerce/farmer-products",
