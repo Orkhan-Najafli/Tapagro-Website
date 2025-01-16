@@ -1,5 +1,5 @@
 <template>
-  <main class=" block overflow-hidden px-6 h-full min-h-full max-h-full">
+  <main class="block px-6 h-full min-h-screen max-h-full">
     <ClientOnly>
       <section class="max-w-[1224px] container mx-auto px-6 xl:px-0">
         <div class="mt-6 mb-5 md:mb-9">
@@ -65,37 +65,59 @@
               <a-form class="block">
                 <div class="flex flex-col md:flex-row">
                   <div class="md:mr-6 w-full leading-none">
-                    <a-form-item v-bind="validateInfos.subcategoryId" class=" flex flex-col w-full leading-none">
+                    <a-form-item v-bind="validateInfos.typeId" class=" flex flex-col w-full leading-none">
                       <label class="flex flex-row justify-start items-center"> <span
                           class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("product") }}</label>
+                      <!--                      <a-tree-select-->
+                      <!--                          class="w-full leading-none"-->
+                      <!--                          v-model:value="formData.typeId"-->
+                      <!--                          :showSearch="true"-->
+                      <!--                          :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"-->
+                      <!--                          :placeholder="t('select_the_product')"-->
+                      <!--                          allow-clear-->
+                      <!--                          name="subcategoryId"-->
+                      <!--                          :treeDefaultExpandAll="false"-->
+                      <!--                          @change="selectSubCategoryChange"-->
+                      <!--                          @click="clickCategory"-->
+                      <!--                      >-->
+                      <!--                        <a-tree-select-node-->
+                      <!--                            v-for="(subcategory, index) in useCategoriesStore().getProductCategories.subcategories"-->
+                      <!--                            :key="subcategory.id"-->
+                      <!--                            :value="subcategory.id"-->
+                      <!--                            :title="subcategory.name"-->
+                      <!--                            :selectable="false"-->
+                      <!--                            :disabled="true"-->
+                      <!--                            @click="selectSubCategory(index)"-->
+                      <!--                        >-->
+                      <!--                          <a-tree-select-node-->
+                      <!--                              v-for="(subcategoryType, typeIndex) in useCategoriesStore().getProductCategories.subcategories[index].types"-->
+                      <!--                              :key="subcategoryType.id"-->
+                      <!--                              :value="subcategoryType.id"-->
+                      <!--                              :title="subcategoryType.name"-->
+                      <!--                              :selectable="false"-->
+                      <!--                          >-->
+                      <!--                          </a-tree-select-node>-->
+                      <!--                        </a-tree-select-node>-->
+                      <!--                      </a-tree-select>-->
+
                       <a-tree-select
-                          :selectable="false"
-                          class="w-full leading-none"
                           v-model:value="formData.typeId"
-                          :showSearch="true"
+                          show-search
+                          style="width: 100%"
                           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                          :placeholder="t('select_the_product')"
+                          placeholder="Please select"
                           allow-clear
-                          name="subcategoryId"
-                          :treeDefaultExpandAll="false"
+                          :tree-data="useCategoriesStore().getProductCategoriesWithChangedValues"
+                          tree-node-filter-prop="label"
                           @select="selectSubCategory"
-                          @change="selectSubCategoryChange"
-                          @click="clickCategory"
                       >
-                        <a-tree-select-node
-                            v-for="(subcategory, index) in useCategoriesStore().getProductCategories.subcategories"
-                            :key="index"
-                            :value="subcategory.id"
-                            :title="subcategory.name"
-                        >
-                          <a-tree-select-node
-                              v-for="(subcategoryType, typeIndex) in useCategoriesStore().getProductCategories.subcategories[index].types"
-                              :key="`${index}-${typeIndex}`"
-                              :value="subcategoryType.id"
-                              :title="subcategoryType.name"
+                        <template #title="{ value: value, label }">
+                          <div
+                              @select="selectSubCategory"
                           >
-                          </a-tree-select-node>
-                        </a-tree-select-node>
+                            {{label}}
+                          </div>
+                        </template>
                       </a-tree-select>
                     </a-form-item>
 
@@ -405,7 +427,7 @@ const otherFileList: any = reactive<Array<any>>([]);
 const allowFileTypes = ref(["image/jpeg", "image/png", "image/jpg"])
 const allowFileSize = ref(5242880)
 const rulesRef = reactive({
-  subcategoryId: [
+  typeId: [
     {
       required: true,
       message: t("required"),
@@ -478,6 +500,8 @@ const waitResponse = ref(false)
 const adUseRules = computed(() => t('ad_use_rules'));
 useCitiesStore().fetchCities()
 useCategoriesStore().fetchProductCategories()
+console.log("getProductCategoriesWithChangedValues=> ", useCategoriesStore().getProductCategoriesWithChangedValues)
+console.log("subcategories=> ", useCategoriesStore().getProductCategories.subcategories)
 
 function getBase64Async(img: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -489,8 +513,6 @@ function getBase64Async(img: Blob): Promise<string> {
 }
 
 const {resetFields, validate, validateInfos} = useForm(formData, rulesRef);
-
-
 const handleSearch = (value: string) => {
   useCitiesStore().fetchCities(value)
 };
@@ -507,10 +529,11 @@ const measurementUnitIdChange = function (value: any) {
       ? (visibleMeasurementUnit.value = false)
       : (visibleMeasurementUnit.value = true);
 }
-const selectSubCategory = function () {
-  let key = extra.selectedNodes[0].key.at(0);
-  measurementUnits.concat(subcategories[key].measurementUnits);
-  formData.subcategoryId.value = subcategories[key].id;
+const selectSubCategory = function (key:any) {
+  // let key = selectedNodes[0].key.at(0);
+  console.log("key=> ", key)
+  // measurementUnits.concat(useCategoriesStore().getProductCategories.subcategories[key].measurementUnits);
+  // formData.subcategoryId.value =  useCategoriesStore().getProductCategories.subcategories[key].id;
 }
 const selectSubCategoryChange = function (value: any) {
   if (value == null) {

@@ -3,8 +3,8 @@ import {defineStore} from "pinia";
 import urls from "@/utils/urls.json";
 import {useRuntimeConfig} from "#app";
 import type {
-  Categories,
-  CategoriesProductType, ProductCategories,
+    Categories,
+    CategoriesProductType, ProductCategories,
 } from "~/utils/types/categories";
 
 export const useCategoriesStore = defineStore("categories", {
@@ -22,6 +22,8 @@ export const useCategoriesStore = defineStore("categories", {
         productCategories: {} as ProductCategories,
         productCategoriesError: null as null | Error,
         productCategoriesStatus: "" as string,
+        productCategoriesTreeData: [] as Array<any>,
+        productTypesTreeData: [] as Array<any>,
 
         productTypes: [] as Array<CategoriesProductType>,
         baseURL: useRuntimeConfig().public.baseURL,
@@ -33,9 +35,26 @@ export const useCategoriesStore = defineStore("categories", {
         getCategoriesStatus: (state) => state.categoriesStatus,
         getBaseCategory: (state) => state.baseCategory,
         getProductCategories: (state) => state.productCategories,
+        getProductCategoriesWithChangedValues: (state) => state.productCategoriesTreeData,
         getProductCategoriesStatus: (state) => state.productCategoriesStatus,
     },
     actions: {
+        setProductCategoriesWithChangedValues(productCategories:ProductCategories) {
+            for (let index = 0; index < productCategories.subcategories.length; index++) {
+                this.productCategoriesTreeData.push({
+                    label: productCategories.subcategories[index].name,
+                    value: productCategories.subcategories[index].id+"-"+window.crypto.randomUUID(),
+                    selectable:false,
+                    children: productCategories.subcategories[index].types.map((producType:any,typeIndex:number) => {
+                        return {
+                            label: producType.name,
+                            value: producType.id,
+                            // key: window.crypto.randomUUID()
+                        }
+                    })
+                });
+            }
+        },
         setBaseCategory(category: Categories) {
             this.baseCategory = category;
         },
@@ -162,7 +181,7 @@ export const useCategoriesStore = defineStore("categories", {
         async fetchProductCategories() {
             try {
                 const {data, status, error} = await useAsyncData<ProductCategories>(
-                    "base-categories",
+                    "product-categories",
                     () =>
                         $fetch(`${this.baseURL}${urls.product_categories}`, {
                             headers: {
@@ -176,6 +195,7 @@ export const useCategoriesStore = defineStore("categories", {
                 this.productCategories = data.value as ProductCategories
                 this.productCategoriesStatus = status.value;
                 this.productCategoriesError = error?.value;
+                this.setProductCategoriesWithChangedValues(data.value!)
             } catch (error) {
                 console.error("When API call, error happened: ", error);
             }

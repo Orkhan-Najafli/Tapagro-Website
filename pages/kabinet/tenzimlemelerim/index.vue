@@ -1,7 +1,6 @@
 <template>
   <div class="mt-9 xl:mt-0">
     <a-skeleton active :loading="useUsersStore().getUserStatus !== 'success'" />
-    <div>{{ useUsersStore().getUserStatus }}</div>
     <a-form v-if="useUsersStore().getUserStatus === 'success'" ref="formRef" :model="userData" :rules="rules as any">
       <div class="block text-left mb-3.5">
         <h3 class="text-emerald-600 font-semibold text-xl">
