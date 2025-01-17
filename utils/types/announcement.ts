@@ -16,6 +16,19 @@ export interface QueryParams {
     size: number;
 }
 
+export interface QueryParamsNewAnnouncement {
+    cityId:number
+    description: string
+    isDelivered:boolean
+    measurementUnitId:number
+    measurementValue:number
+    name: string
+    phoneNumber:string|number
+    price: number
+    subcategoryId:number
+    typeId:number
+}
+
 export interface AnnouncementDetail {
     "id": number,
     "name": string,

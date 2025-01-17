@@ -105,17 +105,17 @@
                           show-search
                           style="width: 100%"
                           :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                          placeholder="Please select"
+                          :placeholder="t('select_the_product')"
                           allow-clear
                           :tree-data="useCategoriesStore().getProductCategoriesWithChangedValues"
                           tree-node-filter-prop="label"
                           @select="selectSubCategory"
                       >
-                        <template #title="{ value: value, label }">
+                        <template #title="{ value: value, label,measurementUnits,subCategoryId }">
                           <div
-                              @select="selectSubCategory"
+                              @click="setMeasurementUnits(measurementUnits,subCategoryId)"
                           >
-                            {{label}}
+                            {{ label }}
                           </div>
                         </template>
                       </a-tree-select>
@@ -185,24 +185,26 @@
                             :placeholder="t('insert')"
                             name="measurementValue"
                         >
-                          <a-select
-                              :disabled="measurementUnits.length == 0"
-                              slot="addonAfter"
-                              default-value="kq"
-                              allow-clear
-                              placeholder="kq"
-                              style="width: 90px"
-                              v-model="formData.measurementUnitId"
-                              @change="measurementUnitIdChange"
-                          >
-                            <a-select-option
-                                v-for="(measurementUnit, index) in measurementUnits"
-                                :key="index"
-                                :value="measurementUnit.id"
+                          <template #addonAfter>
+                            <a-select
+                                :disabled="measurementUnits.list.length == 0"
+                                slot="addonAfter"
+                                default-value="kq"
+                                allow-clear
+                                placeholder="kq"
+                                style="width: 90px"
+                                v-model="formData.measurementUnitId"
+                                @change="measurementUnitIdChange"
                             >
-                              {{ measurementUnit.name }}
-                            </a-select-option>
-                          </a-select>
+                              <a-select-option
+                                  v-for="(measurementUnit, index) in measurementUnits.list"
+                                  :key="index"
+                                  :value="measurementUnit.id"
+                              >
+                                {{ measurementUnit.name }}
+                              </a-select-option>
+                            </a-select>
+                          </template>
                         </a-input>
                       </a-tooltip>
                     </a-form-item>
@@ -214,7 +216,7 @@
                     <a-form-item v-bind="validateInfos.cityId" class=" flex flex-col w-full leading-none">
                       <label class="flex flex-row justify-start items-center"> <span
                           class="pt-1 text-red-500 text-xl pr-1">*</span> {{ t("region_title") }}</label>
-                      <a-select :value="formData.cityId" class="w-full max-w-full mt-1"
+                      <a-select v-model:value="formData.cityId" class="w-full max-w-full mt-1"
                                 id="_city" show-search placeholder="" :options="cities" :filter-option="filterOption"
                                 @change="handleChangeCity" @search="handleSearch" allow-clear>
 
@@ -250,7 +252,7 @@
                         arrow-point-at-center
                     >
                       <a-textarea
-                          v-model="formData.description"
+                          v-model:value="formData.description"
                           :maxLength="1024"
                           :rows="4"
                           name="description"
@@ -395,11 +397,15 @@ import useGoogleRecaptcha, {
 
 const {locale, t} = useI18n({useScope: "global"});
 import {Form} from "ant-design-vue";
+import {Modal} from 'ant-design-vue';
 
+const [modal, contextHolder] = Modal.useModal();
 const {$recaptcha} = useNuxtApp();
 const useForm = Form.useForm;
 const subcategories = reactive([])
-let measurementUnits = reactive([])
+let measurementUnits = reactive({
+  list: [] as Array<{ name: string, id: number }>
+})
 let catalogFile = reactive<Array<{ file: any; uid: number; name: any; data: string; id: null; }>>([])
 const thumbnailName = ref()
 const visibleMeasurementUnit = ref(false)
@@ -498,10 +504,9 @@ const rulesRef = reactive({
 const clickCategoryData = ref(false)
 const waitResponse = ref(false)
 const adUseRules = computed(() => t('ad_use_rules'));
+const announcementsStore = useAnnouncementsStore()
 useCitiesStore().fetchCities()
 useCategoriesStore().fetchProductCategories()
-console.log("getProductCategoriesWithChangedValues=> ", useCategoriesStore().getProductCategoriesWithChangedValues)
-console.log("subcategories=> ", useCategoriesStore().getProductCategories.subcategories)
 
 function getBase64Async(img: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -529,15 +534,16 @@ const measurementUnitIdChange = function (value: any) {
       ? (visibleMeasurementUnit.value = false)
       : (visibleMeasurementUnit.value = true);
 }
-const selectSubCategory = function (key:any) {
-  // let key = selectedNodes[0].key.at(0);
-  console.log("key=> ", key)
-  // measurementUnits.concat(useCategoriesStore().getProductCategories.subcategories[key].measurementUnits);
-  // formData.subcategoryId.value =  useCategoriesStore().getProductCategories.subcategories[key].id;
+const setMeasurementUnits = function (value: any, subCategoryId: number) {
+  if (value) measurementUnits.list = value
+  if (subCategoryId != null) formData.subcategoryId.value = subCategoryId
+}
+const selectSubCategory = function (key: any) {
+  formData.typeId.value = key;
 }
 const selectSubCategoryChange = function (value: any) {
   if (value == null) {
-    measurementUnits.length = 0;
+    measurementUnits.list = [];
     formData.measurementUnitId.value = undefined;
   }
 }
@@ -596,7 +602,15 @@ const removeOtherImage = function (index: number) {
   otherFileList.splice(index, 1);
 };
 const handleOk = function () {
-//       this.$validator.validateAll().then((result) => {
+  validate().then((result) => {
+    // if (verified.value == false) this.checkRecaptcha = "error";
+    // if (!result || !this.verified) return;
+    // if (!formData.measurementUnitId.value) {
+    //   visibleMeasurementUnit.value = true;
+    //   return;
+    // } else {
+    //   visibleMeasurementUnit.value = false;
+    // }
 //         if (!this.formData.measurementUnitId) {
 //           this.visibleMeasurementUnit = true;
 //           return;
@@ -605,73 +619,57 @@ const handleOk = function () {
 //         }
 //         if (this.verified == false) this.checkRecaptcha = "error";
 //         if (!result || !this.verified) return;
-//         this.$confirm({
-//           title: this.t("are_you_sure_you_want_to_create_a_new_ad"),
-//           content: "",
-//           okText: this.t("yes"),
-//           cancelText: this.t("no"),
-//           onOk: () => {
-//             this.waitResponse = true;
-//             let sendFormData = {
-//               cityId: this.formData.cityId,
-//               description: this.formData.description,
-//               measurementUnitId: this.formData.measurementUnitId,
-//               measurementValue: Number(this.formData.measurementValue),
-//               name: this.formData.name,
-//               price: Number(this.formData.price),
-//               phoneNumber: this.formData.phoneNumber,
-//               typeId: this.formData.typeId,
-//               subcategoryId: this.formData.subcategoryId,
-//               isDelivered: this.formData.isDelivered,
-//             };
-//             this.$store
-//                 .dispatch("advertisement/addAdvertisement", sendFormData)
-//                 .then((response) => {
-//                   let formData = new FormData();
-//                   formData.append(
-//                       "thumbnail",
-//                       this.catalogFileList[0] && this.catalogFileList[0].file
-//                   );
-//                   this.otherFileList.forEach((item, index) => {
-//                     formData.append(`productPhotos[${index}]`, item.file);
-//                   });
-//                   this.$store
-//                       .dispatch("advertisement/addAdvertisementPhotos", {
-//                         data: formData,
-//                         id: response.id,
-//                       })
-//                       .then((response) => {
-//                         this.$router.push("/kabinet/elanlarim");
-//                         this.$message.success(
-//                             this.t("operation_was_successful"),
-//                             1.5
-//                         );
-//                       })
-//                       .catch(() => {
-//                         this.$router.push("/fermer-mehsullari/yeni-elan");
-//                         this.waitResponse = false;
-//                       });
-//                 });
-//           },
-//         });
-//       });
+    modal.confirm({
+      title: t("are_you_sure_you_want_to_create_a_new_ad"),
+      content: "",
+      okText: t("yes"),
+      cancelText: t("no"),
+      onOk: async () => {
+        waitResponse.value = true;
+        let sendFormData = {
+          cityId: formData.cityId.value,
+          description: formData.description.value,
+          measurementUnitId: formData.measurementUnitId.value,
+          measurementValue: Number(formData.measurementValue.value),
+          name: formData.name.value,
+          price: Number(formData.price.value),
+          phoneNumber: formData.phoneNumber.value,
+          typeId: formData.typeId.value,
+          subcategoryId: formData.subcategoryId.value,
+          isDelivered: formData.isDelivered,
+        };
+        await announcementsStore.fetchCreateNewAnnouncement(sendFormData)
+        if (announcementsStore.getCreateNewAnnouncementStatus === 'success') {
+          let formData = new FormData();
+          formData.append(
+              "thumbnail",
+              catalogFile[0] && catalogFile[0].file
+          );
+          otherFileList.forEach((item: any, index: number) => {
+            formData.append(`productPhotos[${index}]`, item.file);
+          });
+          await announcementsStore.fetchCreatedAnnouncementPhotos({
+            data: formData,
+            id: announcementsStore.getCreatedNewAnnouncementResult.id,
+          })
+          if (announcementsStore.getCreatedAnnouncementPhotosStatus === 'success') {
+            useRouter().push("/kabinet/elanlarim");
+            message['success'](
+                t("operation_was_successful"),
+                1.5
+            )
+          } else {
+            useRouter().push("/yeni-elan");
+            waitResponse.value = false;
+          }
+        }
+      },
+    })
+  })
+
 }
-//     filterOption(input, option) {
-//       return (
-//           option.componentOptions.children[0].text
-//               .toLowerCase()
-//               .indexOf(input.toLowerCase()) >= 0
-//       );
-//     },
-//     loadCities(cityName) {
-//       this.$store
-//           .dispatch("advertisement/getCities", {
-//             cityNamePhrase: cityName,
-//           })
-//           .then((response) => {
-//             this.cities = response;
-//           });
-//     },
+
+
 //     loadProductCategories() {
 //       this.$store
 //           .dispatch("advertisement/getProductCategories")

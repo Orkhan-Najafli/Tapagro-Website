@@ -3,7 +3,14 @@ import {defineStore} from "pinia";
 import urls from "@/utils/urls.json";
 import {useRuntimeConfig} from "#app";
 import type {ApiBase} from "~/utils/types";
-import type {AnnouncementDetail, Announcements, QueryParams} from "~/utils/types/announcement";
+import type {
+    AnnouncementDetail,
+    Announcements,
+    QueryParams,
+    QueryParamsNewAnnouncement
+} from "~/utils/types/announcement";
+import { stringify } from "qs";
+
 
 export const useAnnouncementsStore = defineStore("announcements", {
     state: () => ({
@@ -12,17 +19,17 @@ export const useAnnouncementsStore = defineStore("announcements", {
         totalPages: 0 as number,
         status: "" as string,
         error: null as null | Error,
-
         announcement: {} as AnnouncementDetail,
         announcementStatus: "" as string,
         announcementError: null as null | Error,
-
         announcementPromoteStatus: "" as string,
         announcementPromoteError: null as null | Error,
-
         announcementVIPStatus: "" as string,
         announcementDeactivateStatus: "" as string,
         announcementActivateStatus: "" as string,
+        createdAnnouncementResult:{} as {id: number,name:string},
+        createAnnouncementStatus:"" as string,
+        createdAnnouncementPhotosStatus:"" as string,
         baseURL: useRuntimeConfig().public.baseURL,
     }),
     getters: {
@@ -39,6 +46,11 @@ export const useAnnouncementsStore = defineStore("announcements", {
         getAnnouncementVIPStatus: (state) => state.announcementVIPStatus,
         getAnnouncementDeactivateStatus: (state) => state.announcementDeactivateStatus,
         getAnnouncementActivateStatus: (state) => state.announcementActivateStatus,
+
+        getCreateNewAnnouncementStatus: (state) => state.createAnnouncementStatus,
+        getCreatedNewAnnouncementResult: (state) => state.createdAnnouncementResult,
+        getCreatedAnnouncementPhotosStatus: (state) => state.createdAnnouncementPhotosStatus,
+
     },
     actions: {
         async resetAnnouncements() {
@@ -176,6 +188,54 @@ export const useAnnouncementsStore = defineStore("announcements", {
                     )
             );
             this.announcementActivateStatus = status.value;
+        },
+        async fetchCreateNewAnnouncement(queryData: QueryParamsNewAnnouncement) {
+            const {data, status, error} = await useAsyncData<{id:number,name:string}>(
+                "create-announcement",
+                () =>
+                    $fetch(
+                        `${this.baseURL}${urls.announcements}`,
+                        {
+                            headers: {
+                                ...HeaderConfigs({
+                                    Authorization: useCookie("token").value || "",
+                                }),
+                            },
+                            query: queryData,
+                            method: "POST",
+                        }
+                    )
+            );
+            this.createAnnouncementStatus = status.value;
+            this.createdAnnouncementResult = data.value!;
+        },
+        async fetchCreatedAnnouncementPhotos(queryData: {data:FormData,id:number}) {
+            const queryString = stringify(queryData, {
+                encode: false,
+                indices: true,
+                allowDots: false,
+                arrayFormat: "comma", //sortList[0].sortDirection: DESC
+                // arrayFormat: "repeat", //sortList.sortDirection: DESC
+            });
+            const {data, status, error} = await useAsyncData<{id:number,name:string}>(
+                "create-announcement",
+                () =>
+                    $fetch(
+                        `${this.baseURL}${parseUrl(urls.photos, {
+                            id: queryData,
+                        })}?${queryString}`,
+                        {
+                            headers: {
+                                ...HeaderConfigs({
+                                    Authorization: useCookie("token").value || "",
+                                }),
+                            },
+                            // query: queryData,
+                            method: "POST",
+                        }
+                    )
+            );
+            this.createdAnnouncementPhotosStatus = status.value;
         },
     },
 });

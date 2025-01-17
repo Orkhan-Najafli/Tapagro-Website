@@ -43,5 +43,6 @@
   "announcements": "/ecommerce/farmer-products",
   "announcement_promote": "/ecommerce/farmer-products/${id}/promote",
   "vip": "/ecommerce/farmer-products/${id}/vip",
-  "deactivate_announcement": "/ecommerce/farmer-products/${id}"
+  "deactivate_announcement": "/ecommerce/farmer-products/${id}",
+  "photos": "/ecommerce/farmer-products/${id}/photos"
 }

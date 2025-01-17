@@ -45,11 +45,12 @@ export const useCategoriesStore = defineStore("categories", {
                     label: productCategories.subcategories[index].name,
                     value: productCategories.subcategories[index].id+"-"+window.crypto.randomUUID(),
                     selectable:false,
-                    children: productCategories.subcategories[index].types.map((producType:any,typeIndex:number) => {
+                    children: productCategories.subcategories[index].types.map((productType:any,typeIndex:number) => {
                         return {
-                            label: producType.name,
-                            value: producType.id,
-                            // key: window.crypto.randomUUID()
+                            label: productType.name,
+                            value: productType.id,
+                            measurementUnits: productCategories.subcategories[index].measurementUnits,
+                            subCategoryId:productCategories.subcategories[index].id
                         }
                     })
                 });
